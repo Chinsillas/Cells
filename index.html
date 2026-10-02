@@ -33,7 +33,9 @@
         </table>
 
         <script>
-            let balance = 0;
+            let transactions = JSON.parse(localStorage.getItem('my_transactions')) || [];
+            updateUI();
+
             function addTransaction(){
                 const descInput = document.getElementById('desc');
                 const amountInput = document.getElementById('amount');
@@ -45,16 +47,47 @@
                     alert("Please enter a valid Description and Amount");
                     return;
                 }
-                balance += amount;
-                document.getElementById('total').innerText = balance.toFixed(2);
 
-                const tbody = document.getElementById('transaction-list');
-                const row = document.createElement('tr');
-                row.innerHTML = `<td>${desc}</td><td>${amount.toFixed(2)}€</td>`;
-                tbody.appendChild(row);
+                const newTransaction ={desc: desc, amount: amount};
+                transactions.push(newTransaction);
+
+                saveToLocalStorage();
+
+                updateUI()
 
                 descInput.value = '';
-                amountInput.value = '';
+                amountInput,value = '';
+            }
+
+            function saveToLocalStorage(){
+                localStorage.setItem('my_transactions', JSON.stringify(transactions));
+            }
+            function updateUI(){
+                const tbody = document.getElementById('transaction-list');
+                const totalSpan = document.getElementById('total');
+
+                tbody.innerHTML = '';
+
+                let balance = 0;
+
+                transactions.forEach((t, index) => {
+                    balance += t.amount;
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                    td>${t.desc}</td>
+                    <td>${t.amount.toFixed(2)} €</td>
+                    <td><button onclick="deleteTransaction(${index})" style="background-color: #dc3545; padding: 2px 8px; margin: 0; width: auto;">X</button></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+                totalSpan.innerText = balance.toFixed(2);
+            }
+            function deleteTransaction(index){
+                transactions.splice(index, 1);
+
+                saveToLocalStorage();
+                updateUI();
             }
         </script>
     </body>
