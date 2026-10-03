@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+    
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Cells</title>
+        
         <style>
             body{font-family:Helvetica, sans-serif; padding: 20px; max-width: 500px; margin: auto;}
             .card{background: #f4f4f9; padding: 15px; border-radius: 8px; margin-bottom: 20px;}
@@ -57,7 +59,11 @@
             }
 
         </style>
+    
     </head>
+    
+
+
     <body>
         <h2>Cells – My Finance Planer</h2>
 
@@ -74,6 +80,11 @@
             <button onclick="addTransaction()">Add Transaction</button>
         </div> 
 
+        <div style="margin-bottom: 10px; display: flex; gap: 10px;">
+            <button onclick="undo()" style="background-color: #6c757d;">↶</button>
+            <button onclick="redo()" style="background-color: #6c757d;">↷</button>
+        </div>"
+
         <table>
             <thead>
                 <tr>
@@ -85,8 +96,13 @@
             <tbody id="transaction-list"></tbody>
         </table>
 
+
+
         <script>
             let transactions = JSON.parse(localStorage.getItem('my_transactions')) || [];
+
+            let historyStack = [];
+            let redoStack = [];
            
             const today = new Date();
             document.getElementById('date').value = today.toISOString().split('T')[0];
@@ -95,6 +111,11 @@
             document.getElementById('month-filter').value = currentMonthYear;
 
             updateUI();
+
+            function saveState() {
+                historyStack.push(JSON.stringify(transactions));
+                redoStack = [];
+            }
 
             function addTransaction(){
                 const descInput = document.getElementById('desc');
@@ -109,6 +130,8 @@
                     alert("Please enter a valid Description and Amount");
                     return;
                 }
+
+                saveState();
 
                 const newTransaction ={
                     id: Date.now(),
@@ -169,7 +192,32 @@
             }
 
             function deleteTransaction(id){
+                const confirmed = confirm("Do you really want to remove this transaction?");
+                if (!confirmed) {
+                    return;
+                }
+
+                saveState();
+
                 transactions = transactions.filter(t => t.id !== id);
+                saveToLocalStorage();
+                updateUI();
+            }
+
+            function undo() {
+                if (historyStack.length === 0) return;
+
+                redoStack.push(JSON.stringify(transactions));
+
+                transactions = JSON.parse(historyStack.pop());
+                saveToLocalStorage();
+                updateUI();
+            }
+
+            function redo() {
+                if (redoStack.length === 0) return;
+
+                historyStack.push JSON.parse(redoStack.pop());
                 saveToLocalStorage();
                 updateUI();
             }
