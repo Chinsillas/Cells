@@ -105,7 +105,7 @@
                 const amount = parseFloat(amountInput.value);
                 const date = dateInput.value;
 
-                if (!desc || isNaN(amount)){
+                if (!desc || isNaN(amount) || !date){
                     alert("Please enter a valid Description and Amount");
                     return;
                 }
@@ -125,7 +125,7 @@
                 updateUI()
 
                 descInput.value = '';
-                amountInput,value = '';
+                amountInput.value = '';
                 document.getElementById('date').value = today.toISOString().split('T')[0];
             }
 
