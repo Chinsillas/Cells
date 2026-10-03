@@ -7,14 +7,19 @@
         <style>
             body{font-family:Helvetica, sans-serif; padding: 20px; max-width: 500px; margin: auto;}
             .card{background: #f4f4f9; padding: 15px; border-radius: 8px; margin-bottom: 20px;}
-            input, select, button{
-                padding: 10px;
-                margin: 5px 0;
-                width: 100%;
-                box-sizing: border-box;
-                border: 1px solid #ccc;
-                border-radius: 4px;
-                font-size: 14px;    
+            input, select, button { 
+                display: block;
+                width: 100%; 
+                box-sizing: border-box; 
+                -webkit-appearance: none;
+                appearance: none;
+                height: 44px;
+                padding: 0 10px; 
+                margin: 5px 0; 
+                border: 1px solid #ccc; 
+                border-radius: 8px; 
+                font-size: 14px;
+                background-color: #fff;
             }
             table{width: 100%; border-collapse: collapse; margin-top: 10px;}
             th, td{border: 1px solid #ddd; padding: 8px; text-align: left;}
@@ -22,6 +27,14 @@
             .btn-delete {
                 width: auto !important;
                 padding: 4px 8px;
+            }
+
+            button { 
+                background-color: #28a745; 
+                color: white; 
+                border: none; 
+                font-weight: bold; 
+                cursor: pointer; 
             }
 
         </style>
