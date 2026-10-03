@@ -24,9 +24,15 @@
             table{width: 100%; border-collapse: collapse; margin-top: 10px;}
             th, td{border: 1px solid #ddd; padding: 8px; text-align: left;}
 
-            .btn-delete {
-                width: auto !important;
-                padding: 4px 8px;
+            input[type="date"], inpu[type="month"] {
+                color: #000000;
+                text-align: center;
+            }
+
+            input[type="date"]::-webkit-date-and-time-value,
+            input[type="month"]::-webkit-date-and-time-value {
+                text-align:center;
+                color #000000;
             }
 
             button { 
@@ -35,6 +41,14 @@
                 border: none; 
                 font-weight: bold; 
                 cursor: pointer; 
+            }
+
+            .btn-delete {
+                background-color: #dc3545 !important; /* Behält den roten Hintergrund */
+                color: white !important;
+                width: auto !important;
+                height: auto !important;
+                padding: 6px 8px !important;
             }
 
         </style>
