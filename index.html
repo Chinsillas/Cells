@@ -83,7 +83,7 @@
         <div style="margin-bottom: 10px; display: flex; gap: 10px;">
             <button onclick="undo()" style="background-color: #6c757d;">↶</button>
             <button onclick="redo()" style="background-color: #6c757d;">↷</button>
-        </div>"
+        </div>
 
         <table>
             <thead>
@@ -217,7 +217,10 @@
             function redo() {
                 if (redoStack.length === 0) return;
 
-                historyStack.push JSON.parse(redoStack.pop());
+                const nextState = JSON.parse(redoStack.pop());
+                historyStack.push(JSON.stringify(transactions));
+                transactions = nextState;
+    
                 saveToLocalStorage();
                 updateUI();
             }
