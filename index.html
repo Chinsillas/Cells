@@ -58,6 +58,13 @@
                 padding: 6px 8px !important;
             }
 
+            table input[type="date"] {
+                height: 300px;
+                font-size: 13px;
+                padding: 2px 5px;
+                margin: 0;
+            }
+
         </style>
     
     </head>
@@ -81,8 +88,8 @@
         </div> 
 
         <div style="margin-bottom: 10px; display: flex; gap: 10px;">
-            <button onclick="undo()" style="background-color: #6c757d;">↶</button>
-            <button onclick="redo()" style="background-color: #6c757d;">↷</button>
+            <button onclick="undo()" style="background-color: #6c757d;">undo</button>
+            <button onclick="redo()" style="background-color: #6c757d;">redo</button>
         </div>
 
         <table>
@@ -175,13 +182,15 @@
 
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                            <td>${formattedDate}</td>
+                            <td>
+                                <input type="date" value="${t.date}" onchange="updateTransactionDate(${t.id}, this.value)">
+                            </td>
                             <td>${t.desc}</td>
                             <td style="color: ${t.amount < 0 ? '#dc3545' : '#28a745'}; font-weight: bold;">
                                 ${t.amount.toFixed(2)} €
                             </td>
                             <td>
-                             <button class="btn-delete" onclick="deleteTransaction(${t.id})">X</button>
+                                <button class="btn-delete" onclick="deleteTransaction(${t.id})">X</button>
                             </td>
                         `;
                         tbody.appendChild(row);
@@ -224,6 +233,19 @@
                 saveToLocalStorage();
                 updateUI();
             }
+
+            function updateTransactionDate(id, newDate) {
+                if (!newDate) return;
+
+                saveState();
+                
+                const transaction = transactions.find(t => t.id === id);
+                if (transaction) {
+                    transaction.date = newDate;
+                    saveToLocalStorage();
+                    updateUI();
+            }
+        }
         </script>
     </body>
 </html>
