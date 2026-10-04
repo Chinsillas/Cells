@@ -35,7 +35,7 @@
         margin: 5px 0;
         border: 1px solid #ccc;
         border-radius: 8px;
-        font-size: 14px;
+        font-size: 16px;
         background-color: #fff;
       }
 
@@ -64,6 +64,7 @@
         align-items: center;
         justify-content: center;
         line-height: 44px;
+        font-size: 16px;
       }
 
       input[type="date"]::-webkit-date-and-time-value,
@@ -168,13 +169,16 @@
     <!-- ========================================== -->
     <script>
       // --- STATE & INITIALISIERUNG ---
-      let transactions = JSON.parse(localStorage.getItem("my_transactions")) || [];
+      let transactions =
+        JSON.parse(localStorage.getItem("my_transactions")) || [];
       let historyStack = [];
       let redoStack = [];
 
       const today = new Date();
       document.getElementById("date").value = today.toISOString().split("T")[0];
-      document.getElementById("month-filter").value = today.toISOString().slice(0, 7);
+      document.getElementById("month-filter").value = today
+        .toISOString()
+        .slice(0, 7);
 
       updateUI();
 
