@@ -36,7 +36,7 @@
         margin: 6px 0;
         border: 1px solid #ccc;
         border-radius: 8px;
-        font-size: 16px;
+        font-size: 16px; /* Verhindert Auto-Zoom auf Safari iOS */
         background-color: #fff;
       }
 
@@ -57,6 +57,7 @@
         font-size: 16px !important;
       }
 
+      /* Zentrieren von Text in Datums-Inputs */
       input[type="date"],
       input[type="month"] {
         color: #000000;
@@ -75,10 +76,11 @@
         margin: auto;
       }
 
+      /* Grid für die Info-Boxen (Salary, Cash & Plasma) */
       .stats-grid {
         display: flex;
         gap: 10px;
-        margin-top: 12px;
+        margin-top: 10px;
       }
 
       .stat-box {
@@ -105,6 +107,26 @@
         color: #28a745;
       }
 
+      /* Anpassung für das interaktive Gehaltsfeld im Stat-Box Look */
+      .salary-input {
+        width: 100% !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 2px 0 !important;
+        border: none !important;
+        background: transparent !important;
+        text-align: center !important;
+        font-size: 16px !important;
+        font-weight: bold !important;
+        color: #28a745 !important;
+      }
+
+      .salary-input:focus {
+        outline: none;
+        background: #f0f8f0 !important;
+        border-radius: 4px;
+      }
+
       /* --- 3. TABELLEN-STYLING --- */
       table {
         width: 100%;
@@ -120,14 +142,11 @@
         text-align: left;
       }
 
-      table input[type="date"] {
-        width: 100% !important;
-        height: auto !important;
-        min-height: 40px !important;
-        padding: 4px 6px !important;
-        line-height: normal !important;
-        display: inline-block !important;
-        font-size: 16px !important;
+      .short-date {
+        font-weight: bold;
+        color: #444;
+        text-align: center;
+        display: block;
       }
     </style>
   </head>
@@ -163,6 +182,8 @@
         Dashboard
       </button>
 
+      <h2>Cells</h2>
+
       <div class="filter-selection">
         <label for="month-filter"><strong>Select Month:</strong></label>
         <input type="month" id="month-filter" onchange="onMonthChange()" />
@@ -170,33 +191,35 @@
 
       <!-- GEHALT & KATEGORIEN INFO CARD -->
       <div class="card">
-        <label
-          for="monthly-salary"
-          style="font-size: 14px; font-weight: bold; color: #444"
-        >
-          Salary:
-        </label>
-        <input
-          type="number"
-          id="monthly-salary"
-          placeholder="Amount"
-          oninput="saveMonthlySalary()"
-        />
+        <!-- Längliches Gehalts-Feld oben -->
+        <div class="stat-box" style="margin-bottom: 10px">
+          <label>Monthly Salary</label>
+          <input
+            type="text"
+            id="monthly-salary"
+            class="salary-input"
+            placeholder="0.00 €"
+            onfocus="onSalaryFocus()"
+            onblur="onSalaryBlur()"
+            onchange="saveMonthlySalary()"
+          />
+        </div>
 
+        <!-- Cash Inflow & Plasma Donation nebeneinander -->
         <div class="stats-grid">
           <div class="stat-box">
-            <label>Cash Income</label>
-            <span id="cash-total">0.00€</span>
+            <label>Cash Inflow</label>
+            <span id="cash-total">0.00 €</span>
           </div>
           <div class="stat-box">
             <label>Plasma Donation</label>
-            <span id="plasma-total">0.00€</span>
+            <span id="plasma-total">0.00 €</span>
           </div>
         </div>
       </div>
 
       <div class="card">
-        <h3>Sum: <span id="total">0</span>€</h3>
+        <h3>This Month's Sum: <span id="total">0</span>€</h3>
         <input type="text" id="desc" placeholder="Description" />
         <input type="number" id="amount" placeholder="Amount" />
         <input type="date" id="date" />
@@ -226,16 +249,13 @@
     <!-- ========================================== -->
     <script>
       // --- 1. STATE & INITIALISIERUNG ---
-      let transactions =
-        JSON.parse(localStorage.getItem("my_transactions")) || [];
+      let transactions = JSON.parse(localStorage.getItem("my_transactions")) || [];
       let historyStack = [];
       let redoStack = [];
 
       const today = new Date();
       document.getElementById("date").value = today.toISOString().split("T")[0];
-      document.getElementById("month-filter").value = today
-        .toISOString()
-        .slice(0, 7);
+      document.getElementById("month-filter").value = today.toISOString().slice(0, 7);
 
       loadMonthlySalary();
       updateUI();
@@ -254,16 +274,46 @@
       // --- 3. GEHALTS-LOGIK ---
       function saveMonthlySalary() {
         const month = document.getElementById("month-filter").value;
-        const val = document.getElementById("monthly-salary").value;
+        const input = document.getElementById("monthly-salary");
+        // Nur Zahlen und Punkt/Komma extrahieren
+        let cleanVal = input.value.replace(/[^0-9.,]/g, "").replace(",", ".");
+        
         if (month) {
-          localStorage.setItem(`salary_${month}`, val);
+          if (cleanVal !== "") {
+            localStorage.setItem(`salary_${month}`, cleanVal);
+          } else {
+            localStorage.removeItem(`salary_${month}`);
+          }
         }
+        formatSalaryDisplay();
       }
 
       function loadMonthlySalary() {
         const month = document.getElementById("month-filter").value;
         const savedSalary = localStorage.getItem(`salary_${month}`) || "";
         document.getElementById("monthly-salary").value = savedSalary;
+        formatSalaryDisplay();
+      }
+
+      function formatSalaryDisplay() {
+        const input = document.getElementById("monthly-salary");
+        let val = input.value.replace(/[^0-9.,]/g, "").replace(",", ".");
+        if (val !== "" && !isNaN(parseFloat(val))) {
+          input.value = parseFloat(val).toFixed(2) + " €";
+        } else {
+          input.value = "";
+        }
+      }
+
+      function onSalaryFocus() {
+        const input = document.getElementById("monthly-salary");
+        // Beim Bearbeiten nur die reine Zahl anzeigen
+        let val = input.value.replace(/[^0-9.,]/g, "").replace(",", ".");
+        input.value = val;
+      }
+
+      function onSalaryBlur() {
+        saveMonthlySalary();
       }
 
       function onMonthChange() {
@@ -319,17 +369,6 @@
         saveAndRefresh();
       }
 
-      function updateTransactionDate(id, newDate) {
-        if (!newDate) return;
-
-        saveState();
-        const transaction = transactions.find((t) => t.id === id);
-        if (transaction) {
-          transaction.date = newDate;
-          saveAndRefresh();
-        }
-      }
-
       // --- 6. UNDO / REDO ---
       function undo() {
         if (historyStack.length === 0) return;
@@ -372,14 +411,18 @@
               plasmaTotal += t.amount;
             }
 
+            // Datum auf TT.MM. formatieren
+            const dateParts = t.date.split("-"); // [YYYY, MM, DD]
+            const shortDateStr = `${dateParts[2]}.${dateParts[1]}.`;
+
             const row = document.createElement("tr");
             row.innerHTML = `
                 <td>
-                    <input type="date" value="${t.date}" onchange="updateTransactionDate(${t.id}, this.value)">
+                    <span class="short-date">${shortDateStr}</span>
                 </td>
                 <td>${t.desc}</td>
                 <td style="color: ${t.amount < 0 ? "#dc3545" : "#28a745"}; font-weight: bold;">
-                    ${t.amount.toFixed(2)}€
+                    ${t.amount.toFixed(2)} €
                 </td>
                 <td>
                     <button class="btn-delete" onclick="deleteTransaction(${t.id})">X</button>
@@ -392,10 +435,8 @@
         totalSpan.innerText = monthBalance.toFixed(2);
         totalSpan.style.color = monthBalance < 0 ? "#dc3545" : "#28a745";
 
-        document.getElementById("cash-total").innerText =
-          cashTotal.toFixed(2) + "€";
-        document.getElementById("plasma-total").innerText =
-          plasmaTotal.toFixed(2) + "€";
+        document.getElementById("cash-total").innerText = cashTotal.toFixed(2) + " €";
+        document.getElementById("plasma-total").innerText = plasmaTotal.toFixed(2) + " €";
       }
     </script>
   </body>
