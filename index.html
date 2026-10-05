@@ -142,14 +142,50 @@
         text-align: left;
       }
 
-      table input[type="date"] {
+      /* Anpassung für das Datumsfeld in der Tabelle */
+      .table-date-container {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+      }
+
+      .table-date-input {
         width: 100% !important;
         height: auto !important;
         min-height: 36px !important;
         padding: 4px 6px !important;
         line-height: normal !important;
-        display: inline-block !important;
+        display: block !important;
         font-size: 16px !important;
+        margin: 0 !important;
+        cursor: pointer;
+      }
+
+      /* Wenn das Feld nicht im Fokus ist, verbergen wir den Standardtext des Browsers und zeigen unser benutzerdefiniertes Format an */
+      .table-date-input:not(:focus)::-webkit-datetime-edit {
+        color: transparent;
+      }
+
+      .table-date-input:not(:focus) {
+        color: transparent;
+      }
+
+      .date-display-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: #444;
+        pointer-events: none; /* Klicks gehen durch zum eigentlichen Input-Feld */
+      }
+
+      .table-date-input:focus + .date-display-overlay {
+        display: none; /* Blendet die Vorschau aus, sobald der Kalender geöffnet wird */
       }
     </style>
   </head>
@@ -424,10 +460,17 @@
               plasmaTotal += t.amount;
             }
 
+            // Erstelle die Datum-Anzeige im Format TT.MM.
+            const dateParts = t.date.split("-"); // [YYYY, MM, DD]
+            const shortDateStr = `${dateParts[2]}.${dateParts[1]}.`;
+
             const row = document.createElement("tr");
             row.innerHTML = `
                 <td>
-                    <input type="date" value="${t.date}" onchange="updateTransactionDate(${t.id}, this.value)">
+                    <div class="table-date-container">
+                        <input type="date" class="table-date-input" value="${t.date}" onchange="updateTransactionDate(${t.id}, this.value)">
+                        <span class="date-display-overlay">${shortDateStr}</span>
+                    </div>
                 </td>
                 <td>${t.desc}</td>
                 <td style="color: ${t.amount < 0 ? "#dc3545" : "#28a745"}; font-weight: bold;">
@@ -441,7 +484,6 @@
           }
         });
 
-        // Summen-Farbe und Betrag zusammen formatieren (inklusive Euro-Zeichen)
         totalSpan.innerText = monthBalance.toFixed(2) + "€";
         totalSpan.style.color = monthBalance < 0 ? "#dc3545" : "#28a745";
 
