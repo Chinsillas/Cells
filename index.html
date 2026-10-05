@@ -262,6 +262,7 @@
           <span id="total-expenses" class="expenses-val">0.00€</span>
         </div>
 
+        <!-- Dünneres Feld für das Gesamtergebnis (Total Income - Total Expenses) -->
         <div class="stat-box-thin">
           <label>Net Total</label>
           <span id="net-total">0.00€</span>
@@ -513,7 +514,7 @@
         document.getElementById("plasma-total").innerText =
           plasmaTotal.toFixed(2) + "€";
 
-        // Summe aus Cash Inflow und Plasma Donation berechnen und setzen
+        // Summe aus Cash Inflow und Plasma Donation
         const cashPlasmaSum = cashTotal + plasmaTotal;
         document.getElementById("cash-plasma-sum").innerText =
           cashPlasmaSum.toFixed(2) + "€";
@@ -523,10 +524,10 @@
         document.getElementById("total-income").innerText =
           totalIncome.toFixed(2) + "€";
 
+        // Net Total berechnen (Total Income minus Total Expenses)
         const netTotal = totalIncome - totalExpenses;
         const netTotalSpan = document.getElementById("net-total");
-        netTotalSpan.innerText = netTotal.tofixed(2) + "€";
-
+        netTotalSpan.innerText = netTotal.toFixed(2) + "€";
         netTotalSpan.style.color = netTotal < 0 ? "#dc3545" : "#28a745";
       }
     </script>
