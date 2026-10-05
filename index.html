@@ -142,11 +142,14 @@
         text-align: left;
       }
 
-      .short-date {
-        font-weight: bold;
-        color: #444;
-        text-align: center;
-        display: block;
+      table input[type="date"] {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 36px !important;
+        padding: 4px 6px !important;
+        line-height: normal !important;
+        display: inline-block !important;
+        font-size: 16px !important;
       }
     </style>
   </head>
@@ -182,8 +185,6 @@
         Dashboard
       </button>
 
-      <h2>Cells</h2>
-
       <div class="filter-selection">
         <label for="month-filter"><strong>Select Month:</strong></label>
         <input type="month" id="month-filter" onchange="onMonthChange()" />
@@ -198,7 +199,7 @@
             type="text"
             id="monthly-salary"
             class="salary-input"
-            placeholder="0.00 €"
+            placeholder="0.00€"
             onfocus="onSalaryFocus()"
             onblur="onSalaryBlur()"
             onchange="saveMonthlySalary()"
@@ -209,17 +210,17 @@
         <div class="stats-grid">
           <div class="stat-box">
             <label>Cash Inflow</label>
-            <span id="cash-total">0.00 €</span>
+            <span id="cash-total">0.00€</span>
           </div>
           <div class="stat-box">
             <label>Plasma Donation</label>
-            <span id="plasma-total">0.00 €</span>
+            <span id="plasma-total">0.00€</span>
           </div>
         </div>
       </div>
 
       <div class="card">
-        <h3>This Month's Sum: <span id="total">0</span>€</h3>
+        <h3>Sum: <span id="total">0.00€</span></h3>
         <input type="text" id="desc" placeholder="Description" />
         <input type="number" id="amount" placeholder="Amount" />
         <input type="date" id="date" />
@@ -249,13 +250,16 @@
     <!-- ========================================== -->
     <script>
       // --- 1. STATE & INITIALISIERUNG ---
-      let transactions = JSON.parse(localStorage.getItem("my_transactions")) || [];
+      let transactions =
+        JSON.parse(localStorage.getItem("my_transactions")) || [];
       let historyStack = [];
       let redoStack = [];
 
       const today = new Date();
       document.getElementById("date").value = today.toISOString().split("T")[0];
-      document.getElementById("month-filter").value = today.toISOString().slice(0, 7);
+      document.getElementById("month-filter").value = today
+        .toISOString()
+        .slice(0, 7);
 
       loadMonthlySalary();
       updateUI();
@@ -275,9 +279,8 @@
       function saveMonthlySalary() {
         const month = document.getElementById("month-filter").value;
         const input = document.getElementById("monthly-salary");
-        // Nur Zahlen und Punkt/Komma extrahieren
         let cleanVal = input.value.replace(/[^0-9.,]/g, "").replace(",", ".");
-        
+
         if (month) {
           if (cleanVal !== "") {
             localStorage.setItem(`salary_${month}`, cleanVal);
@@ -299,7 +302,7 @@
         const input = document.getElementById("monthly-salary");
         let val = input.value.replace(/[^0-9.,]/g, "").replace(",", ".");
         if (val !== "" && !isNaN(parseFloat(val))) {
-          input.value = parseFloat(val).toFixed(2) + " €";
+          input.value = parseFloat(val).toFixed(2) + "€";
         } else {
           input.value = "";
         }
@@ -307,7 +310,6 @@
 
       function onSalaryFocus() {
         const input = document.getElementById("monthly-salary");
-        // Beim Bearbeiten nur die reine Zahl anzeigen
         let val = input.value.replace(/[^0-9.,]/g, "").replace(",", ".");
         input.value = val;
       }
@@ -369,6 +371,17 @@
         saveAndRefresh();
       }
 
+      function updateTransactionDate(id, newDate) {
+        if (!newDate) return;
+
+        saveState();
+        const transaction = transactions.find((t) => t.id === id);
+        if (transaction) {
+          transaction.date = newDate;
+          saveAndRefresh();
+        }
+      }
+
       // --- 6. UNDO / REDO ---
       function undo() {
         if (historyStack.length === 0) return;
@@ -411,18 +424,14 @@
               plasmaTotal += t.amount;
             }
 
-            // Datum auf TT.MM. formatieren
-            const dateParts = t.date.split("-"); // [YYYY, MM, DD]
-            const shortDateStr = `${dateParts[2]}.${dateParts[1]}.`;
-
             const row = document.createElement("tr");
             row.innerHTML = `
                 <td>
-                    <span class="short-date">${shortDateStr}</span>
+                    <input type="date" value="${t.date}" onchange="updateTransactionDate(${t.id}, this.value)">
                 </td>
                 <td>${t.desc}</td>
                 <td style="color: ${t.amount < 0 ? "#dc3545" : "#28a745"}; font-weight: bold;">
-                    ${t.amount.toFixed(2)} €
+                    ${t.amount.toFixed(2)}€
                 </td>
                 <td>
                     <button class="btn-delete" onclick="deleteTransaction(${t.id})">X</button>
@@ -432,11 +441,14 @@
           }
         });
 
-        totalSpan.innerText = monthBalance.toFixed(2);
+        // Summen-Farbe und Betrag zusammen formatieren (inklusive Euro-Zeichen)
+        totalSpan.innerText = monthBalance.toFixed(2) + "€";
         totalSpan.style.color = monthBalance < 0 ? "#dc3545" : "#28a745";
 
-        document.getElementById("cash-total").innerText = cashTotal.toFixed(2) + " €";
-        document.getElementById("plasma-total").innerText = plasmaTotal.toFixed(2) + " €";
+        document.getElementById("cash-total").innerText =
+          cashTotal.toFixed(2) + "€";
+        document.getElementById("plasma-total").innerText =
+          plasmaTotal.toFixed(2) + "€";
       }
     </script>
   </body>
