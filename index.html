@@ -186,11 +186,11 @@
         <div class="stats-grid">
           <div class="stat-box">
             <label>Cash Income</label>
-            <span id="cash-total">0.00 €</span>
+            <span id="cash-total">0.00€</span>
           </div>
           <div class="stat-box">
             <label>Plasma Donation</label>
-            <span id="plasma-total">0.00 €</span>
+            <span id="plasma-total">0.00€</span>
           </div>
         </div>
       </div>
@@ -379,7 +379,7 @@
                 </td>
                 <td>${t.desc}</td>
                 <td style="color: ${t.amount < 0 ? "#dc3545" : "#28a745"}; font-weight: bold;">
-                    ${t.amount.toFixed(2)} €
+                    ${t.amount.toFixed(2)}€
                 </td>
                 <td>
                     <button class="btn-delete" onclick="deleteTransaction(${t.id})">X</button>
@@ -393,9 +393,9 @@
         totalSpan.style.color = monthBalance < 0 ? "#dc3545" : "#28a745";
 
         document.getElementById("cash-total").innerText =
-          cashTotal.toFixed(2) + " €";
+          cashTotal.toFixed(2) + "€";
         document.getElementById("plasma-total").innerText =
-          plasmaTotal.toFixed(2) + " €";
+          plasmaTotal.toFixed(2) + "€";
       }
     </script>
   </body>
