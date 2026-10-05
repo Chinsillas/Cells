@@ -233,15 +233,15 @@
         </div>
       </div>
 
-      <!-- NEU: TOTAL EXPENSES & TOTAL INCOME CARD -->
+      <!-- TOTAL INCOME & TOTAL EXPENSES CARD (GETAUSCHT) -->
       <div class="card">
         <div class="stat-box" style="margin-bottom: 10px">
-          <label>Total Expenses</label>
-          <span id="total-expenses" class="expenses-val">0.00€</span>
-        </div>
-        <div class="stat-box">
           <label>Total Income</label>
           <span id="total-income" class="income-val">0.00€</span>
+        </div>
+        <div class="stat-box">
+          <label>Total Expenses</label>
+          <span id="total-expenses" class="expenses-val">0.00€</span>
         </div>
       </div>
 
@@ -315,7 +315,7 @@
           }
         }
         formatSalaryDisplay();
-        updateUI(); // UI neu berechnen, da Gehalt ins Total Income einfließt
+        updateUI();
       }
 
       function loadMonthlySalary() {
@@ -439,7 +439,7 @@
         let totalExpenses = 0;
         let totalIncome = 0;
 
-        // Eingetragenes Gehalt auslesen und zum Total Income addieren
+        // Gehalt auslesen und zum Total Income hinzufügen
         const savedSalary = localStorage.getItem(`salary_${selectedMonth}`);
         if (savedSalary && !isNaN(parseFloat(savedSalary))) {
           totalIncome += parseFloat(savedSalary);
@@ -451,7 +451,6 @@
           if (!selectedMonth || t.date.slice(0, 7) === selectedMonth) {
             monthBalance += t.amount;
 
-            // Ausgaben (negative Beträge) & Einnahmen (positive Beträge) aufsummieren
             if (t.amount < 0) {
               totalExpenses += Math.abs(t.amount);
             } else {
@@ -483,7 +482,6 @@
           }
         });
 
-        // Summen-Farbe und Betrag zusammen formatieren
         totalSpan.innerText = monthBalance.toFixed(2) + "€";
         totalSpan.style.color = monthBalance < 0 ? "#dc3545" : "#28a745";
 
@@ -492,7 +490,6 @@
         document.getElementById("plasma-total").innerText =
           plasmaTotal.toFixed(2) + "€";
 
-        // Neue Felder für Total Expenses & Total Income setzen
         document.getElementById("total-expenses").innerText =
           totalExpenses.toFixed(2) + "€";
         document.getElementById("total-income").innerText =
