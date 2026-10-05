@@ -76,7 +76,7 @@
         margin: auto;
       }
 
-      /* Grid für die Info-Boxen (Salary, Cash & Plasma) */
+      /* Grid für die Info-Boxen */
       .stats-grid {
         display: flex;
         gap: 10px;
@@ -107,7 +107,7 @@
         color: #28a745;
       }
 
-      /* Anpassung für das interaktive Gehaltsfeld im Stat-Box Look */
+      /* Anpassung für interaktive / strukturierte Gehalts- und Summenfelder */
       .salary-input {
         width: 100% !important;
         height: auto !important;
@@ -125,6 +125,19 @@
         outline: none;
         background: #f0f8f0 !important;
         border-radius: 4px;
+      }
+
+      /* Farbvarianten für Income & Expenses */
+      .expenses-val {
+        color: #dc3545 !important;
+        font-weight: bold;
+        font-size: 16px;
+      }
+
+      .income-val {
+        color: #28a745 !important;
+        font-weight: bold;
+        font-size: 16px;
       }
 
       /* --- 3. TABELLEN-STYLING --- */
@@ -220,6 +233,18 @@
         </div>
       </div>
 
+      <!-- NEU: TOTAL EXPENSES & TOTAL INCOME CARD -->
+      <div class="card">
+        <div class="stat-box" style="margin-bottom: 10px">
+          <label>Total Expenses</label>
+          <span id="total-expenses" class="expenses-val">0.00€</span>
+        </div>
+        <div class="stat-box">
+          <label>Total Income</label>
+          <span id="total-income" class="income-val">0.00€</span>
+        </div>
+      </div>
+
       <div class="card">
         <h3>Sum: <span id="total">0.00€</span></h3>
         <input type="text" id="desc" placeholder="Description" />
@@ -290,6 +315,7 @@
           }
         }
         formatSalaryDisplay();
+        updateUI(); // UI neu berechnen, da Gehalt ins Total Income einfließt
       }
 
       function loadMonthlySalary() {
@@ -410,12 +436,27 @@
         let monthBalance = 0;
         let cashTotal = 0;
         let plasmaTotal = 0;
+        let totalExpenses = 0;
+        let totalIncome = 0;
+
+        // Eingetragenes Gehalt auslesen und zum Total Income addieren
+        const savedSalary = localStorage.getItem(`salary_${selectedMonth}`);
+        if (savedSalary && !isNaN(parseFloat(savedSalary))) {
+          totalIncome += parseFloat(savedSalary);
+        }
 
         transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
 
         transactions.forEach((t) => {
           if (!selectedMonth || t.date.slice(0, 7) === selectedMonth) {
             monthBalance += t.amount;
+
+            // Ausgaben (negative Beträge) & Einnahmen (positive Beträge) aufsummieren
+            if (t.amount < 0) {
+              totalExpenses += Math.abs(t.amount);
+            } else {
+              totalIncome += t.amount;
+            }
 
             const descLower = t.desc.toLowerCase();
             if (descLower.includes("cash") && t.amount > 0) {
@@ -442,6 +483,7 @@
           }
         });
 
+        // Summen-Farbe und Betrag zusammen formatieren
         totalSpan.innerText = monthBalance.toFixed(2) + "€";
         totalSpan.style.color = monthBalance < 0 ? "#dc3545" : "#28a745";
 
@@ -449,6 +491,12 @@
           cashTotal.toFixed(2) + "€";
         document.getElementById("plasma-total").innerText =
           plasmaTotal.toFixed(2) + "€";
+
+        // Neue Felder für Total Expenses & Total Income setzen
+        document.getElementById("total-expenses").innerText =
+          totalExpenses.toFixed(2) + "€";
+        document.getElementById("total-income").innerText =
+          totalIncome.toFixed(2) + "€";
       }
     </script>
   </body>
