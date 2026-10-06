@@ -208,11 +208,10 @@
           padding: 6px 12px;
         "
       >
-        Dashboard
+        🢦 Dashboard
       </button>
 
       <div class="filter-selection">
-        <label for="month-filter"><strong>Select Month:</strong></label>
         <input type="month" id="month-filter" onchange="onMonthChange()" />
       </div>
 
@@ -244,7 +243,6 @@
           </div>
         </div>
 
-        <!-- Dünneres Feld für die Summe aus Cash Inflow + Plasma Donation -->
         <div class="stat-box-thin">
           <label>Cash & Plasma Total</label>
           <span id="cash-plasma-sum">0.00€</span>
@@ -253,16 +251,19 @@
 
       <!-- TOTAL INCOME & TOTAL EXPENSES CARD -->
       <div class="card">
-        <div class="stat-box" style="margin-bottom: 10px">
-          <label>Total Income</label>
-          <span id="total-income" class="income-val">0.00€</span>
-        </div>
-        <div class="stat-box">
-          <label>Total Expenses</label>
-          <span id="total-expenses" class="expenses-val">0.00€</span>
+        <!-- Flex-Container für nebeneinanderliegende Felder -->
+        <div class="stats-grid">
+          <div class="stat-box">
+            <label>Total Income</label>
+            <span id="total-income" class="income-val">0.00€</span>
+          </div>
+          <div class="stat-box">
+            <label>Total Expenses</label>
+            <span id="total-expenses" class="expenses-val">0.00€</span>
+          </div>
         </div>
 
-        <!-- Dünneres Feld für das Gesamtergebnis (Total Income - Total Expenses) -->
+        <!-- Dünneres Feld darunter -->
         <div class="stat-box-thin">
           <label>Net Total</label>
           <span id="net-total">0.00€</span>
