@@ -16,9 +16,9 @@
       }
 
       .card {
-        background: #f4f4f9;
+        background: #edede9;
         padding: 18px;
-        border-radius: 10px;
+        border-radius: 20px;
         margin-bottom: 20px;
       }
 
@@ -34,14 +34,14 @@
         height: 48px;
         padding: 0 12px;
         margin: 6px 0;
-        border: 1px solid #ccc;
-        border-radius: 8px;
+        border: 1px solid #d6ccc2;
+        border-radius: 18px;
         font-size: 16px; /* Verhindert Auto-Zoom auf Safari iOS */
-        background-color: #fff;
+        background-color: #ffffff;
       }
 
       button {
-        background-color: #28a745;
+        background-color: #40916c;
         color: white;
         border: none;
         font-weight: bold;
@@ -49,12 +49,12 @@
       }
 
       .btn-delete {
-        background-color: #dc3545 !important;
+        background-color: #c52233 !important;
         color: white !important;
         width: auto !important;
         height: auto !important;
         padding: 6px 12px !important;
-        font-size: 16px !important;
+        font-size: 12px !important;
       }
 
       /* Zentrieren von Text in Datums-Inputs */
@@ -86,8 +86,8 @@
       .stat-box {
         flex: 1;
         background: #ffffff;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
+        border: 1px solid #d6ccc2;
+        border-radius: 18px;
         padding: 10px;
         text-align: center;
       }
@@ -95,8 +95,8 @@
       /* Spezielles schmälere (dünnere) Info-Box */
       .stat-box-thin {
         background: #ffffff;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
+        border: 1px solid #d6ccc2;
+        border-radius: 18px;
         padding: 4px 8px;
         text-align: center;
         margin-top: 10px;
@@ -116,7 +116,7 @@
       .stat-box-thin span {
         font-size: 15px;
         font-weight: bold;
-        color: #28a745;
+        color: #32a74a;
       }
 
       /* Anpassung für interaktive / strukturierte Gehalts- und Summenfelder */
@@ -130,24 +130,24 @@
         text-align: center !important;
         font-size: 16px !important;
         font-weight: bold !important;
-        color: #28a745 !important;
+        color: #32a74a !important;
       }
 
       .salary-input:focus {
         outline: none;
-        background: #f0f8f0 !important;
-        border-radius: 4px;
+        background: #ffffff !important;
+        border-radius: 18px;
       }
 
       /* Farbvarianten für Income & Expenses */
       .expenses-val {
-        color: #dc3545 !important;
+        color: #c52233 !important;
         font-weight: bold;
         font-size: 16px;
       }
 
       .income-val {
-        color: #28a745 !important;
+        color: #32a74a !important;
         font-weight: bold;
         font-size: 16px;
       }
@@ -162,7 +162,7 @@
 
       th,
       td {
-        border: 1px solid #ddd;
+        border: 1px solid #d6ccc2;
         padding: 10px 8px;
         text-align: left;
       }
@@ -202,13 +202,13 @@
       <button
         onclick="showDashboard()"
         style="
-          background-color: #6c757d;
+          background-color: #40916c;
           width: auto;
           margin-bottom: 15px;
           padding: 6px 12px;
         "
       >
-        🢦 Dashboard
+        Dashboard
       </button>
 
       <div class="filter-selection">
@@ -234,17 +234,17 @@
         <!-- Cash Inflow & Plasma Donation nebeneinander -->
         <div class="stats-grid">
           <div class="stat-box">
-            <label>Cash Inflow</label>
+            <label>Cash</label>
             <span id="cash-total">0.00€</span>
           </div>
           <div class="stat-box">
-            <label>Plasma Donation</label>
+            <label>Plasma</label>
             <span id="plasma-total">0.00€</span>
           </div>
         </div>
 
         <div class="stat-box-thin">
-          <label>Cash & Plasma Total</label>
+          <label>Total</label>
           <span id="cash-plasma-sum">0.00€</span>
         </div>
       </div>
@@ -279,8 +279,30 @@
       </div>
 
       <div style="margin-bottom: 10px; display: flex; gap: 10px">
-        <button onclick="undo()" style="background-color: #6c757d">undo</button>
-        <button onclick="redo()" style="background-color: #6c757d">redo</button>
+        <button
+          onclick="undo()"
+          style="
+            background-color: #40916c;
+            height: 32px;
+            width: 48px;
+            padding: 2px 8px;
+            font-size: 14px;
+          "
+        >
+          ←
+        </button>
+        <button
+          onclick="redo()"
+          style="
+            background-color: #40916c;
+            height: 32px;
+            width: 48px;
+            padding: 2px 8px;
+            font-size: 14px;
+          "
+        >
+          →
+        </button>
       </div>
 
       <table>
@@ -496,7 +518,7 @@
                     <input type="date" value="${t.date}" onchange="updateTransactionDate(${t.id}, this.value)">
                 </td>
                 <td>${t.desc}</td>
-                <td style="color: ${t.amount < 0 ? "#dc3545" : "#28a745"}; font-weight: bold;">
+                <td style="color: ${t.amount < 0 ? "#c52233" : "#32a74a"}; font-weight: bold;">
                     ${t.amount.toFixed(2)}€
                 </td>
                 <td>
@@ -508,7 +530,7 @@
         });
 
         totalSpan.innerText = monthBalance.toFixed(2) + "€";
-        totalSpan.style.color = monthBalance < 0 ? "#dc3545" : "#28a745";
+        totalSpan.style.color = monthBalance < 0 ? "#c52233" : "#32a74a";
 
         document.getElementById("cash-total").innerText =
           cashTotal.toFixed(2) + "€";
@@ -529,7 +551,7 @@
         const netTotal = totalIncome - totalExpenses;
         const netTotalSpan = document.getElementById("net-total");
         netTotalSpan.innerText = netTotal.toFixed(2) + "€";
-        netTotalSpan.style.color = netTotal < 0 ? "#dc3545" : "#28a745";
+        netTotalSpan.style.color = netTotal < 0 ? "#c52233" : "#32a74a";
       }
     </script>
   </body>
