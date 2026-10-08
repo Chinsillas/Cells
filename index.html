@@ -13,13 +13,12 @@
         max-width: 500px;
         margin: auto;
         font-size: 16px;
-        background-color: #f6f6f6;
       }
 
       .card {
-        background: #edede9;
+        background: #f4f4f9;
         padding: 18px;
-        border-radius: 20px;
+        border-radius: 10px;
         margin-bottom: 20px;
       }
 
@@ -35,14 +34,14 @@
         height: 48px;
         padding: 0 12px;
         margin: 6px 0;
-        border: 1px solid #d6ccc2;
-        border-radius: 18px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
         font-size: 16px; /* Verhindert Auto-Zoom auf Safari iOS */
-        background-color: #ffffff;
+        background-color: #fff;
       }
 
       button {
-        background-color: #40916c;
+        background-color: #28a745;
         color: white;
         border: none;
         font-weight: bold;
@@ -50,12 +49,12 @@
       }
 
       .btn-delete {
-        background-color: #c52233 !important;
+        background-color: #dc3545 !important;
         color: white !important;
         width: auto !important;
         height: auto !important;
         padding: 6px 12px !important;
-        font-size: 12px !important;
+        font-size: 16px !important;
       }
 
       /* Zentrieren von Text in Datums-Inputs */
@@ -87,17 +86,21 @@
       .stat-box {
         flex: 1;
         background: #ffffff;
-        border: 1px solid #d6ccc2;
-        border-radius: 18px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
         padding: 10px;
         text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
       }
 
       /* Spezielles schmälere (dünnere) Info-Box */
       .stat-box-thin {
         background: #ffffff;
-        border: 1px solid #d6ccc2;
-        border-radius: 18px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
         padding: 4px 8px;
         text-align: center;
         margin-top: 10px;
@@ -117,10 +120,69 @@
       .stat-box-thin span {
         font-size: 15px;
         font-weight: bold;
-        color: #32a74a;
+        color: #28a745;
       }
 
-      /* Anpassung für interaktive / strukturierte Gehalts- und Summenfelder */
+      /* --- 3. DASHBOARD GRID LAYOUT (NATIVE SKIZZE) --- */
+      .dashboard-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .dashboard-row {
+        display: flex;
+        gap: 10px;
+      }
+
+      .dashboard-column {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex: 1;
+      }
+
+      .dashboard-box-large {
+        flex: 2;
+        min-height: 110px;
+      }
+
+      .dashboard-box-tall {
+        flex: 1;
+        min-height: 110px;
+      }
+
+      .dashboard-box-square {
+        flex: 1;
+        min-height: 120px;
+      }
+
+      .dashboard-box-small {
+        flex: 1;
+        min-height: 55px;
+      }
+
+      /* Interaktives Input-Feld für Beträge */
+      .dash-input {
+        width: 100% !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 2px 0 !important;
+        border: none !important;
+        background: transparent !important;
+        text-align: center !important;
+        font-size: 16px !important;
+        font-weight: bold !important;
+        color: #28a745 !important;
+      }
+
+      .dash-input:focus {
+        outline: none;
+        background: #f0f8f0 !important;
+        border-radius: 4px;
+      }
+
       .salary-input {
         width: 100% !important;
         height: auto !important;
@@ -131,29 +193,29 @@
         text-align: center !important;
         font-size: 16px !important;
         font-weight: bold !important;
-        color: #32a74a !important;
+        color: #28a745 !important;
       }
 
       .salary-input:focus {
         outline: none;
-        background: #ffffff !important;
-        border-radius: 18px;
+        background: #f0f8f0 !important;
+        border-radius: 4px;
       }
 
       /* Farbvarianten für Income & Expenses */
       .expenses-val {
-        color: #c52233 !important;
+        color: #dc3545 !important;
         font-weight: bold;
         font-size: 16px;
       }
 
       .income-val {
-        color: #32a74a !important;
+        color: #28a745 !important;
         font-weight: bold;
         font-size: 16px;
       }
 
-      /* --- 3. TABELLEN-STYLING --- */
+      /* --- 4. TABELLEN-STYLING --- */
       table {
         width: 100%;
         border-collapse: collapse;
@@ -163,7 +225,7 @@
 
       th,
       td {
-        border: 1px solid #d6ccc2;
+        border: 1px solid #ddd;
         padding: 10px 8px;
         text-align: left;
       }
@@ -189,6 +251,78 @@
       <h2>Welcome to Cells</h2>
       <p>Your personal finance tracker.</p>
 
+      <!-- NEUES DASHBOARD LAYOUT BASIERT AUF DER SKIZZE -->
+      <div class="dashboard-grid">
+        <!-- OBERER BEREICH -->
+        <div class="dashboard-row">
+          <!-- Total (Horizontal / Groß) -->
+          <div class="stat-box dashboard-box-large">
+            <label>Total</label>
+            <span
+              id="dash-total-val"
+              style="font-size: 20px; font-weight: bold; color: #28a745"
+              >0.00€</span
+            >
+          </div>
+
+          <!-- This Month (Vertikal / Hoch) -->
+          <div class="stat-box dashboard-box-tall">
+            <label>This Month</label>
+            <input
+              type="text"
+              id="dash-this-month"
+              class="dash-input"
+              placeholder="0.00€"
+              onfocus="onDashInputFocus('dash-this-month')"
+              onblur="onDashInputBlur('dash-this-month')"
+              onchange="saveDashboardData()"
+            />
+          </div>
+        </div>
+
+        <!-- UNTERER BEREICH -->
+        <div class="dashboard-row">
+          <!-- Total Savings (Quadratisch) -->
+          <div class="stat-box dashboard-box-square">
+            <label>Total Savings</label>
+            <span
+              id="dash-savings-val"
+              style="font-size: 18px; font-weight: bold; color: #28a745"
+              >0.00€</span
+            >
+          </div>
+
+          <!-- Rechts: Bank Account & Cash untereinander -->
+          <div class="dashboard-column">
+            <div class="stat-box dashboard-box-small">
+              <label>Bank Account</label>
+              <input
+                type="text"
+                id="dash-bank"
+                class="dash-input"
+                placeholder="0.00€"
+                onfocus="onDashInputFocus('dash-bank')"
+                onblur="onDashInputBlur('dash-bank')"
+                onchange="saveDashboardData()"
+              />
+            </div>
+
+            <div class="stat-box dashboard-box-small">
+              <label>Cash</label>
+              <input
+                type="text"
+                id="dash-cash"
+                class="dash-input"
+                placeholder="0.00€"
+                onfocus="onDashInputFocus('dash-cash')"
+                onblur="onDashInputBlur('dash-cash')"
+                onchange="saveDashboardData()"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="card" style="text-align: center; margin-top: 20px">
         <button onclick="showMainView()" style="padding: 12px; font-size: 16px">
           Monthly Overview
@@ -203,7 +337,7 @@
       <button
         onclick="showDashboard()"
         style="
-          background-color: #40916c;
+          background-color: #6c757d;
           width: auto;
           margin-bottom: 15px;
           padding: 6px 12px;
@@ -235,24 +369,24 @@
         <!-- Cash Inflow & Plasma Donation nebeneinander -->
         <div class="stats-grid">
           <div class="stat-box">
-            <label>Cash</label>
+            <label>Cash Inflow</label>
             <span id="cash-total">0.00€</span>
           </div>
           <div class="stat-box">
-            <label>Plasma</label>
+            <label>Plasma Donation</label>
             <span id="plasma-total">0.00€</span>
           </div>
         </div>
 
+        <!-- Dünneres Feld für die Summe aus Cash Inflow + Plasma Donation -->
         <div class="stat-box-thin">
-          <label>Total</label>
+          <label>Cash & Plasma Total</label>
           <span id="cash-plasma-sum">0.00€</span>
         </div>
       </div>
 
       <!-- TOTAL INCOME & TOTAL EXPENSES CARD -->
       <div class="card">
-        <!-- Flex-Container für nebeneinanderliegende Felder -->
         <div class="stats-grid">
           <div class="stat-box">
             <label>Total Income</label>
@@ -264,7 +398,7 @@
           </div>
         </div>
 
-        <!-- Dünneres Feld darunter -->
+        <!-- Dünneres Feld für das Gesamtergebnis (Total Income - Total Expenses) -->
         <div class="stat-box-thin">
           <label>Net Total</label>
           <span id="net-total">0.00€</span>
@@ -283,26 +417,24 @@
         <button
           onclick="undo()"
           style="
-            background-color: #40916c;
+            background-color: #6c757d;
             height: 32px;
-            width: 48px;
             padding: 2px 8px;
             font-size: 14px;
           "
         >
-          ←
+          undo
         </button>
         <button
           onclick="redo()"
           style="
-            background-color: #40916c;
+            background-color: #6c757d;
             height: 32px;
-            width: 48px;
             padding: 2px 8px;
             font-size: 14px;
           "
         >
-          →
+          redo
         </button>
       </div>
 
@@ -336,6 +468,7 @@
         .slice(0, 7);
 
       loadMonthlySalary();
+      loadDashboardData();
       updateUI();
 
       // --- 2. SPEICHER- & HILFSFUNKTIONEN ---
@@ -349,11 +482,88 @@
         updateUI();
       }
 
-      // --- 3. GEHALTS-LOGIK ---
+      // --- 3. DASHBOARD LOGIK ---
+      function saveDashboardData() {
+        const thisMonthVal = cleanNumber(
+          document.getElementById("dash-this-month").value,
+        );
+        const bankVal = cleanNumber(document.getElementById("dash-bank").value);
+        const cashVal = cleanNumber(document.getElementById("dash-cash").value);
+
+        localStorage.setItem("dash_this_month", thisMonthVal);
+        localStorage.setItem("dash_bank", bankVal);
+        localStorage.setItem("dash_cash", cashVal);
+
+        renderDashboard();
+      }
+
+      function loadDashboardData() {
+        document.getElementById("dash-this-month").value =
+          localStorage.getItem("dash_this_month") || "";
+        document.getElementById("dash-bank").value =
+          localStorage.getItem("dash_bank") || "";
+        document.getElementById("dash-cash").value =
+          localStorage.getItem("dash_cash") || "";
+
+        renderDashboard();
+      }
+
+      function renderDashboard() {
+        const thisMonthVal =
+          parseFloat(localStorage.getItem("dash_this_month")) || 0;
+        const bankVal = parseFloat(localStorage.getItem("dash_bank")) || 0;
+        const cashVal = parseFloat(localStorage.getItem("dash_cash")) || 0;
+
+        // Formatiere Eingabefelder
+        formatDashInput(
+          "dash-this-month",
+          localStorage.getItem("dash_this_month"),
+        );
+        formatDashInput("dash-bank", localStorage.getItem("dash_bank"));
+        formatDashInput("dash-cash", localStorage.getItem("dash_cash"));
+
+        // Berechnungen
+        const totalSavings = bankVal + cashVal;
+        const totalAssets = thisMonthVal + totalSavings;
+
+        document.getElementById("dash-savings-val").innerText =
+          totalSavings.toFixed(2) + "€";
+        document.getElementById("dash-total-val").innerText =
+          totalAssets.toFixed(2) + "€";
+
+        const totalSpan = document.getElementById("dash-total-val");
+        totalSpan.style.color = totalAssets < 0 ? "#dc3545" : "#28a745";
+      }
+
+      function cleanNumber(str) {
+        if (!str) return "";
+        return str.replace(/[^0-9.,-]/g, "").replace(",", ".");
+      }
+
+      function formatDashInput(elementId, valStr) {
+        const input = document.getElementById(elementId);
+        const clean = cleanNumber(valStr);
+        if (clean !== "" && !isNaN(parseFloat(clean))) {
+          input.value = parseFloat(clean).toFixed(2) + "€";
+        } else {
+          input.value = "";
+        }
+      }
+
+      function onDashInputFocus(elementId) {
+        const input = document.getElementById(elementId);
+        input.value = cleanNumber(input.value);
+      }
+
+      function onDashInputBlur(elementId) {
+        saveDashboardData();
+      }
+
+      // --- 4. GEHALTS-LOGIK ---
       function saveMonthlySalary() {
         const month = document.getElementById("month-filter").value;
         const input = document.getElementById("monthly-salary");
-        let cleanVal = input.value.replace(/[^0-9.,]/g, "").replace(",", ".");
+        let cleanVal = cleanNumber(input.value);
 
         if (month) {
           if (cleanVal !== "") {
@@ -375,7 +585,7 @@
 
       function formatSalaryDisplay() {
         const input = document.getElementById("monthly-salary");
-        let val = input.value.replace(/[^0-9.,]/g, "").replace(",", ".");
+        let val = cleanNumber(input.value);
         if (val !== "" && !isNaN(parseFloat(val))) {
           input.value = parseFloat(val).toFixed(2) + "€";
         } else {
@@ -385,8 +595,7 @@
 
       function onSalaryFocus() {
         const input = document.getElementById("monthly-salary");
-        let val = input.value.replace(/[^0-9.,]/g, "").replace(",", ".");
-        input.value = val;
+        input.value = cleanNumber(input.value);
       }
 
       function onSalaryBlur() {
@@ -398,7 +607,7 @@
         updateUI();
       }
 
-      // --- 4. NAVIGATION (ANSICHTEN UMSCHALTEN) ---
+      // --- 5. NAVIGATION (ANSICHTEN UMSCHALTEN) ---
       function showMainView() {
         document.getElementById("dashboard-view").style.display = "none";
         document.getElementById("main-view").style.display = "block";
@@ -407,9 +616,10 @@
       function showDashboard() {
         document.getElementById("main-view").style.display = "none";
         document.getElementById("dashboard-view").style.display = "block";
+        renderDashboard();
       }
 
-      // --- 5. TRANSAKTIONEN VERWALTEN ---
+      // --- 6. TRANSAKTIONEN VERWALTEN ---
       function addTransaction() {
         const descInput = document.getElementById("desc");
         const amountInput = document.getElementById("amount");
@@ -457,7 +667,7 @@
         }
       }
 
-      // --- 6. UNDO / REDO ---
+      // --- 7. UNDO / REDO ---
       function undo() {
         if (historyStack.length === 0) return;
 
@@ -474,7 +684,7 @@
         saveAndRefresh();
       }
 
-      // --- 7. UI AKTUALISIEREN & SUMMEN BERECHNEN ---
+      // --- 8. UI AKTUALISIEREN & SUMMEN BERECHNEN ---
       function updateUI() {
         const tbody = document.getElementById("transaction-list");
         const totalSpan = document.getElementById("total");
@@ -519,7 +729,7 @@
                     <input type="date" value="${t.date}" onchange="updateTransactionDate(${t.id}, this.value)">
                 </td>
                 <td>${t.desc}</td>
-                <td style="color: ${t.amount < 0 ? "#c52233" : "#32a74a"}; font-weight: bold;">
+                <td style="color: ${t.amount < 0 ? "#dc3545" : "#28a745"}; font-weight: bold;">
                     ${t.amount.toFixed(2)}€
                 </td>
                 <td>
@@ -531,7 +741,7 @@
         });
 
         totalSpan.innerText = monthBalance.toFixed(2) + "€";
-        totalSpan.style.color = monthBalance < 0 ? "#c52233" : "#32a74a";
+        totalSpan.style.color = monthBalance < 0 ? "#dc3545" : "#28a745";
 
         document.getElementById("cash-total").innerText =
           cashTotal.toFixed(2) + "€";
@@ -552,7 +762,7 @@
         const netTotal = totalIncome - totalExpenses;
         const netTotalSpan = document.getElementById("net-total");
         netTotalSpan.innerText = netTotal.toFixed(2) + "€";
-        netTotalSpan.style.color = netTotal < 0 ? "#c52233" : "#32a74a";
+        netTotalSpan.style.color = netTotal < 0 ? "#dc3545" : "#28a745";
       }
     </script>
   </body>
