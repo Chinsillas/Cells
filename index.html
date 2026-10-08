@@ -129,7 +129,6 @@
         display: flex;
         flex-direction: column;
         gap: 10px;
-        margin-top: 15px;
       }
 
       .dashboard-row {
@@ -253,72 +252,74 @@
       <p>Your personal finance tracker.</p>
 
       <!-- DASHBOARD LAYOUT GRID BASIERT AUF DER SKIZZE -->
-      <div class="dashboard-grid">
-        <!-- OBERER BEREICH -->
-        <div class="dashboard-row">
-          <!-- Total (Horizontal / Groß) -->
-          <div class="stat-box dashboard-box-large">
-            <label>Total</label>
-            <span
-              id="dash-total-val"
-              style="font-size: 20px; font-weight: bold; color: #32a74a"
-              >0.00€</span
-            >
-          </div>
+      <div class="card">
+        <div class="dashboard-grid">
+          <!-- OBERER BEREICH -->
+          <div class="dashboard-row">
+            <!-- Total (Horizontal / Groß) -->
+            <div class="stat-box dashboard-box-large">
+              <label>Total</label>
+              <span
+                id="dash-total-val"
+                style="font-size: 20px; font-weight: bold; color: #32a74a"
+                >0.00€</span
+              >
+            </div>
 
-          <!-- This Month (Vertikal / Hoch) -->
-          <div class="stat-box dashboard-box-tall">
-            <label>This Month</label>
-            <input
-              type="text"
-              id="dash-this-month"
-              class="dash-input"
-              placeholder="0.00€"
-              onfocus="onDashInputFocus('dash-this-month')"
-              onblur="onDashInputBlur('dash-this-month')"
-              onchange="saveDashboardData()"
-            />
-          </div>
-        </div>
-
-        <!-- UNTERER BEREICH -->
-        <div class="dashboard-row">
-          <!-- Total Savings (Quadratisch) -->
-          <div class="stat-box dashboard-box-square">
-            <label>Total Savings</label>
-            <span
-              id="dash-savings-val"
-              style="font-size: 18px; font-weight: bold; color: #32a74a"
-              >0.00€</span
-            >
-          </div>
-
-          <!-- Rechts: Bank Account & Cash untereinander -->
-          <div class="dashboard-column">
-            <div class="stat-box dashboard-box-small">
-              <label>Bank Account</label>
+            <!-- This Month (Vertikal / Hoch) -->
+            <div class="stat-box dashboard-box-tall">
+              <label>This Month</label>
               <input
                 type="text"
-                id="dash-bank"
+                id="dash-this-month"
                 class="dash-input"
                 placeholder="0.00€"
-                onfocus="onDashInputFocus('dash-bank')"
-                onblur="onDashInputBlur('dash-bank')"
+                onfocus="onDashInputFocus('dash-this-month')"
+                onblur="onDashInputBlur('dash-this-month')"
                 onchange="saveDashboardData()"
               />
             </div>
+          </div>
 
-            <div class="stat-box dashboard-box-small">
-              <label>Cash</label>
-              <input
-                type="text"
-                id="dash-cash"
-                class="dash-input"
-                placeholder="0.00€"
-                onfocus="onDashInputFocus('dash-cash')"
-                onblur="onDashInputBlur('dash-cash')"
-                onchange="saveDashboardData()"
-              />
+          <!-- UNTERER BEREICH -->
+          <div class="dashboard-row">
+            <!-- Total Savings (Quadratisch) -->
+            <div class="stat-box dashboard-box-square">
+              <label>Total Savings</label>
+              <span
+                id="dash-savings-val"
+                style="font-size: 18px; font-weight: bold; color: #32a74a"
+                >0.00€</span
+              >
+            </div>
+
+            <!-- Rechts: Bank Account & Cash untereinander -->
+            <div class="dashboard-column">
+              <div class="stat-box dashboard-box-small">
+                <label>Bank Account</label>
+                <input
+                  type="text"
+                  id="dash-bank"
+                  class="dash-input"
+                  placeholder="0.00€"
+                  onfocus="onDashInputFocus('dash-bank')"
+                  onblur="onDashInputBlur('dash-bank')"
+                  onchange="saveDashboardData()"
+                />
+              </div>
+
+              <div class="stat-box dashboard-box-small">
+                <label>Cash</label>
+                <input
+                  type="text"
+                  id="dash-cash"
+                  class="dash-input"
+                  placeholder="0.00€"
+                  onfocus="onDashInputFocus('dash-cash')"
+                  onblur="onDashInputBlur('dash-cash')"
+                  onchange="saveDashboardData()"
+                />
+              </div>
             </div>
           </div>
         </div>
