@@ -240,6 +240,22 @@
         display: inline-block !important;
         font-size: 15px !important;
       }
+
+      .custom-label {
+        text-align: center;
+        text-transform: uppercase;
+        color: #666;
+        font-weight: bold;
+        font-size: 12px;
+        margin-top: 0px;
+      }
+
+      .custom-label2 {
+        color: #666;
+        font-weight: bold;
+        font-size: 16px;
+        margin-top: 0px;
+      }
     </style>
   </head>
 
@@ -249,7 +265,6 @@
     <!-- ========================================== -->
     <div id="dashboard-view" style="display: block">
       <h2>Welcome to Cells</h2>
-      <p>Your personal finance tracker.</p>
 
       <!-- DASHBOARD LAYOUT GRID BASIERT AUF DER SKIZZE -->
       <div class="card">
@@ -354,9 +369,10 @@
 
       <!-- GEHALT & KATEGORIEN INFO CARD -->
       <div class="card">
+        <p class="custom-label">Earned this month</p>
         <!-- Längliches Gehalts-Feld oben -->
         <div class="stat-box" style="margin-bottom: 10px">
-          <label>Monthly Salary</label>
+          <label>Salary</label>
           <input
             type="text"
             id="monthly-salary"
@@ -406,7 +422,7 @@
       </div>
 
       <div class="card">
-        <h3>Sum: <span id="total">0.00€</span></h3>
+        <h3 class="custom-label2">Sum: <span id="total">0.00€</span></h3>
         <input type="text" id="desc" placeholder="Description" />
         <input type="number" id="amount" placeholder="Amount" />
         <input type="date" id="date" />
