@@ -155,12 +155,12 @@
 
       .dashboard-box-square {
         flex: 1;
-        min-height: 120px;
+        min-height: 150px;
       }
 
       .dashboard-box-small {
         flex: 1;
-        min-height: 55px;
+        min-height: 44px;
       }
 
       /* Interaktive Input-Felder im Dashboard */
@@ -269,7 +269,7 @@
       <!-- DASHBOARD LAYOUT GRID BASIERT AUF DER SKIZZE -->
       <div class="card">
         <div class="dashboard-grid">
-          <!-- OBERER BEREICH -->
+          <!-- OBERER BEREICH: TOTAL & THIS MONTH -->
           <div class="dashboard-row">
             <!-- Total (Horizontal / Groß) -->
             <div class="stat-box dashboard-box-large">
@@ -296,7 +296,52 @@
             </div>
           </div>
 
-          <!-- UNTERER BEREICH -->
+          <!-- NEU: 3 KLEINE FELDER NEBENEINANDER (CASH, PAYPAL, VINTED) -->
+          <div class="dashboard-row">
+            <div class="stat-box dashboard-box-small">
+              <label>Cash</label>
+              <input
+                type="text"
+                id="dash-top-cash"
+                class="dash-input"
+                placeholder="0.00€"
+                onfocus="onDashInputFocus('dash-top-cash')"
+                onblur="onDashInputBlur('dash-top-cash')"
+                onchange="saveDashboardData()"
+              />
+            </div>
+            <div class="stat-box dashboard-box-small">
+              <label>Paypal</label>
+              <input
+                type="text"
+                id="dash-paypal"
+                class="dash-input"
+                placeholder="0.00€"
+                onfocus="onDashInputFocus('dash-paypal')"
+                onblur="onDashInputBlur('dash-paypal')"
+                onchange="saveDashboardData()"
+              />
+            </div>
+            <div class="stat-box dashboard-box-small">
+              <label>Vinted</label>
+              <input
+                type="text"
+                id="dash-vinted"
+                class="dash-input"
+                placeholder="0.00€"
+                onfocus="onDashInputFocus('dash-vinted')"
+                onblur="onDashInputBlur('dash-vinted')"
+                onchange="saveDashboardData()"
+              />
+            </div>
+          </div>
+
+          <!-- NEU: ÜBERSCHRIFT SAVINGS FÜR OPTISCHE TRENNUNG -->
+          <p class="custom-label" style="margin-top: 10px; margin-bottom: 2px">
+            Savings
+          </p>
+
+          <!-- UNTERER BEREICH: SAVINGS -->
           <div class="dashboard-row">
             <!-- Total Savings (Quadratisch) -->
             <div class="stat-box dashboard-box-square">
@@ -308,7 +353,7 @@
               >
             </div>
 
-            <!-- Rechts: Bank Account & Cash untereinander -->
+            <!-- Rechts: Bank Account, Cash & Ichrak untereinander -->
             <div class="dashboard-column">
               <div class="stat-box dashboard-box-small">
                 <label>Bank Account</label>
@@ -332,6 +377,20 @@
                   placeholder="0.00€"
                   onfocus="onDashInputFocus('dash-cash')"
                   onblur="onDashInputBlur('dash-cash')"
+                  onchange="saveDashboardData()"
+                />
+              </div>
+
+              <!-- NEU: ICHRAK FELD (geht nicht in Total Savings ein) -->
+              <div class="stat-box dashboard-box-small">
+                <label>Ichrak</label>
+                <input
+                  type="text"
+                  id="dash-ichrak"
+                  class="dash-input"
+                  placeholder="0.00€"
+                  onfocus="onDashInputFocus('dash-ichrak')"
+                  onblur="onDashInputBlur('dash-ichrak')"
                   onchange="saveDashboardData()"
                 />
               </div>
@@ -505,12 +564,30 @@
         const thisMonthVal = cleanNumber(
           document.getElementById("dash-this-month").value,
         );
+        const topCashVal = cleanNumber(
+          document.getElementById("dash-top-cash").value,
+        );
+        const paypalVal = cleanNumber(
+          document.getElementById("dash-paypal").value,
+        );
+        const vintedVal = cleanNumber(
+          document.getElementById("dash-vinted").value,
+        );
+
         const bankVal = cleanNumber(document.getElementById("dash-bank").value);
         const cashVal = cleanNumber(document.getElementById("dash-cash").value);
+        const ichrakVal = cleanNumber(
+          document.getElementById("dash-ichrak").value,
+        );
 
         localStorage.setItem("dash_this_month", thisMonthVal);
+        localStorage.setItem("dash_top_cash", topCashVal);
+        localStorage.setItem("dash_paypal", paypalVal);
+        localStorage.setItem("dash_vinted", vintedVal);
+
         localStorage.setItem("dash_bank", bankVal);
         localStorage.setItem("dash_cash", cashVal);
+        localStorage.setItem("dash_ichrak", ichrakVal);
 
         renderDashboard();
       }
@@ -518,10 +595,19 @@
       function loadDashboardData() {
         document.getElementById("dash-this-month").value =
           localStorage.getItem("dash_this_month") || "";
+        document.getElementById("dash-top-cash").value =
+          localStorage.getItem("dash_top_cash") || "";
+        document.getElementById("dash-paypal").value =
+          localStorage.getItem("dash_paypal") || "";
+        document.getElementById("dash-vinted").value =
+          localStorage.getItem("dash_vinted") || "";
+
         document.getElementById("dash-bank").value =
           localStorage.getItem("dash_bank") || "";
         document.getElementById("dash-cash").value =
           localStorage.getItem("dash_cash") || "";
+        document.getElementById("dash-ichrak").value =
+          localStorage.getItem("dash_ichrak") || "";
 
         renderDashboard();
       }
@@ -529,18 +615,34 @@
       function renderDashboard() {
         const thisMonthVal =
           parseFloat(localStorage.getItem("dash_this_month")) || 0;
+        const topCashVal =
+          parseFloat(localStorage.getItem("dash_top_cash")) || 0;
+        const paypalVal = parseFloat(localStorage.getItem("dash_paypal")) || 0;
+        const vintedVal = parseFloat(localStorage.getItem("dash_vinted")) || 0;
+
         const bankVal = parseFloat(localStorage.getItem("dash_bank")) || 0;
         const cashVal = parseFloat(localStorage.getItem("dash_cash")) || 0;
 
+        // Formatiere Eingabefelder
         formatDashInput(
           "dash-this-month",
           localStorage.getItem("dash_this_month"),
         );
+        formatDashInput("dash-top-cash", localStorage.getItem("dash_top_cash"));
+        formatDashInput("dash-paypal", localStorage.getItem("dash_paypal"));
+        formatDashInput("dash-vinted", localStorage.getItem("dash_vinted"));
+
         formatDashInput("dash-bank", localStorage.getItem("dash_bank"));
         formatDashInput("dash-cash", localStorage.getItem("dash_cash"));
+        formatDashInput("dash-ichrak", localStorage.getItem("dash_ichrak"));
 
+        // Berechnungen:
+        // Total Savings = NUR Bank Account + Cash (Ichrak ausgeschlossen)
         const totalSavings = bankVal + cashVal;
-        const totalAssets = thisMonthVal + totalSavings;
+
+        // Gesamtvermögen Total = This Month + Cash + Paypal + Vinted + Total Savings
+        const totalAssets =
+          thisMonthVal + topCashVal + paypalVal + vintedVal + totalSavings;
 
         document.getElementById("dash-savings-val").innerText =
           totalSavings.toFixed(2) + "€";
