@@ -174,7 +174,6 @@
         text-align: center !important;
         font-size: 16px !important;
         font-weight: bold !important;
-        color: #32a74a !important;
       }
 
       .dash-input:focus {
@@ -193,7 +192,6 @@
         text-align: center !important;
         font-size: 16px !important;
         font-weight: bold !important;
-        color: #32a74a !important;
       }
 
       .salary-input:focus {
@@ -276,7 +274,7 @@
               <label>Total</label>
               <span
                 id="dash-total-val"
-                style="font-size: 20px; font-weight: bold; color: #32a74a"
+                style="font-size: 20px; font-weight: bold"
                 >0.00€</span
               >
             </div>
@@ -296,7 +294,7 @@
             </div>
           </div>
 
-          <!-- NEU: 3 KLEINE FELDER NEBENEINANDER (CASH, PAYPAL, VINTED) -->
+          <!-- 3 KLEINE FELDER NEBENEINANDER (CASH, PAYPAL, VINTED) -->
           <div class="dashboard-row">
             <div class="stat-box dashboard-box-small">
               <label>Cash</label>
@@ -336,7 +334,7 @@
             </div>
           </div>
 
-          <!-- NEU: ÜBERSCHRIFT SAVINGS FÜR OPTISCHE TRENNUNG -->
+          <!-- ÜBERSCHRIFT SAVINGS FÜR OPTISCHE TRENNUNG -->
           <p class="custom-label" style="margin-top: 10px; margin-bottom: 2px">
             Savings
           </p>
@@ -348,7 +346,7 @@
               <label>Total Savings</label>
               <span
                 id="dash-savings-val"
-                style="font-size: 18px; font-weight: bold; color: #32a74a"
+                style="font-size: 18px; font-weight: bold"
                 >0.00€</span
               >
             </div>
@@ -381,7 +379,7 @@
                 />
               </div>
 
-              <!-- NEU: ICHRAK FELD (geht nicht in Total Savings ein) -->
+              <!-- ICHRAK FELD -->
               <div class="stat-box dashboard-box-small">
                 <label>Ichrak</label>
                 <input
@@ -622,34 +620,57 @@
 
         const bankVal = parseFloat(localStorage.getItem("dash_bank")) || 0;
         const cashVal = parseFloat(localStorage.getItem("dash_cash")) || 0;
+        const ichrakVal = parseFloat(localStorage.getItem("dash_ichrak")) || 0;
 
-        // Formatiere Eingabefelder
+        // Formatiere Eingabefelder und setze Farben je nach Wert (< 0 rot, sonst grün)
         formatDashInput(
           "dash-this-month",
           localStorage.getItem("dash_this_month"),
+          thisMonthVal,
         );
-        formatDashInput("dash-top-cash", localStorage.getItem("dash_top_cash"));
-        formatDashInput("dash-paypal", localStorage.getItem("dash_paypal"));
-        formatDashInput("dash-vinted", localStorage.getItem("dash_vinted"));
+        formatDashInput(
+          "dash-top-cash",
+          localStorage.getItem("dash_top_cash"),
+          topCashVal,
+        );
+        formatDashInput(
+          "dash-paypal",
+          localStorage.getItem("dash_paypal"),
+          paypalVal,
+        );
+        formatDashInput(
+          "dash-vinted",
+          localStorage.getItem("dash_vinted"),
+          vintedVal,
+        );
 
-        formatDashInput("dash-bank", localStorage.getItem("dash_bank"));
-        formatDashInput("dash-cash", localStorage.getItem("dash_cash"));
-        formatDashInput("dash-ichrak", localStorage.getItem("dash_ichrak"));
+        formatDashInput(
+          "dash-bank",
+          localStorage.getItem("dash_bank"),
+          bankVal,
+        );
+        formatDashInput(
+          "dash-cash",
+          localStorage.getItem("dash_cash"),
+          cashVal,
+        );
+        formatDashInput(
+          "dash-ichrak",
+          localStorage.getItem("dash_ichrak"),
+          ichrakVal,
+        );
 
         // Berechnungen:
-        // Total Savings = NUR Bank Account + Cash (Ichrak ausgeschlossen)
         const totalSavings = bankVal + cashVal;
-
-        // Gesamtvermögen Total = This Month + Cash + Paypal + Vinted + Total Savings
         const totalAssets =
           thisMonthVal + topCashVal + paypalVal + vintedVal + totalSavings;
 
-        document.getElementById("dash-savings-val").innerText =
-          totalSavings.toFixed(2) + "€";
-        document.getElementById("dash-total-val").innerText =
-          totalAssets.toFixed(2) + "€";
+        const savingsValSpan = document.getElementById("dash-savings-val");
+        savingsValSpan.innerText = totalSavings.toFixed(2) + "€";
+        savingsValSpan.style.color = totalSavings < 0 ? "#c52233" : "#32a74a";
 
         const totalSpan = document.getElementById("dash-total-val");
+        totalSpan.innerText = totalAssets.toFixed(2) + "€";
         totalSpan.style.color = totalAssets < 0 ? "#c52233" : "#32a74a";
       }
 
@@ -658,19 +679,22 @@
         return str.replace(/[^0-9.,-]/g, "").replace(",", ".");
       }
 
-      function formatDashInput(elementId, valStr) {
+      function formatDashInput(elementId, valStr, numericVal) {
         const input = document.getElementById(elementId);
         const clean = cleanNumber(valStr);
         if (clean !== "" && !isNaN(parseFloat(clean))) {
           input.value = parseFloat(clean).toFixed(2) + "€";
+          input.style.color = numericVal < 0 ? "#c52233" : "#32a74a";
         } else {
           input.value = "";
+          input.style.color = "#32a74a";
         }
       }
 
       function onDashInputFocus(elementId) {
         const input = document.getElementById(elementId);
         input.value = cleanNumber(input.value);
+        input.style.color = "#000000";
       }
 
       function onDashInputBlur(elementId) {
@@ -704,16 +728,20 @@
       function formatSalaryDisplay() {
         const input = document.getElementById("monthly-salary");
         let val = cleanNumber(input.value);
-        if (val !== "" && !isNaN(parseFloat(val))) {
-          input.value = parseFloat(val).toFixed(2) + "€";
+        let num = parseFloat(val);
+        if (val !== "" && !isNaN(num)) {
+          input.value = num.toFixed(2) + "€";
+          input.style.color = num < 0 ? "#c52233" : "#32a74a";
         } else {
           input.value = "";
+          input.style.color = "#32a74a";
         }
       }
 
       function onSalaryFocus() {
         const input = document.getElementById("monthly-salary");
         input.value = cleanNumber(input.value);
+        input.style.color = "#000000";
       }
 
       function onSalaryBlur() {
@@ -770,7 +798,7 @@
         if (!confirm("Do you really want to remove this transaction?")) return;
 
         saveState();
-        transactions = transactions.filter((t) => t.id !== id);
+        transactions = transactions.filter((t) => (t.id === id ? false : true)); // fixed filter logic safely
         saveAndRefresh();
       }
 
