@@ -351,6 +351,22 @@
             </div>
           </div>
 
+          <!-- NEUES FELD: CASH SAVINGS (UNTER TOTAL SAVINGS) -->
+          <div class="dashboard-row">
+            <div class="stat-box dashboard-box-small" style="flex: 1">
+              <label>Cash Savings</label>
+              <input
+                type="text"
+                id="dash-cash-savings"
+                class="dash-input"
+                placeholder="0.00€"
+                onfocus="onDashInputFocus('dash-cash-savings')"
+                onblur="onDashInputBlur('dash-cash-savings')"
+                onchange="saveDashboardData()"
+              />
+            </div>
+          </div>
+
           <!-- DARUNTER DIE DREI SPARZIELE NEBENEINANDER -->
           <div class="dashboard-row">
             <!-- Travels -->
@@ -657,6 +673,9 @@
           document.getElementById("dash-paypal").value,
         );
 
+        const cashSavingsVal = cleanNumber(
+          document.getElementById("dash-cash-savings").value,
+        );
         const travelsVal = cleanNumber(
           document.getElementById("dash-travels").value,
         );
@@ -679,6 +698,7 @@
         localStorage.setItem("dash_top_cash", topCashVal);
         localStorage.setItem("dash_paypal", paypalVal);
 
+        localStorage.setItem("dash_cash_savings", cashSavingsVal);
         localStorage.setItem("dash_travels", travelsVal);
         localStorage.setItem("dash_studies", studiesVal);
         localStorage.setItem("dash_car", carVal);
@@ -698,6 +718,8 @@
         document.getElementById("dash-paypal").value =
           localStorage.getItem("dash_paypal") || "";
 
+        document.getElementById("dash-cash-savings").value =
+          localStorage.getItem("dash_cash_savings") || "";
         document.getElementById("dash-travels").value =
           localStorage.getItem("dash_travels") || "";
         document.getElementById("dash-studies").value =
@@ -722,6 +744,8 @@
           parseFloat(localStorage.getItem("dash_top_cash")) || 0;
         const paypalVal = parseFloat(localStorage.getItem("dash_paypal")) || 0;
 
+        const cashSavingsVal =
+          parseFloat(localStorage.getItem("dash_cash_savings")) || 0;
         const travelsVal =
           parseFloat(localStorage.getItem("dash_travels")) || 0;
         const studiesVal =
@@ -750,6 +774,11 @@
           paypalVal,
         );
 
+        formatDashInput(
+          "dash-cash-savings",
+          localStorage.getItem("dash_cash_savings"),
+          cashSavingsVal,
+        );
         formatDashInput(
           "dash-travels",
           localStorage.getItem("dash_travels"),
@@ -791,7 +820,15 @@
         cInput.style.color =
           carVal > 0 ? "#32a74a" : carVal < 0 ? "#c52233" : "#666666";
 
-        // Berechnungen: Total Savings = Travels + Studies + Car
+        const csInput = document.getElementById("dash-cash-savings");
+        csInput.style.color =
+          cashSavingsVal > 0
+            ? "#32a74a"
+            : cashSavingsVal < 0
+              ? "#c52233"
+              : "#666666";
+
+        // Berechnungen: Total Savings = Travels + Studies + Car (Cash Savings bewusst ausgeschlossen)
         const totalSavings = travelsVal + studiesVal + carVal;
         const totalAssets =
           thisMonthVal + topCashVal + paypalVal + totalSavings;
@@ -815,7 +852,14 @@
         const clean = cleanNumber(valStr);
         if (clean !== "" && !isNaN(parseFloat(clean))) {
           input.value = parseFloat(clean).toFixed(2) + "€";
-          input.style.color = numericVal < 0 ? "#c52233" : "#32a74a";
+          if (
+            elementId !== "dash-travels" &&
+            elementId !== "dash-studies" &&
+            elementId !== "dash-car" &&
+            elementId !== "dash-cash-savings"
+          ) {
+            input.style.color = numericVal < 0 ? "#c52233" : "#32a74a";
+          }
         } else {
           input.value = "";
           input.style.color = "#32a74a";
