@@ -341,7 +341,7 @@
 
           <!-- UNTERER BEREICH: TOTAL SAVINGS (HORIZONTAL LANG OBEN) -->
           <div class="dashboard-row">
-            <div class="stat-box" style="flex: 1; min-height: 60px">
+            <div class="stat-box" style="flex: 1; min-height: 60px;">
               <label>Total Savings</label>
               <span
                 id="dash-savings-val"
@@ -351,9 +351,25 @@
             </div>
           </div>
 
-          <!-- NEUES FELD: CASH SAVINGS (UNTER TOTAL SAVINGS) -->
+          <!-- BANK SAVINGS (ÜBER CASH SAVINGS) -->
           <div class="dashboard-row">
-            <div class="stat-box dashboard-box-small" style="flex: 1">
+            <div class="stat-box dashboard-box-small" style="flex: 1;">
+              <label>Bank Savings</label>
+              <input
+                type="text"
+                id="dash-bank-savings"
+                class="dash-input"
+                placeholder="0.00€"
+                onfocus="onDashInputFocus('dash-bank-savings')"
+                onblur="onDashInputBlur('dash-bank-savings')"
+                onchange="saveDashboardData()"
+              />
+            </div>
+          </div>
+
+          <!-- CASH SAVINGS (UNTER BANK SAVINGS) -->
+          <div class="dashboard-row">
+            <div class="stat-box dashboard-box-small" style="flex: 1;">
               <label>Cash Savings</label>
               <input
                 type="text"
@@ -381,29 +397,12 @@
                 onblur="onDashInputBlur('dash-travels')"
                 onchange="saveDashboardData()"
               />
-              <div
-                style="
-                  font-size: 12px;
-                  margin-top: 2px;
-                  width: 100%;
-                  display: flex;
-                  justify-content: center;
-                "
-              >
+              <div style="font-size: 12px; margin-top: 2px; width: 100%; display: flex; justify-content: center;">
                 <input
                   type="text"
                   id="goal-travels"
                   class="dash-input"
-                  style="
-                    font-size: 12px !important;
-                    color: #666 !important;
-                    width: 80px !important;
-                    height: 22px !important;
-                    padding: 0 !important;
-                    margin: 0 !important;
-                    background: transparent !important;
-                    text-align: center !important;
-                  "
+                  style="font-size: 12px !important; color: #666 !important; width: 80px !important; height: 22px !important; padding: 0 !important; margin: 0 !important; background: transparent !important; text-align: center !important;"
                   placeholder="0.00€"
                   onfocus="onDashInputFocus('goal-travels')"
                   onblur="onDashInputBlur('goal-travels')"
@@ -424,29 +423,12 @@
                 onblur="onDashInputBlur('dash-studies')"
                 onchange="saveDashboardData()"
               />
-              <div
-                style="
-                  font-size: 12px;
-                  margin-top: 2px;
-                  width: 100%;
-                  display: flex;
-                  justify-content: center;
-                "
-              >
+              <div style="font-size: 12px; margin-top: 2px; width: 100%; display: flex; justify-content: center;">
                 <input
                   type="text"
                   id="goal-studies"
                   class="dash-input"
-                  style="
-                    font-size: 12px !important;
-                    color: #666 !important;
-                    width: 80px !important;
-                    height: 22px !important;
-                    padding: 0 !important;
-                    margin: 0 !important;
-                    background: transparent !important;
-                    text-align: center !important;
-                  "
+                  style="font-size: 12px !important; color: #666 !important; width: 80px !important; height: 22px !important; padding: 0 !important; margin: 0 !important; background: transparent !important; text-align: center !important;"
                   placeholder="0.00€"
                   onfocus="onDashInputFocus('goal-studies')"
                   onblur="onDashInputBlur('goal-studies')"
@@ -467,29 +449,12 @@
                 onblur="onDashInputBlur('dash-car')"
                 onchange="saveDashboardData()"
               />
-              <div
-                style="
-                  font-size: 12px;
-                  margin-top: 2px;
-                  width: 100%;
-                  display: flex;
-                  justify-content: center;
-                "
-              >
+              <div style="font-size: 12px; margin-top: 2px; width: 100%; display: flex; justify-content: center;">
                 <input
                   type="text"
                   id="goal-car"
                   class="dash-input"
-                  style="
-                    font-size: 12px !important;
-                    color: #666 !important;
-                    width: 80px !important;
-                    height: 22px !important;
-                    padding: 0 !important;
-                    margin: 0 !important;
-                    background: transparent !important;
-                    text-align: center !important;
-                  "
+                  style="font-size: 12px !important; color: #666 !important; width: 80px !important; height: 22px !important; padding: 0 !important; margin: 0 !important; background: transparent !important; text-align: center !important;"
                   placeholder="0.00€"
                   onfocus="onDashInputFocus('goal-car')"
                   onblur="onDashInputBlur('goal-car')"
@@ -663,41 +628,25 @@
 
       // --- 3. DASHBOARD LOGIK ---
       function saveDashboardData() {
-        const thisMonthVal = cleanNumber(
-          document.getElementById("dash-this-month").value,
-        );
-        const topCashVal = cleanNumber(
-          document.getElementById("dash-top-cash").value,
-        );
-        const paypalVal = cleanNumber(
-          document.getElementById("dash-paypal").value,
-        );
+        const thisMonthVal = cleanNumber(document.getElementById("dash-this-month").value);
+        const topCashVal = cleanNumber(document.getElementById("dash-top-cash").value);
+        const paypalVal = cleanNumber(document.getElementById("dash-paypal").value);
 
-        const cashSavingsVal = cleanNumber(
-          document.getElementById("dash-cash-savings").value,
-        );
-        const travelsVal = cleanNumber(
-          document.getElementById("dash-travels").value,
-        );
-        const studiesVal = cleanNumber(
-          document.getElementById("dash-studies").value,
-        );
+        const bankSavingsVal = cleanNumber(document.getElementById("dash-bank-savings").value);
+        const cashSavingsVal = cleanNumber(document.getElementById("dash-cash-savings").value);
+        const travelsVal = cleanNumber(document.getElementById("dash-travels").value);
+        const studiesVal = cleanNumber(document.getElementById("dash-studies").value);
         const carVal = cleanNumber(document.getElementById("dash-car").value);
 
-        const goalTravelsVal = cleanNumber(
-          document.getElementById("goal-travels").value,
-        );
-        const goalStudiesVal = cleanNumber(
-          document.getElementById("goal-studies").value,
-        );
-        const goalCarVal = cleanNumber(
-          document.getElementById("goal-car").value,
-        );
+        const goalTravelsVal = cleanNumber(document.getElementById("goal-travels").value);
+        const goalStudiesVal = cleanNumber(document.getElementById("goal-studies").value);
+        const goalCarVal = cleanNumber(document.getElementById("goal-car").value);
 
         localStorage.setItem("dash_this_month", thisMonthVal);
         localStorage.setItem("dash_top_cash", topCashVal);
         localStorage.setItem("dash_paypal", paypalVal);
 
+        localStorage.setItem("dash_bank_savings", bankSavingsVal);
         localStorage.setItem("dash_cash_savings", cashSavingsVal);
         localStorage.setItem("dash_travels", travelsVal);
         localStorage.setItem("dash_studies", studiesVal);
@@ -711,127 +660,71 @@
       }
 
       function loadDashboardData() {
-        document.getElementById("dash-this-month").value =
-          localStorage.getItem("dash_this_month") || "";
-        document.getElementById("dash-top-cash").value =
-          localStorage.getItem("dash_top_cash") || "";
-        document.getElementById("dash-paypal").value =
-          localStorage.getItem("dash_paypal") || "";
+        document.getElementById("dash-this-month").value = localStorage.getItem("dash_this_month") || "";
+        document.getElementById("dash-top-cash").value = localStorage.getItem("dash_top_cash") || "";
+        document.getElementById("dash-paypal").value = localStorage.getItem("dash_paypal") || "";
 
-        document.getElementById("dash-cash-savings").value =
-          localStorage.getItem("dash_cash_savings") || "";
-        document.getElementById("dash-travels").value =
-          localStorage.getItem("dash_travels") || "";
-        document.getElementById("dash-studies").value =
-          localStorage.getItem("dash_studies") || "";
-        document.getElementById("dash-car").value =
-          localStorage.getItem("dash_car") || "";
+        document.getElementById("dash-bank-savings").value = localStorage.getItem("dash_bank_savings") || "";
+        document.getElementById("dash-cash-savings").value = localStorage.getItem("dash_cash_savings") || "";
+        document.getElementById("dash-travels").value = localStorage.getItem("dash_travels") || "";
+        document.getElementById("dash-studies").value = localStorage.getItem("dash_studies") || "";
+        document.getElementById("dash-car").value = localStorage.getItem("dash_car") || "";
 
-        document.getElementById("goal-travels").value =
-          localStorage.getItem("goal_travels") || "";
-        document.getElementById("goal-studies").value =
-          localStorage.getItem("goal_studies") || "";
-        document.getElementById("goal-car").value =
-          localStorage.getItem("goal_car") || "";
+        document.getElementById("goal-travels").value = localStorage.getItem("goal_travels") || "";
+        document.getElementById("goal-studies").value = localStorage.getItem("goal_studies") || "";
+        document.getElementById("goal-car").value = localStorage.getItem("goal_car") || "";
 
         renderDashboard();
       }
 
       function renderDashboard() {
-        const thisMonthVal =
-          parseFloat(localStorage.getItem("dash_this_month")) || 0;
-        const topCashVal =
-          parseFloat(localStorage.getItem("dash_top_cash")) || 0;
+        const thisMonthVal = parseFloat(localStorage.getItem("dash_this_month")) || 0;
+        const topCashVal = parseFloat(localStorage.getItem("dash_top_cash")) || 0;
         const paypalVal = parseFloat(localStorage.getItem("dash_paypal")) || 0;
 
-        const cashSavingsVal =
-          parseFloat(localStorage.getItem("dash_cash_savings")) || 0;
-        const travelsVal =
-          parseFloat(localStorage.getItem("dash_travels")) || 0;
-        const studiesVal =
-          parseFloat(localStorage.getItem("dash_studies")) || 0;
+        const bankSavingsVal = parseFloat(localStorage.getItem("dash_bank_savings")) || 0;
+        const cashSavingsVal = parseFloat(localStorage.getItem("dash_cash_savings")) || 0;
+        const travelsVal = parseFloat(localStorage.getItem("dash_travels")) || 0;
+        const studiesVal = parseFloat(localStorage.getItem("dash_studies")) || 0;
         const carVal = parseFloat(localStorage.getItem("dash_car")) || 0;
 
-        const goalTravelsVal =
-          parseFloat(localStorage.getItem("goal_travels")) || 0;
-        const goalStudiesVal =
-          parseFloat(localStorage.getItem("goal_studies")) || 0;
+        const goalTravelsVal = parseFloat(localStorage.getItem("goal_travels")) || 0;
+        const goalStudiesVal = parseFloat(localStorage.getItem("goal_studies")) || 0;
         const goalCarVal = parseFloat(localStorage.getItem("goal_car")) || 0;
 
-        formatDashInput(
-          "dash-this-month",
-          localStorage.getItem("dash_this_month"),
-          thisMonthVal,
-        );
-        formatDashInput(
-          "dash-top-cash",
-          localStorage.getItem("dash_top_cash"),
-          topCashVal,
-        );
-        formatDashInput(
-          "dash-paypal",
-          localStorage.getItem("dash_paypal"),
-          paypalVal,
-        );
+        formatDashInput("dash-this-month", localStorage.getItem("dash_this_month"), thisMonthVal);
+        formatDashInput("dash-top-cash", localStorage.getItem("dash_top_cash"), topCashVal);
+        formatDashInput("dash-paypal", localStorage.getItem("dash_paypal"), paypalVal);
 
-        formatDashInput(
-          "dash-cash-savings",
-          localStorage.getItem("dash_cash_savings"),
-          cashSavingsVal,
-        );
-        formatDashInput(
-          "dash-travels",
-          localStorage.getItem("dash_travels"),
-          travelsVal,
-        );
-        formatDashInput(
-          "dash-studies",
-          localStorage.getItem("dash_studies"),
-          studiesVal,
-        );
+        formatDashInput("dash-bank-savings", localStorage.getItem("dash_bank_savings"), bankSavingsVal);
+        formatDashInput("dash-cash-savings", localStorage.getItem("dash_cash_savings"), cashSavingsVal);
+        formatDashInput("dash-travels", localStorage.getItem("dash_travels"), travelsVal);
+        formatDashInput("dash-studies", localStorage.getItem("dash_studies"), studiesVal);
         formatDashInput("dash-car", localStorage.getItem("dash_car"), carVal);
 
-        formatGoalInput(
-          "goal-travels",
-          localStorage.getItem("goal_travels"),
-          goalTravelsVal,
-        );
-        formatGoalInput(
-          "goal-studies",
-          localStorage.getItem("goal_studies"),
-          goalStudiesVal,
-        );
-        formatGoalInput(
-          "goal-car",
-          localStorage.getItem("goal_car"),
-          goalCarVal,
-        );
+        formatGoalInput("goal-travels", localStorage.getItem("goal_travels"), goalTravelsVal);
+        formatGoalInput("goal-studies", localStorage.getItem("goal_studies"), goalStudiesVal);
+        formatGoalInput("goal-car", localStorage.getItem("goal_car"), goalCarVal);
 
-        // Farbanpassung für die Sparziel-Beträge (Grün wenn > 0, Grau wenn == 0, Rot wenn < 0)
+        // Farbanpassung für die Beträge (Grün wenn > 0, Grau wenn == 0, Rot wenn < 0)
         const tInput = document.getElementById("dash-travels");
-        tInput.style.color =
-          travelsVal > 0 ? "#32a74a" : travelsVal < 0 ? "#c52233" : "#666666";
+        tInput.style.color = travelsVal > 0 ? "#32a74a" : (travelsVal < 0 ? "#c52233" : "#666666");
 
         const sInput = document.getElementById("dash-studies");
-        sInput.style.color =
-          studiesVal > 0 ? "#32a74a" : studiesVal < 0 ? "#c52233" : "#666666";
+        sInput.style.color = studiesVal > 0 ? "#32a74a" : (studiesVal < 0 ? "#c52233" : "#666666");
 
         const cInput = document.getElementById("dash-car");
-        cInput.style.color =
-          carVal > 0 ? "#32a74a" : carVal < 0 ? "#c52233" : "#666666";
+        cInput.style.color = carVal > 0 ? "#32a74a" : (carVal < 0 ? "#c52233" : "#666666");
+
+        const bsInput = document.getElementById("dash-bank-savings");
+        bsInput.style.color = bankSavingsVal > 0 ? "#32a74a" : (bankSavingsVal < 0 ? "#c52233" : "#666666");
 
         const csInput = document.getElementById("dash-cash-savings");
-        csInput.style.color =
-          cashSavingsVal > 0
-            ? "#32a74a"
-            : cashSavingsVal < 0
-              ? "#c52233"
-              : "#666666";
+        csInput.style.color = cashSavingsVal > 0 ? "#32a74a" : (cashSavingsVal < 0 ? "#c52233" : "#666666");
 
-        // Berechnungen: Total Savings = Travels + Studies + Car (Cash Savings bewusst ausgeschlossen)
-        const totalSavings = travelsVal + studiesVal + carVal;
-        const totalAssets =
-          thisMonthVal + topCashVal + paypalVal + totalSavings;
+        // Berechnungen: Total Savings = Bank Savings + Cash Savings
+        const totalSavings = bankSavingsVal + cashSavingsVal;
+        const totalAssets = thisMonthVal + topCashVal + paypalVal + totalSavings;
 
         const savingsValSpan = document.getElementById("dash-savings-val");
         savingsValSpan.innerText = totalSavings.toFixed(2) + "€";
@@ -856,6 +749,7 @@
             elementId !== "dash-travels" &&
             elementId !== "dash-studies" &&
             elementId !== "dash-car" &&
+            elementId !== "dash-bank-savings" &&
             elementId !== "dash-cash-savings"
           ) {
             input.style.color = numericVal < 0 ? "#c52233" : "#32a74a";
@@ -1067,8 +961,7 @@
             if (descLower.includes("cash") && t.amount > 0) {
               cashTotal += t.amount;
             }
-            const secondaryKeyword =
-              selectedMonth >= "2026-11" ? "tips" : "plasma";
+            const secondaryKeyword = selectedMonth >= "2026-11" ? "tips" : "plasma";
             if (descLower.includes(secondaryKeyword) && t.amount > 0) {
               secondaryTotal += t.amount;
             }
