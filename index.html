@@ -151,9 +151,16 @@
         min-height: 44px;
       }
 
+      /* Spezielle Spalte für Sparziel + Progress-Box */
+      .savings-goal-col {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
       /* Spezielle Boxen für Sparziele */
       .savings-goal-box {
-        flex: 1;
         background: #ffffff;
         border: 1px solid #d6ccc2;
         border-radius: 18px;
@@ -173,6 +180,78 @@
         text-transform: uppercase;
         font-weight: bold;
         margin-bottom: 2px;
+      }
+
+      /* Weiße Box für Ladebalken & Prozentzahl */
+      .progress-box {
+        background: #ffffff;
+        border: 1px solid #d6ccc2;
+        border-radius: 18px;
+        padding: 8px 10px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .progress-bar-bg {
+        width: 100%;
+        height: 8px;
+        background-color: #edede9;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 4px;
+      }
+
+      .progress-bar-fill {
+        height: 100%;
+        width: 0%;
+        background-color: #40916c;
+        border-radius: 10px;
+        transition: width 0.3s ease;
+      }
+
+      .progress-text {
+        font-size: 12px;
+        font-weight: bold;
+        color: #666;
+      }
+
+      /* Dropdown (Accordion) für Savings */
+      details.savings-dropdown {
+        background: #ffffff;
+        border: 1px solid #d6ccc2;
+        border-radius: 18px;
+        padding: 10px 14px;
+        margin-top: 5px;
+      }
+
+      details.savings-dropdown summary {
+        font-size: 12px;
+        color: #666;
+        text-transform: uppercase;
+        font-weight: bold;
+        cursor: pointer;
+        outline: none;
+        text-align: center;
+        list-style: none; /* Versteckt den Standard-Pfeil in einigen Browsern sauberer */
+      }
+
+      details.savings-dropdown summary::-webkit-details-marker {
+        display: none;
+      }
+
+      details.savings-dropdown[open] summary {
+        margin-bottom: 12px;
+      }
+
+      .savings-content {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        border-top: 1px solid #f0eee9;
+        padding-top: 10px;
       }
 
       /* Interaktive Input-Felder im Dashboard */
@@ -334,135 +413,211 @@
             </div>
           </div>
 
-          <!-- ÜBERSCHRIFT SAVINGS -->
-          <p class="custom-label" style="margin-top: 10px; margin-bottom: 2px">
-            Savings
-          </p>
+          <!-- SAVINGS DROPDOWN-MENÜ -->
+          <details class="savings-dropdown">
+            <summary>Savings</summary>
+            <div class="savings-content">
+              <!-- UNTERER BEREICH: TOTAL SAVINGS -->
+              <div class="dashboard-row">
+                <div class="stat-box" style="flex: 1; min-height: 50px">
+                  <label>Total Savings</label>
+                  <span
+                    id="dash-savings-val"
+                    style="font-size: 18px; font-weight: bold"
+                    >0.00€</span
+                  >
+                </div>
+              </div>
 
-          <!-- UNTERER BEREICH: TOTAL SAVINGS (HORIZONTAL LANG OBEN) -->
-          <div class="dashboard-row">
-            <div class="stat-box" style="flex: 1; min-height: 60px;">
-              <label>Total Savings</label>
-              <span
-                id="dash-savings-val"
-                style="font-size: 18px; font-weight: bold"
-                >0.00€</span
-              >
-            </div>
-          </div>
+              <!-- BANK SAVINGS -->
+              <div class="dashboard-row">
+                <div class="stat-box dashboard-box-small" style="flex: 1">
+                  <label>Bank Savings</label>
+                  <input
+                    type="text"
+                    id="dash-bank-savings"
+                    class="dash-input"
+                    placeholder="0.00€"
+                    onfocus="onDashInputFocus('dash-bank-savings')"
+                    onblur="onDashInputBlur('dash-bank-savings')"
+                    onchange="saveDashboardData()"
+                  />
+                </div>
+              </div>
 
-          <!-- BANK SAVINGS (ÜBER CASH SAVINGS) -->
-          <div class="dashboard-row">
-            <div class="stat-box dashboard-box-small" style="flex: 1;">
-              <label>Bank Savings</label>
-              <input
-                type="text"
-                id="dash-bank-savings"
-                class="dash-input"
-                placeholder="0.00€"
-                onfocus="onDashInputFocus('dash-bank-savings')"
-                onblur="onDashInputBlur('dash-bank-savings')"
-                onchange="saveDashboardData()"
-              />
-            </div>
-          </div>
+              <!-- CASH SAVINGS -->
+              <div class="dashboard-row">
+                <div class="stat-box dashboard-box-small" style="flex: 1">
+                  <label>Cash Savings</label>
+                  <input
+                    type="text"
+                    id="dash-cash-savings"
+                    class="dash-input"
+                    placeholder="0.00€"
+                    onfocus="onDashInputFocus('dash-cash-savings')"
+                    onblur="onDashInputBlur('dash-cash-savings')"
+                    onchange="saveDashboardData()"
+                  />
+                </div>
+              </div>
 
-          <!-- CASH SAVINGS (UNTER BANK SAVINGS) -->
-          <div class="dashboard-row">
-            <div class="stat-box dashboard-box-small" style="flex: 1;">
-              <label>Cash Savings</label>
-              <input
-                type="text"
-                id="dash-cash-savings"
-                class="dash-input"
-                placeholder="0.00€"
-                onfocus="onDashInputFocus('dash-cash-savings')"
-                onblur="onDashInputBlur('dash-cash-savings')"
-                onchange="saveDashboardData()"
-              />
-            </div>
-          </div>
+              <!-- SPARZIELE NEBENEINANDER MIT LADEBALKEN -->
+              <div class="dashboard-row">
+                <!-- Travels -->
+                <div class="savings-goal-col">
+                  <div class="savings-goal-box">
+                    <label>Travels</label>
+                    <input
+                      type="text"
+                      id="dash-travels"
+                      class="dash-input"
+                      placeholder="0.00€"
+                      onfocus="onDashInputFocus('dash-travels')"
+                      onblur="onDashInputBlur('dash-travels')"
+                      onchange="saveDashboardData()"
+                    />
+                    <div
+                      style="
+                        font-size: 12px;
+                        margin-top: 2px;
+                        width: 100%;
+                        display: flex;
+                        justify-content: center;
+                      "
+                    >
+                      <input
+                        type="text"
+                        id="goal-travels"
+                        class="dash-input"
+                        style="
+                          font-size: 12px !important;
+                          color: #666 !important;
+                          width: 80px !important;
+                          height: 22px !important;
+                          padding: 0 !important;
+                          margin: 0 !important;
+                          background: transparent !important;
+                          text-align: center !important;
+                        "
+                        placeholder="0.00€"
+                        onfocus="onDashInputFocus('goal-travels')"
+                        onblur="onDashInputBlur('goal-travels')"
+                        onchange="saveDashboardData()"
+                      />
+                    </div>
+                  </div>
+                  <div class="progress-box">
+                    <div class="progress-bar-bg">
+                      <div id="bar-travels" class="progress-bar-fill"></div>
+                    </div>
+                    <span id="pct-travels" class="progress-text">0%</span>
+                  </div>
+                </div>
 
-          <!-- DARUNTER DIE DREI SPARZIELE NEBENEINANDER -->
-          <div class="dashboard-row">
-            <!-- Travels -->
-            <div class="savings-goal-box">
-              <label>Travels</label>
-              <input
-                type="text"
-                id="dash-travels"
-                class="dash-input"
-                placeholder="0.00€"
-                onfocus="onDashInputFocus('dash-travels')"
-                onblur="onDashInputBlur('dash-travels')"
-                onchange="saveDashboardData()"
-              />
-              <div style="font-size: 12px; margin-top: 2px; width: 100%; display: flex; justify-content: center;">
-                <input
-                  type="text"
-                  id="goal-travels"
-                  class="dash-input"
-                  style="font-size: 12px !important; color: #666 !important; width: 80px !important; height: 22px !important; padding: 0 !important; margin: 0 !important; background: transparent !important; text-align: center !important;"
-                  placeholder="0.00€"
-                  onfocus="onDashInputFocus('goal-travels')"
-                  onblur="onDashInputBlur('goal-travels')"
-                  onchange="saveDashboardData()"
-                />
+                <!-- Studies -->
+                <div class="savings-goal-col">
+                  <div class="savings-goal-box">
+                    <label>Studies</label>
+                    <input
+                      type="text"
+                      id="dash-studies"
+                      class="dash-input"
+                      placeholder="0.00€"
+                      onfocus="onDashInputFocus('dash-studies')"
+                      onblur="onDashInputBlur('dash-studies')"
+                      onchange="saveDashboardData()"
+                    />
+                    <div
+                      style="
+                        font-size: 12px;
+                        margin-top: 2px;
+                        width: 100%;
+                        display: flex;
+                        justify-content: center;
+                      "
+                    >
+                      <input
+                        type="text"
+                        id="goal-studies"
+                        class="dash-input"
+                        style="
+                          font-size: 12px !important;
+                          color: #666 !important;
+                          width: 80px !important;
+                          height: 22px !important;
+                          padding: 0 !important;
+                          margin: 0 !important;
+                          background: transparent !important;
+                          text-align: center !important;
+                        "
+                        placeholder="0.00€"
+                        onfocus="onDashInputFocus('goal-studies')"
+                        onblur="onDashInputBlur('goal-studies')"
+                        onchange="saveDashboardData()"
+                      />
+                    </div>
+                  </div>
+                  <div class="progress-box">
+                    <div class="progress-bar-bg">
+                      <div id="bar-studies" class="progress-bar-fill"></div>
+                    </div>
+                    <span id="pct-studies" class="progress-text">0%</span>
+                  </div>
+                </div>
+
+                <!-- Car -->
+                <div class="savings-goal-col">
+                  <div class="savings-goal-box">
+                    <label>Car</label>
+                    <input
+                      type="text"
+                      id="dash-car"
+                      class="dash-input"
+                      placeholder="0.00€"
+                      onfocus="onDashInputFocus('dash-car')"
+                      onblur="onDashInputBlur('dash-car')"
+                      onchange="saveDashboardData()"
+                    />
+                    <div
+                      style="
+                        font-size: 12px;
+                        margin-top: 2px;
+                        width: 100%;
+                        display: flex;
+                        justify-content: center;
+                      "
+                    >
+                      <input
+                        type="text"
+                        id="goal-car"
+                        class="dash-input"
+                        style="
+                          font-size: 12px !important;
+                          color: #666 !important;
+                          width: 80px !important;
+                          height: 22px !important;
+                          padding: 0 !important;
+                          margin: 0 !important;
+                          background: transparent !important;
+                          text-align: center !important;
+                        "
+                        placeholder="0.00€"
+                        onfocus="onDashInputFocus('goal-car')"
+                        onblur="onDashInputBlur('goal-car')"
+                        onchange="saveDashboardData()"
+                      />
+                    </div>
+                  </div>
+                  <div class="progress-box">
+                    <div class="progress-bar-bg">
+                      <div id="bar-car" class="progress-bar-fill"></div>
+                    </div>
+                    <span id="pct-car" class="progress-text">0%</span>
+                  </div>
+                </div>
               </div>
             </div>
-
-            <!-- Studies -->
-            <div class="savings-goal-box">
-              <label>Studies</label>
-              <input
-                type="text"
-                id="dash-studies"
-                class="dash-input"
-                placeholder="0.00€"
-                onfocus="onDashInputFocus('dash-studies')"
-                onblur="onDashInputBlur('dash-studies')"
-                onchange="saveDashboardData()"
-              />
-              <div style="font-size: 12px; margin-top: 2px; width: 100%; display: flex; justify-content: center;">
-                <input
-                  type="text"
-                  id="goal-studies"
-                  class="dash-input"
-                  style="font-size: 12px !important; color: #666 !important; width: 80px !important; height: 22px !important; padding: 0 !important; margin: 0 !important; background: transparent !important; text-align: center !important;"
-                  placeholder="0.00€"
-                  onfocus="onDashInputFocus('goal-studies')"
-                  onblur="onDashInputBlur('goal-studies')"
-                  onchange="saveDashboardData()"
-                />
-              </div>
-            </div>
-
-            <!-- Car -->
-            <div class="savings-goal-box">
-              <label>Car</label>
-              <input
-                type="text"
-                id="dash-car"
-                class="dash-input"
-                placeholder="0.00€"
-                onfocus="onDashInputFocus('dash-car')"
-                onblur="onDashInputBlur('dash-car')"
-                onchange="saveDashboardData()"
-              />
-              <div style="font-size: 12px; margin-top: 2px; width: 100%; display: flex; justify-content: center;">
-                <input
-                  type="text"
-                  id="goal-car"
-                  class="dash-input"
-                  style="font-size: 12px !important; color: #666 !important; width: 80px !important; height: 22px !important; padding: 0 !important; margin: 0 !important; background: transparent !important; text-align: center !important;"
-                  placeholder="0.00€"
-                  onfocus="onDashInputFocus('goal-car')"
-                  onblur="onDashInputBlur('goal-car')"
-                  onchange="saveDashboardData()"
-                />
-              </div>
-            </div>
-          </div>
+          </details>
         </div>
       </div>
 
@@ -628,19 +783,39 @@
 
       // --- 3. DASHBOARD LOGIK ---
       function saveDashboardData() {
-        const thisMonthVal = cleanNumber(document.getElementById("dash-this-month").value);
-        const topCashVal = cleanNumber(document.getElementById("dash-top-cash").value);
-        const paypalVal = cleanNumber(document.getElementById("dash-paypal").value);
+        const thisMonthVal = cleanNumber(
+          document.getElementById("dash-this-month").value,
+        );
+        const topCashVal = cleanNumber(
+          document.getElementById("dash-top-cash").value,
+        );
+        const paypalVal = cleanNumber(
+          document.getElementById("dash-paypal").value,
+        );
 
-        const bankSavingsVal = cleanNumber(document.getElementById("dash-bank-savings").value);
-        const cashSavingsVal = cleanNumber(document.getElementById("dash-cash-savings").value);
-        const travelsVal = cleanNumber(document.getElementById("dash-travels").value);
-        const studiesVal = cleanNumber(document.getElementById("dash-studies").value);
+        const bankSavingsVal = cleanNumber(
+          document.getElementById("dash-bank-savings").value,
+        );
+        const cashSavingsVal = cleanNumber(
+          document.getElementById("dash-cash-savings").value,
+        );
+        const travelsVal = cleanNumber(
+          document.getElementById("dash-travels").value,
+        );
+        const studiesVal = cleanNumber(
+          document.getElementById("dash-studies").value,
+        );
         const carVal = cleanNumber(document.getElementById("dash-car").value);
 
-        const goalTravelsVal = cleanNumber(document.getElementById("goal-travels").value);
-        const goalStudiesVal = cleanNumber(document.getElementById("goal-studies").value);
-        const goalCarVal = cleanNumber(document.getElementById("goal-car").value);
+        const goalTravelsVal = cleanNumber(
+          document.getElementById("goal-travels").value,
+        );
+        const goalStudiesVal = cleanNumber(
+          document.getElementById("goal-studies").value,
+        );
+        const goalCarVal = cleanNumber(
+          document.getElementById("goal-car").value,
+        );
 
         localStorage.setItem("dash_this_month", thisMonthVal);
         localStorage.setItem("dash_top_cash", topCashVal);
@@ -660,71 +835,169 @@
       }
 
       function loadDashboardData() {
-        document.getElementById("dash-this-month").value = localStorage.getItem("dash_this_month") || "";
-        document.getElementById("dash-top-cash").value = localStorage.getItem("dash_top_cash") || "";
-        document.getElementById("dash-paypal").value = localStorage.getItem("dash_paypal") || "";
+        document.getElementById("dash-this-month").value =
+          localStorage.getItem("dash_this_month") || "";
+        document.getElementById("dash-top-cash").value =
+          localStorage.getItem("dash_top_cash") || "";
+        document.getElementById("dash-paypal").value =
+          localStorage.getItem("dash_paypal") || "";
 
-        document.getElementById("dash-bank-savings").value = localStorage.getItem("dash_bank_savings") || "";
-        document.getElementById("dash-cash-savings").value = localStorage.getItem("dash_cash_savings") || "";
-        document.getElementById("dash-travels").value = localStorage.getItem("dash_travels") || "";
-        document.getElementById("dash-studies").value = localStorage.getItem("dash_studies") || "";
-        document.getElementById("dash-car").value = localStorage.getItem("dash_car") || "";
+        document.getElementById("dash-bank-savings").value =
+          localStorage.getItem("dash_bank_savings") || "";
+        document.getElementById("dash-cash-savings").value =
+          localStorage.getItem("dash_cash_savings") || "";
+        document.getElementById("dash-travels").value =
+          localStorage.getItem("dash_travels") || "";
+        document.getElementById("dash-studies").value =
+          localStorage.getItem("dash_studies") || "";
+        document.getElementById("dash-car").value =
+          localStorage.getItem("dash_car") || "";
 
-        document.getElementById("goal-travels").value = localStorage.getItem("goal_travels") || "";
-        document.getElementById("goal-studies").value = localStorage.getItem("goal_studies") || "";
-        document.getElementById("goal-car").value = localStorage.getItem("goal_car") || "";
+        document.getElementById("goal-travels").value =
+          localStorage.getItem("goal_travels") || "";
+        document.getElementById("goal-studies").value =
+          localStorage.getItem("goal_studies") || "";
+        document.getElementById("goal-car").value =
+          localStorage.getItem("goal_car") || "";
 
         renderDashboard();
       }
 
+      function updateProgress(currentVal, goalVal, barId, pctId) {
+        let pct = 0;
+        if (goalVal > 0 && currentVal > 0) {
+          pct = (currentVal / goalVal) * 100;
+        }
+        const clampedPct = Math.min(Math.max(pct, 0), 100);
+        document.getElementById(barId).style.width = clampedPct + "%";
+        document.getElementById(pctId).innerText = Math.round(pct) + "%";
+      }
+
       function renderDashboard() {
-        const thisMonthVal = parseFloat(localStorage.getItem("dash_this_month")) || 0;
-        const topCashVal = parseFloat(localStorage.getItem("dash_top_cash")) || 0;
+        const thisMonthVal =
+          parseFloat(localStorage.getItem("dash_this_month")) || 0;
+        const topCashVal =
+          parseFloat(localStorage.getItem("dash_top_cash")) || 0;
         const paypalVal = parseFloat(localStorage.getItem("dash_paypal")) || 0;
 
-        const bankSavingsVal = parseFloat(localStorage.getItem("dash_bank_savings")) || 0;
-        const cashSavingsVal = parseFloat(localStorage.getItem("dash_cash_savings")) || 0;
-        const travelsVal = parseFloat(localStorage.getItem("dash_travels")) || 0;
-        const studiesVal = parseFloat(localStorage.getItem("dash_studies")) || 0;
+        const bankSavingsVal =
+          parseFloat(localStorage.getItem("dash_bank_savings")) || 0;
+        const cashSavingsVal =
+          parseFloat(localStorage.getItem("dash_cash_savings")) || 0;
+        const travelsVal =
+          parseFloat(localStorage.getItem("dash_travels")) || 0;
+        const studiesVal =
+          parseFloat(localStorage.getItem("dash_studies")) || 0;
         const carVal = parseFloat(localStorage.getItem("dash_car")) || 0;
 
-        const goalTravelsVal = parseFloat(localStorage.getItem("goal_travels")) || 0;
-        const goalStudiesVal = parseFloat(localStorage.getItem("goal_studies")) || 0;
+        const goalTravelsVal =
+          parseFloat(localStorage.getItem("goal_travels")) || 0;
+        const goalStudiesVal =
+          parseFloat(localStorage.getItem("goal_studies")) || 0;
         const goalCarVal = parseFloat(localStorage.getItem("goal_car")) || 0;
 
-        formatDashInput("dash-this-month", localStorage.getItem("dash_this_month"), thisMonthVal);
-        formatDashInput("dash-top-cash", localStorage.getItem("dash_top_cash"), topCashVal);
-        formatDashInput("dash-paypal", localStorage.getItem("dash_paypal"), paypalVal);
+        formatDashInput(
+          "dash-this-month",
+          localStorage.getItem("dash_this_month"),
+          thisMonthVal,
+        );
+        formatDashInput(
+          "dash-top-cash",
+          localStorage.getItem("dash_top_cash"),
+          topCashVal,
+        );
+        formatDashInput(
+          "dash-paypal",
+          localStorage.getItem("dash_paypal"),
+          paypalVal,
+        );
 
-        formatDashInput("dash-bank-savings", localStorage.getItem("dash_bank_savings"), bankSavingsVal);
-        formatDashInput("dash-cash-savings", localStorage.getItem("dash_cash_savings"), cashSavingsVal);
-        formatDashInput("dash-travels", localStorage.getItem("dash_travels"), travelsVal);
-        formatDashInput("dash-studies", localStorage.getItem("dash_studies"), studiesVal);
+        formatDashInput(
+          "dash-bank-savings",
+          localStorage.getItem("dash_bank_savings"),
+          bankSavingsVal,
+        );
+        formatDashInput(
+          "dash-cash-savings",
+          localStorage.getItem("dash_cash_savings"),
+          cashSavingsVal,
+        );
+        formatDashInput(
+          "dash-travels",
+          localStorage.getItem("dash_travels"),
+          travelsVal,
+        );
+        formatDashInput(
+          "dash-studies",
+          localStorage.getItem("dash_studies"),
+          studiesVal,
+        );
         formatDashInput("dash-car", localStorage.getItem("dash_car"), carVal);
 
-        formatGoalInput("goal-travels", localStorage.getItem("goal_travels"), goalTravelsVal);
-        formatGoalInput("goal-studies", localStorage.getItem("goal_studies"), goalStudiesVal);
-        formatGoalInput("goal-car", localStorage.getItem("goal_car"), goalCarVal);
+        formatGoalInput(
+          "goal-travels",
+          localStorage.getItem("goal_travels"),
+          goalTravelsVal,
+        );
+        formatGoalInput(
+          "goal-studies",
+          localStorage.getItem("goal_studies"),
+          goalStudiesVal,
+        );
+        formatGoalInput(
+          "goal-car",
+          localStorage.getItem("goal_car"),
+          goalCarVal,
+        );
+
+        // Ladebalken & Prozentwerte aktualisieren
+        updateProgress(
+          travelsVal,
+          goalTravelsVal,
+          "bar-travels",
+          "pct-travels",
+        );
+        updateProgress(
+          studiesVal,
+          goalStudiesVal,
+          "bar-studies",
+          "pct-studies",
+        );
+        updateProgress(carVal, goalCarVal, "bar-car", "pct-car");
 
         // Farbanpassung für die Beträge (Grün wenn > 0, Grau wenn == 0, Rot wenn < 0)
         const tInput = document.getElementById("dash-travels");
-        tInput.style.color = travelsVal > 0 ? "#32a74a" : (travelsVal < 0 ? "#c52233" : "#666666");
+        tInput.style.color =
+          travelsVal > 0 ? "#32a74a" : travelsVal < 0 ? "#c52233" : "#666666";
 
         const sInput = document.getElementById("dash-studies");
-        sInput.style.color = studiesVal > 0 ? "#32a74a" : (studiesVal < 0 ? "#c52233" : "#666666");
+        sInput.style.color =
+          studiesVal > 0 ? "#32a74a" : studiesVal < 0 ? "#c52233" : "#666666";
 
         const cInput = document.getElementById("dash-car");
-        cInput.style.color = carVal > 0 ? "#32a74a" : (carVal < 0 ? "#c52233" : "#666666");
+        cInput.style.color =
+          carVal > 0 ? "#32a74a" : carVal < 0 ? "#c52233" : "#666666";
 
         const bsInput = document.getElementById("dash-bank-savings");
-        bsInput.style.color = bankSavingsVal > 0 ? "#32a74a" : (bankSavingsVal < 0 ? "#c52233" : "#666666");
+        bsInput.style.color =
+          bankSavingsVal > 0
+            ? "#32a74a"
+            : bankSavingsVal < 0
+              ? "#c52233"
+              : "#666666";
 
         const csInput = document.getElementById("dash-cash-savings");
-        csInput.style.color = cashSavingsVal > 0 ? "#32a74a" : (cashSavingsVal < 0 ? "#c52233" : "#666666");
+        csInput.style.color =
+          cashSavingsVal > 0
+            ? "#32a74a"
+            : cashSavingsVal < 0
+              ? "#c52233"
+              : "#666666";
 
         // Berechnungen: Total Savings = Bank Savings + Cash Savings
         const totalSavings = bankSavingsVal + cashSavingsVal;
-        const totalAssets = thisMonthVal + topCashVal + paypalVal + totalSavings;
+        const totalAssets =
+          thisMonthVal + topCashVal + paypalVal + totalSavings;
 
         const savingsValSpan = document.getElementById("dash-savings-val");
         savingsValSpan.innerText = totalSavings.toFixed(2) + "€";
@@ -961,7 +1234,8 @@
             if (descLower.includes("cash") && t.amount > 0) {
               cashTotal += t.amount;
             }
-            const secondaryKeyword = selectedMonth >= "2026-11" ? "tips" : "plasma";
+            const secondaryKeyword =
+              selectedMonth >= "2026-11" ? "tips" : "plasma";
             if (descLower.includes(secondaryKeyword) && t.amount > 0) {
               secondaryTotal += t.amount;
             }
