@@ -136,13 +136,6 @@
         gap: 10px;
       }
 
-      .dashboard-column {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        flex: 1;
-      }
-
       .dashboard-box-large {
         flex: 2;
         min-height: 110px;
@@ -153,14 +146,33 @@
         min-height: 110px;
       }
 
-      .dashboard-box-square {
-        flex: 1;
-        min-height: 150px;
-      }
-
       .dashboard-box-small {
         flex: 1;
         min-height: 44px;
+      }
+
+      /* Spezielle Boxen für Sparziele */
+      .savings-goal-box {
+        flex: 1;
+        background: #ffffff;
+        border: 1px solid #d6ccc2;
+        border-radius: 18px;
+        padding: 10px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 105px;
+      }
+
+      .savings-goal-box label {
+        display: block;
+        font-size: 11px;
+        color: #666;
+        text-transform: uppercase;
+        font-weight: bold;
+        margin-bottom: 2px;
       }
 
       /* Interaktive Input-Felder im Dashboard */
@@ -264,7 +276,7 @@
     <div id="dashboard-view" style="display: block">
       <h2>Welcome to Cells</h2>
 
-      <!-- DASHBOARD LAYOUT GRID BASIERT AUF DER SKIZZE -->
+      <!-- DASHBOARD LAYOUT GRID -->
       <div class="card">
         <div class="dashboard-grid">
           <!-- OBERER BEREICH: TOTAL & THIS MONTH -->
@@ -294,7 +306,7 @@
             </div>
           </div>
 
-          <!-- 3 KLEINE FELDER NEBENEINANDER (CASH, PAYPAL, VINTED) -->
+          <!-- 2 FELDER NEBENEINANDER (CASH, PAYPAL) -->
           <div class="dashboard-row">
             <div class="stat-box dashboard-box-small">
               <label>Cash</label>
@@ -320,29 +332,16 @@
                 onchange="saveDashboardData()"
               />
             </div>
-            <div class="stat-box dashboard-box-small">
-              <label>Vinted</label>
-              <input
-                type="text"
-                id="dash-vinted"
-                class="dash-input"
-                placeholder="0.00€"
-                onfocus="onDashInputFocus('dash-vinted')"
-                onblur="onDashInputBlur('dash-vinted')"
-                onchange="saveDashboardData()"
-              />
-            </div>
           </div>
 
-          <!-- ÜBERSCHRIFT SAVINGS FÜR OPTISCHE TRENNUNG -->
+          <!-- ÜBERSCHRIFT SAVINGS -->
           <p class="custom-label" style="margin-top: 10px; margin-bottom: 2px">
             Savings
           </p>
 
-          <!-- UNTERER BEREICH: SAVINGS -->
+          <!-- UNTERER BEREICH: TOTAL SAVINGS (HORIZONTAL LANG OBEN) -->
           <div class="dashboard-row">
-            <!-- Total Savings (Quadratisch) -->
-            <div class="stat-box dashboard-box-square">
+            <div class="stat-box" style="flex: 1; min-height: 60px">
               <label>Total Savings</label>
               <span
                 id="dash-savings-val"
@@ -350,45 +349,134 @@
                 >0.00€</span
               >
             </div>
+          </div>
 
-            <!-- Rechts: Bank Account, Cash & Ichrak untereinander -->
-            <div class="dashboard-column">
-              <div class="stat-box dashboard-box-small">
-                <label>Bank Account</label>
+          <!-- DARUNTER DIE DREI SPARZIELE NEBENEINANDER -->
+          <div class="dashboard-row">
+            <!-- Travels -->
+            <div class="savings-goal-box">
+              <label>Travels</label>
+              <input
+                type="text"
+                id="dash-travels"
+                class="dash-input"
+                placeholder="0.00€"
+                onfocus="onDashInputFocus('dash-travels')"
+                onblur="onDashInputBlur('dash-travels')"
+                onchange="saveDashboardData()"
+              />
+              <div
+                style="
+                  font-size: 12px;
+                  margin-top: 2px;
+                  width: 100%;
+                  display: flex;
+                  justify-content: center;
+                "
+              >
                 <input
                   type="text"
-                  id="dash-bank"
+                  id="goal-travels"
                   class="dash-input"
+                  style="
+                    font-size: 12px !important;
+                    color: #666 !important;
+                    width: 80px !important;
+                    height: 22px !important;
+                    padding: 0 !important;
+                    margin: 0 !important;
+                    background: transparent !important;
+                    text-align: center !important;
+                  "
                   placeholder="0.00€"
-                  onfocus="onDashInputFocus('dash-bank')"
-                  onblur="onDashInputBlur('dash-bank')"
+                  onfocus="onDashInputFocus('goal-travels')"
+                  onblur="onDashInputBlur('goal-travels')"
                   onchange="saveDashboardData()"
                 />
               </div>
+            </div>
 
-              <div class="stat-box dashboard-box-small">
-                <label>Cash</label>
+            <!-- Studies -->
+            <div class="savings-goal-box">
+              <label>Studies</label>
+              <input
+                type="text"
+                id="dash-studies"
+                class="dash-input"
+                placeholder="0.00€"
+                onfocus="onDashInputFocus('dash-studies')"
+                onblur="onDashInputBlur('dash-studies')"
+                onchange="saveDashboardData()"
+              />
+              <div
+                style="
+                  font-size: 12px;
+                  margin-top: 2px;
+                  width: 100%;
+                  display: flex;
+                  justify-content: center;
+                "
+              >
                 <input
                   type="text"
-                  id="dash-cash"
+                  id="goal-studies"
                   class="dash-input"
+                  style="
+                    font-size: 12px !important;
+                    color: #666 !important;
+                    width: 80px !important;
+                    height: 22px !important;
+                    padding: 0 !important;
+                    margin: 0 !important;
+                    background: transparent !important;
+                    text-align: center !important;
+                  "
                   placeholder="0.00€"
-                  onfocus="onDashInputFocus('dash-cash')"
-                  onblur="onDashInputBlur('dash-cash')"
+                  onfocus="onDashInputFocus('goal-studies')"
+                  onblur="onDashInputBlur('goal-studies')"
                   onchange="saveDashboardData()"
                 />
               </div>
+            </div>
 
-              <!-- ICHRAK FELD -->
-              <div class="stat-box dashboard-box-small">
-                <label>Ichrak</label>
+            <!-- Car -->
+            <div class="savings-goal-box">
+              <label>Car</label>
+              <input
+                type="text"
+                id="dash-car"
+                class="dash-input"
+                placeholder="0.00€"
+                onfocus="onDashInputFocus('dash-car')"
+                onblur="onDashInputBlur('dash-car')"
+                onchange="saveDashboardData()"
+              />
+              <div
+                style="
+                  font-size: 12px;
+                  margin-top: 2px;
+                  width: 100%;
+                  display: flex;
+                  justify-content: center;
+                "
+              >
                 <input
                   type="text"
-                  id="dash-ichrak"
+                  id="goal-car"
                   class="dash-input"
+                  style="
+                    font-size: 12px !important;
+                    color: #666 !important;
+                    width: 80px !important;
+                    height: 22px !important;
+                    padding: 0 !important;
+                    margin: 0 !important;
+                    background: transparent !important;
+                    text-align: center !important;
+                  "
                   placeholder="0.00€"
-                  onfocus="onDashInputFocus('dash-ichrak')"
-                  onblur="onDashInputBlur('dash-ichrak')"
+                  onfocus="onDashInputFocus('goal-car')"
+                  onblur="onDashInputBlur('goal-car')"
                   onchange="saveDashboardData()"
                 />
               </div>
@@ -441,14 +529,14 @@
           />
         </div>
 
-        <!-- Cash Inflow & Plasma Donation nebeneinander -->
+        <!-- Cash Inflow & Dynamic Label nebeneinander -->
         <div class="stats-grid">
           <div class="stat-box">
             <label>Cash</label>
             <span id="cash-total">0.00€</span>
           </div>
           <div class="stat-box">
-            <label>Plasma</label>
+            <label id="dynamic-label">Plasma</label>
             <span id="plasma-total">0.00€</span>
           </div>
         </div>
@@ -568,24 +656,36 @@
         const paypalVal = cleanNumber(
           document.getElementById("dash-paypal").value,
         );
-        const vintedVal = cleanNumber(
-          document.getElementById("dash-vinted").value,
-        );
 
-        const bankVal = cleanNumber(document.getElementById("dash-bank").value);
-        const cashVal = cleanNumber(document.getElementById("dash-cash").value);
-        const ichrakVal = cleanNumber(
-          document.getElementById("dash-ichrak").value,
+        const travelsVal = cleanNumber(
+          document.getElementById("dash-travels").value,
+        );
+        const studiesVal = cleanNumber(
+          document.getElementById("dash-studies").value,
+        );
+        const carVal = cleanNumber(document.getElementById("dash-car").value);
+
+        const goalTravelsVal = cleanNumber(
+          document.getElementById("goal-travels").value,
+        );
+        const goalStudiesVal = cleanNumber(
+          document.getElementById("goal-studies").value,
+        );
+        const goalCarVal = cleanNumber(
+          document.getElementById("goal-car").value,
         );
 
         localStorage.setItem("dash_this_month", thisMonthVal);
         localStorage.setItem("dash_top_cash", topCashVal);
         localStorage.setItem("dash_paypal", paypalVal);
-        localStorage.setItem("dash_vinted", vintedVal);
 
-        localStorage.setItem("dash_bank", bankVal);
-        localStorage.setItem("dash_cash", cashVal);
-        localStorage.setItem("dash_ichrak", ichrakVal);
+        localStorage.setItem("dash_travels", travelsVal);
+        localStorage.setItem("dash_studies", studiesVal);
+        localStorage.setItem("dash_car", carVal);
+
+        localStorage.setItem("goal_travels", goalTravelsVal);
+        localStorage.setItem("goal_studies", goalStudiesVal);
+        localStorage.setItem("goal_car", goalCarVal);
 
         renderDashboard();
       }
@@ -597,15 +697,20 @@
           localStorage.getItem("dash_top_cash") || "";
         document.getElementById("dash-paypal").value =
           localStorage.getItem("dash_paypal") || "";
-        document.getElementById("dash-vinted").value =
-          localStorage.getItem("dash_vinted") || "";
 
-        document.getElementById("dash-bank").value =
-          localStorage.getItem("dash_bank") || "";
-        document.getElementById("dash-cash").value =
-          localStorage.getItem("dash_cash") || "";
-        document.getElementById("dash-ichrak").value =
-          localStorage.getItem("dash_ichrak") || "";
+        document.getElementById("dash-travels").value =
+          localStorage.getItem("dash_travels") || "";
+        document.getElementById("dash-studies").value =
+          localStorage.getItem("dash_studies") || "";
+        document.getElementById("dash-car").value =
+          localStorage.getItem("dash_car") || "";
+
+        document.getElementById("goal-travels").value =
+          localStorage.getItem("goal_travels") || "";
+        document.getElementById("goal-studies").value =
+          localStorage.getItem("goal_studies") || "";
+        document.getElementById("goal-car").value =
+          localStorage.getItem("goal_car") || "";
 
         renderDashboard();
       }
@@ -616,13 +721,19 @@
         const topCashVal =
           parseFloat(localStorage.getItem("dash_top_cash")) || 0;
         const paypalVal = parseFloat(localStorage.getItem("dash_paypal")) || 0;
-        const vintedVal = parseFloat(localStorage.getItem("dash_vinted")) || 0;
 
-        const bankVal = parseFloat(localStorage.getItem("dash_bank")) || 0;
-        const cashVal = parseFloat(localStorage.getItem("dash_cash")) || 0;
-        const ichrakVal = parseFloat(localStorage.getItem("dash_ichrak")) || 0;
+        const travelsVal =
+          parseFloat(localStorage.getItem("dash_travels")) || 0;
+        const studiesVal =
+          parseFloat(localStorage.getItem("dash_studies")) || 0;
+        const carVal = parseFloat(localStorage.getItem("dash_car")) || 0;
 
-        // Formatiere Eingabefelder und setze Farben je nach Wert (< 0 rot, sonst grün)
+        const goalTravelsVal =
+          parseFloat(localStorage.getItem("goal_travels")) || 0;
+        const goalStudiesVal =
+          parseFloat(localStorage.getItem("goal_studies")) || 0;
+        const goalCarVal = parseFloat(localStorage.getItem("goal_car")) || 0;
+
         formatDashInput(
           "dash-this-month",
           localStorage.getItem("dash_this_month"),
@@ -638,32 +749,52 @@
           localStorage.getItem("dash_paypal"),
           paypalVal,
         );
-        formatDashInput(
-          "dash-vinted",
-          localStorage.getItem("dash_vinted"),
-          vintedVal,
-        );
 
         formatDashInput(
-          "dash-bank",
-          localStorage.getItem("dash_bank"),
-          bankVal,
+          "dash-travels",
+          localStorage.getItem("dash_travels"),
+          travelsVal,
         );
         formatDashInput(
-          "dash-cash",
-          localStorage.getItem("dash_cash"),
-          cashVal,
+          "dash-studies",
+          localStorage.getItem("dash_studies"),
+          studiesVal,
         );
-        formatDashInput(
-          "dash-ichrak",
-          localStorage.getItem("dash_ichrak"),
-          ichrakVal,
+        formatDashInput("dash-car", localStorage.getItem("dash_car"), carVal);
+
+        formatGoalInput(
+          "goal-travels",
+          localStorage.getItem("goal_travels"),
+          goalTravelsVal,
+        );
+        formatGoalInput(
+          "goal-studies",
+          localStorage.getItem("goal_studies"),
+          goalStudiesVal,
+        );
+        formatGoalInput(
+          "goal-car",
+          localStorage.getItem("goal_car"),
+          goalCarVal,
         );
 
-        // Berechnungen:
-        const totalSavings = bankVal + cashVal;
+        // Farbanpassung für die Sparziel-Beträge (Grün wenn > 0, Grau wenn == 0, Rot wenn < 0)
+        const tInput = document.getElementById("dash-travels");
+        tInput.style.color =
+          travelsVal > 0 ? "#32a74a" : travelsVal < 0 ? "#c52233" : "#666666";
+
+        const sInput = document.getElementById("dash-studies");
+        sInput.style.color =
+          studiesVal > 0 ? "#32a74a" : studiesVal < 0 ? "#c52233" : "#666666";
+
+        const cInput = document.getElementById("dash-car");
+        cInput.style.color =
+          carVal > 0 ? "#32a74a" : carVal < 0 ? "#c52233" : "#666666";
+
+        // Berechnungen: Total Savings = Travels + Studies + Car
+        const totalSavings = travelsVal + studiesVal + carVal;
         const totalAssets =
-          thisMonthVal + topCashVal + paypalVal + vintedVal + totalSavings;
+          thisMonthVal + topCashVal + paypalVal + totalSavings;
 
         const savingsValSpan = document.getElementById("dash-savings-val");
         savingsValSpan.innerText = totalSavings.toFixed(2) + "€";
@@ -691,10 +822,22 @@
         }
       }
 
+      function formatGoalInput(elementId, valStr, numericVal) {
+        const input = document.getElementById(elementId);
+        const clean = cleanNumber(valStr);
+        if (clean !== "" && !isNaN(parseFloat(clean))) {
+          input.value = parseFloat(clean).toFixed(2) + "€";
+        } else {
+          input.value = "";
+        }
+      }
+
       function onDashInputFocus(elementId) {
         const input = document.getElementById(elementId);
         input.value = cleanNumber(input.value);
-        input.style.color = "#000000";
+        if (!elementId.startsWith("goal-")) {
+          input.style.color = "#000000";
+        }
       }
 
       function onDashInputBlur(elementId) {
@@ -723,6 +866,17 @@
         const savedSalary = localStorage.getItem(`salary_${month}`) || "";
         document.getElementById("monthly-salary").value = savedSalary;
         formatSalaryDisplay();
+        checkDynamicLabel();
+      }
+
+      function checkDynamicLabel() {
+        const month = document.getElementById("month-filter").value;
+        const label = document.getElementById("dynamic-label");
+        if (month && month >= "2026-11") {
+          label.innerText = "Tips";
+        } else {
+          label.innerText = "Plasma";
+        }
       }
 
       function formatSalaryDisplay() {
@@ -750,6 +904,7 @@
 
       function onMonthChange() {
         loadMonthlySalary();
+        checkDynamicLabel();
         updateUI();
       }
 
@@ -757,6 +912,7 @@
       function showMainView() {
         document.getElementById("dashboard-view").style.display = "none";
         document.getElementById("main-view").style.display = "block";
+        checkDynamicLabel();
       }
 
       function showDashboard() {
@@ -786,6 +942,7 @@
 
         document.getElementById("month-filter").value = date.slice(0, 7);
         loadMonthlySalary();
+        checkDynamicLabel();
 
         saveAndRefresh();
 
@@ -798,7 +955,7 @@
         if (!confirm("Do you really want to remove this transaction?")) return;
 
         saveState();
-        transactions = transactions.filter((t) => (t.id === id ? false : true)); // fixed filter logic safely
+        transactions = transactions.filter((t) => (t.id === id ? false : true));
         saveAndRefresh();
       }
 
@@ -836,10 +993,12 @@
         const totalSpan = document.getElementById("total");
         const selectedMonth = document.getElementById("month-filter").value;
 
+        checkDynamicLabel();
+
         tbody.innerHTML = "";
         let monthBalance = 0;
         let cashTotal = 0;
-        let plasmaTotal = 0;
+        let secondaryTotal = 0;
         let totalExpenses = 0;
         let totalIncome = 0;
 
@@ -864,8 +1023,10 @@
             if (descLower.includes("cash") && t.amount > 0) {
               cashTotal += t.amount;
             }
-            if (descLower.includes("plasma") && t.amount > 0) {
-              plasmaTotal += t.amount;
+            const secondaryKeyword =
+              selectedMonth >= "2026-11" ? "tips" : "plasma";
+            if (descLower.includes(secondaryKeyword) && t.amount > 0) {
+              secondaryTotal += t.amount;
             }
 
             const row = document.createElement("tr");
@@ -891,11 +1052,11 @@
         document.getElementById("cash-total").innerText =
           cashTotal.toFixed(2) + "€";
         document.getElementById("plasma-total").innerText =
-          plasmaTotal.toFixed(2) + "€";
+          secondaryTotal.toFixed(2) + "€";
 
-        const cashPlasmaSum = cashTotal + plasmaTotal;
+        const cashSecondarySum = cashTotal + secondaryTotal;
         document.getElementById("cash-plasma-sum").innerText =
-          cashPlasmaSum.toFixed(2) + "€";
+          cashSecondarySum.toFixed(2) + "€";
 
         document.getElementById("total-expenses").innerText =
           totalExpenses.toFixed(2) + "€";
