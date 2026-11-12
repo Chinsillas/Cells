@@ -49,6 +49,12 @@
         cursor: pointer;
       }
 
+      .btn-secondary {
+        background-color: #ffffff;
+        color: #40916c;
+        border: 1px solid #40916c;
+      }
+
       .btn-delete {
         background-color: #c52233 !important;
         color: white !important;
@@ -86,6 +92,7 @@
 
       .stat-box {
         flex: 1;
+        min-width: 0;
         background: #ffffff;
         border: 1px solid #d6ccc2;
         border-radius: 18px;
@@ -151,20 +158,21 @@
         min-height: 44px;
       }
 
-      /* Spezielle Spalte für Sparziel + Progress-Box */
+      /* Spalte für Sparziel + Progress-Box (min-width: 0 verhindert den Überlauf) */
       .savings-goal-col {
         flex: 1;
+        min-width: 0;
         display: flex;
         flex-direction: column;
         gap: 8px;
       }
 
-      /* Spezielle Boxen für Sparziele */
       .savings-goal-box {
         background: #ffffff;
         border: 1px solid #d6ccc2;
         border-radius: 18px;
-        padding: 10px;
+        padding: 10px 4px;
+        min-width: 0;
         text-align: center;
         display: flex;
         flex-direction: column;
@@ -182,7 +190,7 @@
         margin-bottom: 2px;
       }
 
-      /* Weiße Box für Ladebalken & Prozentzahl */
+      /* Ladebalken & Prozentzahl */
       .progress-box {
         background: #ffffff;
         border: 1px solid #d6ccc2;
@@ -235,7 +243,7 @@
         cursor: pointer;
         outline: none;
         text-align: center;
-        list-style: none; /* Versteckt den Standard-Pfeil in einigen Browsern sauberer */
+        list-style: none;
       }
 
       details.savings-dropdown summary::-webkit-details-marker {
@@ -254,27 +262,22 @@
         padding-top: 10px;
       }
 
+      /* Felder im Savings-Dropdown: etwas grauer als der weiße Dropdown-Hintergrund */
+      .savings-content .stat-box,
+      .savings-content .savings-goal-box,
+      .savings-content .progress-box {
+        background: #f3f3f1;
+      }
+
+      .savings-content .progress-bar-bg {
+        background-color: #dedcd7;
+      }
+
       /* Interaktive Input-Felder im Dashboard */
-      .dash-input {
-        width: 100% !important;
-        height: auto !important;
-        margin: 0 !important;
-        padding: 2px 0 !important;
-        border: none !important;
-        background: transparent !important;
-        text-align: center !important;
-        font-size: 16px !important;
-        font-weight: bold !important;
-      }
-
-      .dash-input:focus {
-        outline: none;
-        background: #ffffff !important;
-        border-radius: 18px;
-      }
-
+      .dash-input,
       .salary-input {
         width: 100% !important;
+        min-width: 0;
         height: auto !important;
         margin: 0 !important;
         padding: 2px 0 !important;
@@ -285,10 +288,24 @@
         font-weight: bold !important;
       }
 
+      .dash-input:focus,
       .salary-input:focus {
         outline: none;
         background: #ffffff !important;
         border-radius: 18px;
+      }
+
+      /* Kleinere Beträge in den drei Sparziel-Feldern */
+      .savings-goal-box .dash-input {
+        font-size: 14px !important;
+      }
+
+      .savings-goal-box .goal-input {
+        font-size: 12px !important;
+        color: #666 !important;
+        height: 22px !important;
+        padding: 0 !important;
+        margin-top: 2px !important;
       }
 
       /* Farbvarianten für Income & Expenses */
@@ -319,7 +336,6 @@
         text-align: left;
       }
 
-      /* Styling für das Datums-Auswahlfeld in der Tabelle */
       table input[type="date"] {
         width: 100% !important;
         height: auto !important;
@@ -345,6 +361,13 @@
         font-size: 16px;
         margin-top: 0px;
       }
+
+      .backup-info {
+        text-align: center;
+        font-size: 12px;
+        color: #666;
+        margin: 8px 0 0;
+      }
     </style>
   </head>
 
@@ -355,37 +378,28 @@
     <div id="dashboard-view" style="display: block">
       <h2>Welcome to Cells</h2>
 
-      <!-- DASHBOARD LAYOUT GRID -->
       <div class="card">
         <div class="dashboard-grid">
-          <!-- OBERER BEREICH: TOTAL & THIS MONTH -->
           <div class="dashboard-row">
-            <!-- Total (Horizontal / Groß) -->
             <div class="stat-box dashboard-box-large">
               <label>Total</label>
               <span
                 id="dash-total-val"
                 style="font-size: 20px; font-weight: bold"
-                >0.00€</span
+                >0,00€</span
               >
             </div>
-
-            <!-- This Month (Vertikal / Hoch) -->
             <div class="stat-box dashboard-box-tall">
               <label>This Month</label>
               <input
                 type="text"
                 id="dash-this-month"
                 class="dash-input"
-                placeholder="0.00€"
-                onfocus="onDashInputFocus('dash-this-month')"
-                onblur="onDashInputBlur('dash-this-month')"
-                onchange="saveDashboardData()"
+                placeholder="0,00€"
               />
             </div>
           </div>
 
-          <!-- 2 FELDER NEBENEINANDER (CASH, PAYPAL) -->
           <div class="dashboard-row">
             <div class="stat-box dashboard-box-small">
               <label>Cash</label>
@@ -393,10 +407,7 @@
                 type="text"
                 id="dash-top-cash"
                 class="dash-input"
-                placeholder="0.00€"
-                onfocus="onDashInputFocus('dash-top-cash')"
-                onblur="onDashInputBlur('dash-top-cash')"
-                onchange="saveDashboardData()"
+                placeholder="0,00€"
               />
             </div>
             <div class="stat-box dashboard-box-small">
@@ -405,217 +416,51 @@
                 type="text"
                 id="dash-paypal"
                 class="dash-input"
-                placeholder="0.00€"
-                onfocus="onDashInputFocus('dash-paypal')"
-                onblur="onDashInputBlur('dash-paypal')"
-                onchange="saveDashboardData()"
+                placeholder="0,00€"
               />
             </div>
           </div>
 
-          <!-- SAVINGS DROPDOWN-MENÜ -->
           <details class="savings-dropdown">
             <summary>Savings</summary>
             <div class="savings-content">
-              <!-- UNTERER BEREICH: TOTAL SAVINGS -->
               <div class="dashboard-row">
                 <div class="stat-box" style="flex: 1; min-height: 50px">
                   <label>Total Savings</label>
                   <span
                     id="dash-savings-val"
                     style="font-size: 18px; font-weight: bold"
-                    >0.00€</span
+                    >0,00€</span
                   >
                 </div>
               </div>
 
-              <!-- BANK SAVINGS -->
               <div class="dashboard-row">
-                <div class="stat-box dashboard-box-small" style="flex: 1">
+                <div class="stat-box dashboard-box-small">
                   <label>Bank Savings</label>
                   <input
                     type="text"
                     id="dash-bank-savings"
                     class="dash-input"
-                    placeholder="0.00€"
-                    onfocus="onDashInputFocus('dash-bank-savings')"
-                    onblur="onDashInputBlur('dash-bank-savings')"
-                    onchange="saveDashboardData()"
+                    placeholder="0,00€"
                   />
                 </div>
               </div>
 
-              <!-- CASH SAVINGS -->
               <div class="dashboard-row">
-                <div class="stat-box dashboard-box-small" style="flex: 1">
+                <div class="stat-box dashboard-box-small">
                   <label>Cash Savings</label>
                   <input
                     type="text"
                     id="dash-cash-savings"
                     class="dash-input"
-                    placeholder="0.00€"
-                    onfocus="onDashInputFocus('dash-cash-savings')"
-                    onblur="onDashInputBlur('dash-cash-savings')"
-                    onchange="saveDashboardData()"
+                    placeholder="0,00€"
                   />
                 </div>
               </div>
 
-              <!-- SPARZIELE NEBENEINANDER MIT LADEBALKEN -->
-              <div class="dashboard-row">
-                <!-- Travels -->
-                <div class="savings-goal-col">
-                  <div class="savings-goal-box">
-                    <label>Travels</label>
-                    <input
-                      type="text"
-                      id="dash-travels"
-                      class="dash-input"
-                      placeholder="0.00€"
-                      onfocus="onDashInputFocus('dash-travels')"
-                      onblur="onDashInputBlur('dash-travels')"
-                      onchange="saveDashboardData()"
-                    />
-                    <div
-                      style="
-                        font-size: 12px;
-                        margin-top: 2px;
-                        width: 100%;
-                        display: flex;
-                        justify-content: center;
-                      "
-                    >
-                      <input
-                        type="text"
-                        id="goal-travels"
-                        class="dash-input"
-                        style="
-                          font-size: 12px !important;
-                          color: #666 !important;
-                          width: 80px !important;
-                          height: 22px !important;
-                          padding: 0 !important;
-                          margin: 0 !important;
-                          background: transparent !important;
-                          text-align: center !important;
-                        "
-                        placeholder="0.00€"
-                        onfocus="onDashInputFocus('goal-travels')"
-                        onblur="onDashInputBlur('goal-travels')"
-                        onchange="saveDashboardData()"
-                      />
-                    </div>
-                  </div>
-                  <div class="progress-box">
-                    <div class="progress-bar-bg">
-                      <div id="bar-travels" class="progress-bar-fill"></div>
-                    </div>
-                    <span id="pct-travels" class="progress-text">0%</span>
-                  </div>
-                </div>
-
-                <!-- Studies -->
-                <div class="savings-goal-col">
-                  <div class="savings-goal-box">
-                    <label>Studies</label>
-                    <input
-                      type="text"
-                      id="dash-studies"
-                      class="dash-input"
-                      placeholder="0.00€"
-                      onfocus="onDashInputFocus('dash-studies')"
-                      onblur="onDashInputBlur('dash-studies')"
-                      onchange="saveDashboardData()"
-                    />
-                    <div
-                      style="
-                        font-size: 12px;
-                        margin-top: 2px;
-                        width: 100%;
-                        display: flex;
-                        justify-content: center;
-                      "
-                    >
-                      <input
-                        type="text"
-                        id="goal-studies"
-                        class="dash-input"
-                        style="
-                          font-size: 12px !important;
-                          color: #666 !important;
-                          width: 80px !important;
-                          height: 22px !important;
-                          padding: 0 !important;
-                          margin: 0 !important;
-                          background: transparent !important;
-                          text-align: center !important;
-                        "
-                        placeholder="0.00€"
-                        onfocus="onDashInputFocus('goal-studies')"
-                        onblur="onDashInputBlur('goal-studies')"
-                        onchange="saveDashboardData()"
-                      />
-                    </div>
-                  </div>
-                  <div class="progress-box">
-                    <div class="progress-bar-bg">
-                      <div id="bar-studies" class="progress-bar-fill"></div>
-                    </div>
-                    <span id="pct-studies" class="progress-text">0%</span>
-                  </div>
-                </div>
-
-                <!-- Car -->
-                <div class="savings-goal-col">
-                  <div class="savings-goal-box">
-                    <label>Car</label>
-                    <input
-                      type="text"
-                      id="dash-car"
-                      class="dash-input"
-                      placeholder="0.00€"
-                      onfocus="onDashInputFocus('dash-car')"
-                      onblur="onDashInputBlur('dash-car')"
-                      onchange="saveDashboardData()"
-                    />
-                    <div
-                      style="
-                        font-size: 12px;
-                        margin-top: 2px;
-                        width: 100%;
-                        display: flex;
-                        justify-content: center;
-                      "
-                    >
-                      <input
-                        type="text"
-                        id="goal-car"
-                        class="dash-input"
-                        style="
-                          font-size: 12px !important;
-                          color: #666 !important;
-                          width: 80px !important;
-                          height: 22px !important;
-                          padding: 0 !important;
-                          margin: 0 !important;
-                          background: transparent !important;
-                          text-align: center !important;
-                        "
-                        placeholder="0.00€"
-                        onfocus="onDashInputFocus('goal-car')"
-                        onblur="onDashInputBlur('goal-car')"
-                        onchange="saveDashboardData()"
-                      />
-                    </div>
-                  </div>
-                  <div class="progress-box">
-                    <div class="progress-bar-bg">
-                      <div id="bar-car" class="progress-bar-fill"></div>
-                    </div>
-                    <span id="pct-car" class="progress-text">0%</span>
-                  </div>
-                </div>
-              </div>
+              <!-- Sparziele (werden per JS aus GOALS erzeugt) -->
+              <div class="dashboard-row" id="goals-row"></div>
             </div>
           </details>
         </div>
@@ -625,6 +470,24 @@
         <button onclick="showMainView()" style="padding: 12px; font-size: 16px">
           Monthly Overview
         </button>
+      </div>
+
+      <!-- BACKUP -->
+      <div class="card">
+        <button onclick="exportBackup()">Download Backup</button>
+        <button
+          class="btn-secondary"
+          onclick="document.getElementById('backup-file').click()"
+        >
+          Restore Backup
+        </button>
+        <input
+          type="file"
+          id="backup-file"
+          accept=".json,application/json"
+          style="display: none"
+        />
+        <p class="backup-info" id="backup-info"></p>
       </div>
     </div>
 
@@ -648,64 +511,57 @@
         <input type="month" id="month-filter" onchange="onMonthChange()" />
       </div>
 
-      <!-- GEHALT & KATEGORIEN INFO CARD -->
       <div class="card">
         <p class="custom-label">Earned this month</p>
-        <!-- Längliches Gehalts-Feld oben -->
         <div class="stat-box" style="margin-bottom: 10px">
           <label>Salary</label>
           <input
             type="text"
             id="monthly-salary"
             class="salary-input"
-            placeholder="0.00€"
-            onfocus="onSalaryFocus()"
-            onblur="onSalaryBlur()"
-            onchange="saveMonthlySalary()"
+            placeholder="0,00€"
           />
         </div>
 
-        <!-- Cash Inflow & Dynamic Label nebeneinander -->
         <div class="stats-grid">
           <div class="stat-box">
             <label>Cash</label>
-            <span id="cash-total">0.00€</span>
+            <span id="cash-total">0,00€</span>
           </div>
           <div class="stat-box">
             <label id="dynamic-label">Plasma</label>
-            <span id="plasma-total">0.00€</span>
+            <span id="plasma-total">0,00€</span>
           </div>
         </div>
 
         <div class="stat-box-thin">
           <label>Total</label>
-          <span id="cash-plasma-sum">0.00€</span>
+          <span id="cash-plasma-sum">0,00€</span>
         </div>
       </div>
 
-      <!-- TOTAL INCOME & TOTAL EXPENSES CARD -->
       <div class="card">
         <div class="stats-grid">
           <div class="stat-box">
             <label>Total Income</label>
-            <span id="total-income" class="income-val">0.00€</span>
+            <span id="total-income" class="income-val">0,00€</span>
           </div>
           <div class="stat-box">
             <label>Total Expenses</label>
-            <span id="total-expenses" class="expenses-val">0.00€</span>
+            <span id="total-expenses" class="expenses-val">0,00€</span>
           </div>
         </div>
 
         <div class="stat-box-thin">
           <label>Net Total</label>
-          <span id="net-total">0.00€</span>
+          <span id="net-total">0,00€</span>
         </div>
       </div>
 
       <div class="card">
-        <h3 class="custom-label2">Sum: <span id="total">0.00€</span></h3>
+        <h3 class="custom-label2">Sum: <span id="total">0,00€</span></h3>
         <input type="text" id="desc" placeholder="Description" />
-        <input type="number" id="amount" placeholder="Amount" />
+        <input type="number" step="any" id="amount" placeholder="Amount" />
         <input type="date" id="date" />
         <button onclick="addTransaction()">Add Transaction</button>
       </div>
@@ -754,23 +610,173 @@
     <!-- JAVASCRIPT                                 -->
     <!-- ========================================== -->
     <script>
-      // --- 1. STATE & INITIALISIERUNG ---
+      const $ = (id) => document.getElementById(id);
+
+      // --- 1. KONSTANTEN ---
+      const GOALS = [
+        ["travels", "Travels"],
+        ["studies", "Studies"],
+        ["car", "Car"],
+      ];
+      const GREEN = "#32a74a",
+        RED = "#c52233",
+        GREY = "#666666";
+      // Felder, die bei 0 grau statt grün sind
+      const GREY_ZERO = [
+        "dash-travels",
+        "dash-studies",
+        "dash-car",
+        "dash-bank-savings",
+        "dash-cash-savings",
+      ];
+
+      // --- 2. ZAHLEN & DATUM (Format: 1.324,54€) ---
+      // Versteht "1324,54", "1.324,54", "1324.54" und "1,324.54"
+      function parseNum(str) {
+        if (str === null || str === undefined) return NaN;
+        let s = String(str).replace(/[^0-9.,-]/g, "");
+        if (!s || s === "-") return NaN;
+        const lc = s.lastIndexOf(","),
+          ld = s.lastIndexOf(".");
+        if (lc > -1 && ld > -1) {
+          s =
+            lc > ld
+              ? s.replace(/\./g, "").replace(",", ".")
+              : s.replace(/,/g, "");
+        } else if (lc > -1) {
+          s = s.replace(/\./g, "").replace(",", ".");
+        } else if (ld > -1) {
+          if (s.split(".").length > 2 || /^-?[1-9]\d{0,2}\.\d{3}$/.test(s))
+            s = s.replace(/\./g, "");
+        }
+        return parseFloat(s);
+      }
+
+      // Normalisiert zum Speichern: "1.324,5" -> "1324.5" (auf 2 Nachkommastellen gerundet)
+      function cleanNumber(str) {
+        const n = parseNum(str);
+        return isNaN(n) ? "" : String(Math.round(n * 100) / 100);
+      }
+
+      // Anzeige: 1324.5 -> "1.324,50€"
+      function fmt(n) {
+        const neg = n < 0 && Math.abs(n) >= 0.005;
+        const [i, d] = Math.abs(n).toFixed(2).split(".");
+        return (
+          (neg ? "-" : "") +
+          i.replace(/\B(?=(\d{3})+(?!\d))/g, ".") +
+          "," +
+          d +
+          "€"
+        );
+      }
+
+      // Beim Bearbeiten: "1324,5" (ohne Tausenderpunkte und €)
+      function editStr(str) {
+        return cleanNumber(str).replace(".", ",");
+      }
+
+      // Lokales Datum (nicht UTC) -> wechselt genau um 0:00 Uhr
+      function localDate(d = new Date()) {
+        return (
+          d.getFullYear() +
+          "-" +
+          String(d.getMonth() + 1).padStart(2, "0") +
+          "-" +
+          String(d.getDate()).padStart(2, "0")
+        );
+      }
+
+      function esc(s) {
+        return String(s).replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+
+      function colorFor(n) {
+        return n < 0 ? RED : GREEN;
+      }
+
+      // --- 3. STATE & INITIALISIERUNG ---
       let transactions =
         JSON.parse(localStorage.getItem("my_transactions")) || [];
       let historyStack = [];
       let redoStack = [];
+      let lastDay = localDate();
 
-      const today = new Date();
-      document.getElementById("date").value = today.toISOString().split("T")[0];
-      document.getElementById("month-filter").value = today
-        .toISOString()
-        .slice(0, 7);
+      // Sparziel-Spalten erzeugen
+      $("goals-row").innerHTML = GOALS.map(
+        ([key, label]) => `
+        <div class="savings-goal-col">
+          <div class="savings-goal-box">
+            <label>${label}</label>
+            <input type="text" id="dash-${key}" class="dash-input" placeholder="0,00€" />
+            <input type="text" id="goal-${key}" class="dash-input goal-input" placeholder="0,00€" />
+          </div>
+          <div class="progress-box">
+            <div class="progress-bar-bg"><div id="bar-${key}" class="progress-bar-fill"></div></div>
+            <span id="pct-${key}" class="progress-text">0%</span>
+          </div>
+        </div>`,
+      ).join("");
+
+      $("date").value = lastDay;
+      $("month-filter").value = lastDay.slice(0, 7);
+
+      // Eingabefelder (Dashboard + Gehalt): beim Fokus Rohwert, beim Verlassen speichern
+      document.querySelectorAll(".dash-input").forEach((input) => {
+        input.addEventListener("focus", () => {
+          input.value = editStr(input.value);
+          if (!input.id.startsWith("goal-")) input.style.color = "#000000";
+        });
+        input.addEventListener("blur", saveDashboardData);
+        input.addEventListener(
+          "keydown",
+          (e) => e.key === "Enter" && input.blur(),
+        );
+      });
+      $("monthly-salary").addEventListener("focus", () => {
+        const i = $("monthly-salary");
+        i.value = editStr(i.value);
+        i.style.color = "#000000";
+      });
+      $("monthly-salary").addEventListener("blur", saveMonthlySalary);
+      $("monthly-salary").addEventListener(
+        "keydown",
+        (e) => e.key === "Enter" && e.target.blur(),
+      );
+
+      // Datum wechselt um Mitternacht (auch wenn die App im Hintergrund war)
+      function checkNewDay() {
+        const now = localDate();
+        if (now === lastDay) return;
+        if ($("date").value === lastDay) $("date").value = now;
+        lastDay = now;
+      }
+      setInterval(checkNewDay, 15000);
+      document.addEventListener("visibilitychange", checkNewDay);
+
+      // Browser bitten, den Speicher nicht automatisch zu löschen
+      try {
+        navigator.storage &&
+          navigator.storage.persist &&
+          navigator.storage.persist();
+      } catch (e) {}
 
       loadMonthlySalary();
       loadDashboardData();
+      renderBackupInfo();
       updateUI();
 
-      // --- 2. SPEICHER- & HILFSFUNKTIONEN ---
+      // --- 4. SPEICHER-FUNKTIONEN ---
       function saveState() {
         historyStack.push(JSON.stringify(transactions));
         redoStack = [];
@@ -781,366 +787,195 @@
         updateUI();
       }
 
-      // --- 3. DASHBOARD LOGIK ---
+      // --- 5. DASHBOARD ---
+      function dashIds() {
+        return [...document.querySelectorAll(".dash-input")].map((i) => i.id);
+      }
+      function keyOf(id) {
+        return id.replace(/-/g, "_");
+      }
+      function stored(id) {
+        return parseFloat(localStorage.getItem(keyOf(id))) || 0;
+      }
+
       function saveDashboardData() {
-        const thisMonthVal = cleanNumber(
-          document.getElementById("dash-this-month").value,
+        dashIds().forEach((id) =>
+          localStorage.setItem(keyOf(id), cleanNumber($(id).value)),
         );
-        const topCashVal = cleanNumber(
-          document.getElementById("dash-top-cash").value,
-        );
-        const paypalVal = cleanNumber(
-          document.getElementById("dash-paypal").value,
-        );
-
-        const bankSavingsVal = cleanNumber(
-          document.getElementById("dash-bank-savings").value,
-        );
-        const cashSavingsVal = cleanNumber(
-          document.getElementById("dash-cash-savings").value,
-        );
-        const travelsVal = cleanNumber(
-          document.getElementById("dash-travels").value,
-        );
-        const studiesVal = cleanNumber(
-          document.getElementById("dash-studies").value,
-        );
-        const carVal = cleanNumber(document.getElementById("dash-car").value);
-
-        const goalTravelsVal = cleanNumber(
-          document.getElementById("goal-travels").value,
-        );
-        const goalStudiesVal = cleanNumber(
-          document.getElementById("goal-studies").value,
-        );
-        const goalCarVal = cleanNumber(
-          document.getElementById("goal-car").value,
-        );
-
-        localStorage.setItem("dash_this_month", thisMonthVal);
-        localStorage.setItem("dash_top_cash", topCashVal);
-        localStorage.setItem("dash_paypal", paypalVal);
-
-        localStorage.setItem("dash_bank_savings", bankSavingsVal);
-        localStorage.setItem("dash_cash_savings", cashSavingsVal);
-        localStorage.setItem("dash_travels", travelsVal);
-        localStorage.setItem("dash_studies", studiesVal);
-        localStorage.setItem("dash_car", carVal);
-
-        localStorage.setItem("goal_travels", goalTravelsVal);
-        localStorage.setItem("goal_studies", goalStudiesVal);
-        localStorage.setItem("goal_car", goalCarVal);
-
         renderDashboard();
       }
 
       function loadDashboardData() {
-        document.getElementById("dash-this-month").value =
-          localStorage.getItem("dash_this_month") || "";
-        document.getElementById("dash-top-cash").value =
-          localStorage.getItem("dash_top_cash") || "";
-        document.getElementById("dash-paypal").value =
-          localStorage.getItem("dash_paypal") || "";
-
-        document.getElementById("dash-bank-savings").value =
-          localStorage.getItem("dash_bank_savings") || "";
-        document.getElementById("dash-cash-savings").value =
-          localStorage.getItem("dash_cash_savings") || "";
-        document.getElementById("dash-travels").value =
-          localStorage.getItem("dash_travels") || "";
-        document.getElementById("dash-studies").value =
-          localStorage.getItem("dash_studies") || "";
-        document.getElementById("dash-car").value =
-          localStorage.getItem("dash_car") || "";
-
-        document.getElementById("goal-travels").value =
-          localStorage.getItem("goal_travels") || "";
-        document.getElementById("goal-studies").value =
-          localStorage.getItem("goal_studies") || "";
-        document.getElementById("goal-car").value =
-          localStorage.getItem("goal_car") || "";
-
+        dashIds().forEach(
+          (id) => ($(id).value = localStorage.getItem(keyOf(id)) || ""),
+        );
         renderDashboard();
       }
 
-      function updateProgress(currentVal, goalVal, barId, pctId) {
-        let pct = 0;
-        if (goalVal > 0 && currentVal > 0) {
-          pct = (currentVal / goalVal) * 100;
-        }
-        const clampedPct = Math.min(Math.max(pct, 0), 100);
-        document.getElementById(barId).style.width = clampedPct + "%";
-        document.getElementById(pctId).innerText = Math.round(pct) + "%";
+      function updateProgress(current, goal, key) {
+        const pct = goal > 0 && current > 0 ? (current / goal) * 100 : 0;
+        $("bar-" + key).style.width = Math.min(Math.max(pct, 0), 100) + "%";
+        $("pct-" + key).innerText = Math.round(pct) + "%";
       }
 
       function renderDashboard() {
-        const thisMonthVal =
-          parseFloat(localStorage.getItem("dash_this_month")) || 0;
-        const topCashVal =
-          parseFloat(localStorage.getItem("dash_top_cash")) || 0;
-        const paypalVal = parseFloat(localStorage.getItem("dash_paypal")) || 0;
+        dashIds().forEach((id) => {
+          const raw = localStorage.getItem(keyOf(id));
+          const n = parseFloat(raw);
+          const input = $(id);
+          input.value = raw !== null && raw !== "" && !isNaN(n) ? fmt(n) : "";
+          if (id.startsWith("goal-")) return;
+          input.style.color = GREY_ZERO.includes(id)
+            ? n > 0
+              ? GREEN
+              : n < 0
+                ? RED
+                : GREY
+            : colorFor(n || 0);
+        });
 
-        const bankSavingsVal =
-          parseFloat(localStorage.getItem("dash_bank_savings")) || 0;
-        const cashSavingsVal =
-          parseFloat(localStorage.getItem("dash_cash_savings")) || 0;
-        const travelsVal =
-          parseFloat(localStorage.getItem("dash_travels")) || 0;
-        const studiesVal =
-          parseFloat(localStorage.getItem("dash_studies")) || 0;
-        const carVal = parseFloat(localStorage.getItem("dash_car")) || 0;
-
-        const goalTravelsVal =
-          parseFloat(localStorage.getItem("goal_travels")) || 0;
-        const goalStudiesVal =
-          parseFloat(localStorage.getItem("goal_studies")) || 0;
-        const goalCarVal = parseFloat(localStorage.getItem("goal_car")) || 0;
-
-        formatDashInput(
-          "dash-this-month",
-          localStorage.getItem("dash_this_month"),
-          thisMonthVal,
-        );
-        formatDashInput(
-          "dash-top-cash",
-          localStorage.getItem("dash_top_cash"),
-          topCashVal,
-        );
-        formatDashInput(
-          "dash-paypal",
-          localStorage.getItem("dash_paypal"),
-          paypalVal,
+        GOALS.forEach(([key]) =>
+          updateProgress(stored("dash-" + key), stored("goal-" + key), key),
         );
 
-        formatDashInput(
-          "dash-bank-savings",
-          localStorage.getItem("dash_bank_savings"),
-          bankSavingsVal,
-        );
-        formatDashInput(
-          "dash-cash-savings",
-          localStorage.getItem("dash_cash_savings"),
-          cashSavingsVal,
-        );
-        formatDashInput(
-          "dash-travels",
-          localStorage.getItem("dash_travels"),
-          travelsVal,
-        );
-        formatDashInput(
-          "dash-studies",
-          localStorage.getItem("dash_studies"),
-          studiesVal,
-        );
-        formatDashInput("dash-car", localStorage.getItem("dash_car"), carVal);
-
-        formatGoalInput(
-          "goal-travels",
-          localStorage.getItem("goal_travels"),
-          goalTravelsVal,
-        );
-        formatGoalInput(
-          "goal-studies",
-          localStorage.getItem("goal_studies"),
-          goalStudiesVal,
-        );
-        formatGoalInput(
-          "goal-car",
-          localStorage.getItem("goal_car"),
-          goalCarVal,
-        );
-
-        // Ladebalken & Prozentwerte aktualisieren
-        updateProgress(
-          travelsVal,
-          goalTravelsVal,
-          "bar-travels",
-          "pct-travels",
-        );
-        updateProgress(
-          studiesVal,
-          goalStudiesVal,
-          "bar-studies",
-          "pct-studies",
-        );
-        updateProgress(carVal, goalCarVal, "bar-car", "pct-car");
-
-        // Farbanpassung für die Beträge (Grün wenn > 0, Grau wenn == 0, Rot wenn < 0)
-        const tInput = document.getElementById("dash-travels");
-        tInput.style.color =
-          travelsVal > 0 ? "#32a74a" : travelsVal < 0 ? "#c52233" : "#666666";
-
-        const sInput = document.getElementById("dash-studies");
-        sInput.style.color =
-          studiesVal > 0 ? "#32a74a" : studiesVal < 0 ? "#c52233" : "#666666";
-
-        const cInput = document.getElementById("dash-car");
-        cInput.style.color =
-          carVal > 0 ? "#32a74a" : carVal < 0 ? "#c52233" : "#666666";
-
-        const bsInput = document.getElementById("dash-bank-savings");
-        bsInput.style.color =
-          bankSavingsVal > 0
-            ? "#32a74a"
-            : bankSavingsVal < 0
-              ? "#c52233"
-              : "#666666";
-
-        const csInput = document.getElementById("dash-cash-savings");
-        csInput.style.color =
-          cashSavingsVal > 0
-            ? "#32a74a"
-            : cashSavingsVal < 0
-              ? "#c52233"
-              : "#666666";
-
-        // Berechnungen: Total Savings = Bank Savings + Cash Savings
-        const totalSavings = bankSavingsVal + cashSavingsVal;
+        const totalSavings =
+          stored("dash-bank-savings") + stored("dash-cash-savings");
         const totalAssets =
-          thisMonthVal + topCashVal + paypalVal + totalSavings;
+          stored("dash-this-month") +
+          stored("dash-top-cash") +
+          stored("dash-paypal") +
+          totalSavings;
 
-        const savingsValSpan = document.getElementById("dash-savings-val");
-        savingsValSpan.innerText = totalSavings.toFixed(2) + "€";
-        savingsValSpan.style.color = totalSavings < 0 ? "#c52233" : "#32a74a";
-
-        const totalSpan = document.getElementById("dash-total-val");
-        totalSpan.innerText = totalAssets.toFixed(2) + "€";
-        totalSpan.style.color = totalAssets < 0 ? "#c52233" : "#32a74a";
+        $("dash-savings-val").innerText = fmt(totalSavings);
+        $("dash-savings-val").style.color = colorFor(totalSavings);
+        $("dash-total-val").innerText = fmt(totalAssets);
+        $("dash-total-val").style.color = colorFor(totalAssets);
       }
 
-      function cleanNumber(str) {
-        if (!str) return "";
-        return str.replace(/[^0-9.,-]/g, "").replace(",", ".");
+      // --- 6. BACKUP ---
+      function exportBackup() {
+        localStorage.setItem("last_backup", localDate());
+        const data = {};
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          data[k] = localStorage.getItem(k);
+        }
+        const blob = new Blob(
+          [JSON.stringify({ app: "cells", version: 1, data }, null, 2)],
+          { type: "application/json" },
+        );
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = `cells-backup-${localDate()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+        renderBackupInfo();
       }
 
-      function formatDashInput(elementId, valStr, numericVal) {
-        const input = document.getElementById(elementId);
-        const clean = cleanNumber(valStr);
-        if (clean !== "" && !isNaN(parseFloat(clean))) {
-          input.value = parseFloat(clean).toFixed(2) + "€";
-          if (
-            elementId !== "dash-travels" &&
-            elementId !== "dash-studies" &&
-            elementId !== "dash-car" &&
-            elementId !== "dash-bank-savings" &&
-            elementId !== "dash-cash-savings"
-          ) {
-            input.style.color = numericVal < 0 ? "#c52233" : "#32a74a";
+      $("backup-file").addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        e.target.value = "";
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const obj = JSON.parse(reader.result);
+            if (!obj || obj.app !== "cells" || typeof obj.data !== "object")
+              throw new Error("invalid");
+            if (
+              !confirm(
+                "This replaces ALL current data with the backup. Continue?",
+              )
+            )
+              return;
+            localStorage.clear();
+            Object.entries(obj.data).forEach(([k, v]) =>
+              localStorage.setItem(k, v),
+            );
+            location.reload();
+          } catch (err) {
+            alert("This file is not a valid Cells backup.");
           }
-        } else {
+        };
+        reader.readAsText(file);
+      });
+
+      function renderBackupInfo() {
+        const last = localStorage.getItem("last_backup");
+        const el = $("backup-info");
+        if (!last) {
+          el.innerText = "No backup yet";
+          el.style.color = RED;
+          return;
+        }
+        const days = Math.floor(
+          (new Date(localDate()) - new Date(last)) / 86400000,
+        );
+        const [y, m, d] = last.split("-");
+        el.innerText = `Last backup: ${d}.${m}.${y}`;
+        el.style.color = days > 30 ? RED : GREY;
+      }
+
+      // --- 7. GEHALT ---
+      function applySalaryDisplay(num) {
+        const input = $("monthly-salary");
+        if (num === "" || isNaN(num)) {
           input.value = "";
-          input.style.color = "#32a74a";
-        }
-      }
-
-      function formatGoalInput(elementId, valStr, numericVal) {
-        const input = document.getElementById(elementId);
-        const clean = cleanNumber(valStr);
-        if (clean !== "" && !isNaN(parseFloat(clean))) {
-          input.value = parseFloat(clean).toFixed(2) + "€";
+          input.style.color = GREEN;
         } else {
-          input.value = "";
+          input.value = fmt(num);
+          input.style.color = colorFor(num);
         }
       }
 
-      function onDashInputFocus(elementId) {
-        const input = document.getElementById(elementId);
-        input.value = cleanNumber(input.value);
-        if (!elementId.startsWith("goal-")) {
-          input.style.color = "#000000";
-        }
-      }
-
-      function onDashInputBlur(elementId) {
-        saveDashboardData();
-      }
-
-      // --- 4. GEHALTS-LOGIK ---
       function saveMonthlySalary() {
-        const month = document.getElementById("month-filter").value;
-        const input = document.getElementById("monthly-salary");
-        let cleanVal = cleanNumber(input.value);
-
+        const month = $("month-filter").value;
+        const val = cleanNumber($("monthly-salary").value);
         if (month) {
-          if (cleanVal !== "") {
-            localStorage.setItem(`salary_${month}`, cleanVal);
-          } else {
-            localStorage.removeItem(`salary_${month}`);
-          }
+          if (val !== "") localStorage.setItem(`salary_${month}`, val);
+          else localStorage.removeItem(`salary_${month}`);
         }
-        formatSalaryDisplay();
+        applySalaryDisplay(val === "" ? "" : parseFloat(val));
         updateUI();
       }
 
       function loadMonthlySalary() {
-        const month = document.getElementById("month-filter").value;
-        const savedSalary = localStorage.getItem(`salary_${month}`) || "";
-        document.getElementById("monthly-salary").value = savedSalary;
-        formatSalaryDisplay();
+        const saved = localStorage.getItem(`salary_${$("month-filter").value}`);
+        applySalaryDisplay(saved === null ? "" : parseFloat(saved));
         checkDynamicLabel();
       }
 
       function checkDynamicLabel() {
-        const month = document.getElementById("month-filter").value;
-        const label = document.getElementById("dynamic-label");
-        if (month && month >= "2026-11") {
-          label.innerText = "Tips";
-        } else {
-          label.innerText = "Plasma";
-        }
-      }
-
-      function formatSalaryDisplay() {
-        const input = document.getElementById("monthly-salary");
-        let val = cleanNumber(input.value);
-        let num = parseFloat(val);
-        if (val !== "" && !isNaN(num)) {
-          input.value = num.toFixed(2) + "€";
-          input.style.color = num < 0 ? "#c52233" : "#32a74a";
-        } else {
-          input.value = "";
-          input.style.color = "#32a74a";
-        }
-      }
-
-      function onSalaryFocus() {
-        const input = document.getElementById("monthly-salary");
-        input.value = cleanNumber(input.value);
-        input.style.color = "#000000";
-      }
-
-      function onSalaryBlur() {
-        saveMonthlySalary();
+        const month = $("month-filter").value;
+        $("dynamic-label").innerText =
+          month && month >= "2026-11" ? "Tips" : "Plasma";
       }
 
       function onMonthChange() {
         loadMonthlySalary();
-        checkDynamicLabel();
         updateUI();
       }
 
-      // --- 5. NAVIGATION (ANSICHTEN UMSCHALTEN) ---
+      // --- 8. NAVIGATION ---
       function showMainView() {
-        document.getElementById("dashboard-view").style.display = "none";
-        document.getElementById("main-view").style.display = "block";
+        $("dashboard-view").style.display = "none";
+        $("main-view").style.display = "block";
         checkDynamicLabel();
       }
 
       function showDashboard() {
-        document.getElementById("main-view").style.display = "none";
-        document.getElementById("dashboard-view").style.display = "block";
+        $("main-view").style.display = "none";
+        $("dashboard-view").style.display = "block";
         renderDashboard();
       }
 
-      // --- 6. TRANSAKTIONEN VERWALTEN ---
+      // --- 9. TRANSAKTIONEN ---
       function addTransaction() {
-        const descInput = document.getElementById("desc");
-        const amountInput = document.getElementById("amount");
-        const dateInput = document.getElementById("date");
-
-        const desc = descInput.value;
-        const amount = parseFloat(amountInput.value);
-        const date = dateInput.value;
+        const desc = $("desc").value;
+        const amount = parseFloat($("amount").value);
+        const date = $("date").value;
 
         if (!desc || isNaN(amount) || !date) {
           alert("Please enter a valid Description and Amount");
@@ -1148,43 +983,38 @@
         }
 
         saveState();
-
         transactions.push({ id: Date.now(), desc, amount, date });
 
-        document.getElementById("month-filter").value = date.slice(0, 7);
+        $("month-filter").value = date.slice(0, 7);
         loadMonthlySalary();
-        checkDynamicLabel();
-
         saveAndRefresh();
 
-        descInput.value = "";
-        amountInput.value = "";
-        dateInput.value = today.toISOString().split("T")[0];
+        $("desc").value = "";
+        $("amount").value = "";
+        $("date").value = localDate();
+        lastDay = localDate();
       }
 
       function deleteTransaction(id) {
         if (!confirm("Do you really want to remove this transaction?")) return;
-
         saveState();
-        transactions = transactions.filter((t) => (t.id === id ? false : true));
+        transactions = transactions.filter((t) => t.id !== id);
         saveAndRefresh();
       }
 
       function updateTransactionDate(id, newDate) {
         if (!newDate) return;
-
         saveState();
-        const transaction = transactions.find((t) => t.id === id);
-        if (transaction) {
-          transaction.date = newDate;
+        const t = transactions.find((t) => t.id === id);
+        if (t) {
+          t.date = newDate;
           saveAndRefresh();
         }
       }
 
-      // --- 7. UNDO / REDO ---
+      // --- 10. UNDO / REDO ---
       function undo() {
         if (historyStack.length === 0) return;
-
         redoStack.push(JSON.stringify(transactions));
         transactions = JSON.parse(historyStack.pop());
         saveAndRefresh();
@@ -1192,92 +1022,66 @@
 
       function redo() {
         if (redoStack.length === 0) return;
-
         historyStack.push(JSON.stringify(transactions));
         transactions = JSON.parse(redoStack.pop());
         saveAndRefresh();
       }
 
-      // --- 8. UI AKTUALISIEREN & SUMMEN BERECHNEN ---
+      // --- 11. UI & SUMMEN ---
       function updateUI() {
-        const tbody = document.getElementById("transaction-list");
-        const totalSpan = document.getElementById("total");
-        const selectedMonth = document.getElementById("month-filter").value;
-
+        const tbody = $("transaction-list");
+        const selectedMonth = $("month-filter").value;
         checkDynamicLabel();
 
         tbody.innerHTML = "";
-        let monthBalance = 0;
-        let cashTotal = 0;
-        let secondaryTotal = 0;
-        let totalExpenses = 0;
-        let totalIncome = 0;
+        let monthBalance = 0,
+          cashTotal = 0,
+          secondaryTotal = 0,
+          totalExpenses = 0,
+          totalIncome = 0;
 
-        const savedSalary = localStorage.getItem(`salary_${selectedMonth}`);
-        if (savedSalary && !isNaN(parseFloat(savedSalary))) {
-          totalIncome += parseFloat(savedSalary);
-        }
+        const savedSalary = parseFloat(
+          localStorage.getItem(`salary_${selectedMonth}`),
+        );
+        if (!isNaN(savedSalary)) totalIncome += savedSalary;
+
+        const secondaryKeyword = selectedMonth >= "2026-11" ? "tips" : "plasma";
 
         transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
 
         transactions.forEach((t) => {
-          if (!selectedMonth || t.date.slice(0, 7) === selectedMonth) {
-            monthBalance += t.amount;
+          if (selectedMonth && t.date.slice(0, 7) !== selectedMonth) return;
 
-            if (t.amount < 0) {
-              totalExpenses += Math.abs(t.amount);
-            } else {
-              totalIncome += t.amount;
-            }
+          monthBalance += t.amount;
+          if (t.amount < 0) totalExpenses += Math.abs(t.amount);
+          else totalIncome += t.amount;
 
-            const descLower = t.desc.toLowerCase();
-            if (descLower.includes("cash") && t.amount > 0) {
-              cashTotal += t.amount;
-            }
-            const secondaryKeyword =
-              selectedMonth >= "2026-11" ? "tips" : "plasma";
-            if (descLower.includes(secondaryKeyword) && t.amount > 0) {
-              secondaryTotal += t.amount;
-            }
+          const descLower = t.desc.toLowerCase();
+          if (descLower.includes("cash") && t.amount > 0) cashTotal += t.amount;
+          if (descLower.includes(secondaryKeyword) && t.amount > 0)
+            secondaryTotal += t.amount;
 
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>
-                    <input type="date" value="${t.date}" onchange="updateTransactionDate(${t.id}, this.value)">
-                </td>
-                <td>${t.desc}</td>
-                <td style="color: ${t.amount < 0 ? "#c52233" : "#32a74a"}; font-weight: bold;">
-                    ${t.amount.toFixed(2)}€
-                </td>
-                <td>
-                    <button class="btn-delete" onclick="deleteTransaction(${t.id})">X</button>
-                </td>
-            `;
-            tbody.appendChild(row);
-          }
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td><input type="date" value="${t.date}" onchange="updateTransactionDate(${t.id}, this.value)"></td>
+            <td>${esc(t.desc)}</td>
+            <td style="color: ${colorFor(t.amount)}; font-weight: bold;">${fmt(t.amount)}</td>
+            <td><button class="btn-delete" onclick="deleteTransaction(${t.id})">X</button></td>
+          `;
+          tbody.appendChild(row);
         });
 
-        totalSpan.innerText = monthBalance.toFixed(2) + "€";
-        totalSpan.style.color = monthBalance < 0 ? "#c52233" : "#32a74a";
+        $("total").innerText = fmt(monthBalance);
+        $("total").style.color = colorFor(monthBalance);
+        $("cash-total").innerText = fmt(cashTotal);
+        $("plasma-total").innerText = fmt(secondaryTotal);
+        $("cash-plasma-sum").innerText = fmt(cashTotal + secondaryTotal);
+        $("total-expenses").innerText = fmt(totalExpenses);
+        $("total-income").innerText = fmt(totalIncome);
 
-        document.getElementById("cash-total").innerText =
-          cashTotal.toFixed(2) + "€";
-        document.getElementById("plasma-total").innerText =
-          secondaryTotal.toFixed(2) + "€";
-
-        const cashSecondarySum = cashTotal + secondaryTotal;
-        document.getElementById("cash-plasma-sum").innerText =
-          cashSecondarySum.toFixed(2) + "€";
-
-        document.getElementById("total-expenses").innerText =
-          totalExpenses.toFixed(2) + "€";
-        document.getElementById("total-income").innerText =
-          totalIncome.toFixed(2) + "€";
-
-        const netTotal = totalIncome - totalExpenses;
-        const netTotalSpan = document.getElementById("net-total");
-        netTotalSpan.innerText = netTotal.toFixed(2) + "€";
-        netTotalSpan.style.color = netTotal < 0 ? "#c52233" : "#32a74a";
+        const net = totalIncome - totalExpenses;
+        $("net-total").innerText = fmt(net);
+        $("net-total").style.color = colorFor(net);
       }
     </script>
   </body>
