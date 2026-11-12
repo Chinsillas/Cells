@@ -4,18 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cells</title>
-
     <style>
-      /* --- 1. ALLGEMEINES LAYOUT & CARDS --- */
+      /* --- 1. LAYOUT & CARDS --- */
       body {
         font-family: Helvetica, sans-serif;
-        padding: 20px;
+        padding: 72px 20px 20px;
         max-width: 500px;
         margin: auto;
         font-size: 16px;
-        background-color: #f6f6f6;
+        background: #f6f6f6;
       }
-
       .card {
         background: #edede9;
         padding: 18px;
@@ -23,7 +21,7 @@
         margin-bottom: 20px;
       }
 
-      /* --- 2. FORMULAR-ELEMENTE & BUTTONS --- */
+      /* --- 2. FORMULARE & BUTTONS --- */
       input,
       select,
       button {
@@ -32,43 +30,38 @@
         box-sizing: border-box;
         -webkit-appearance: none;
         appearance: none;
-        font-family: inherit; /* <- neu */
+        font-family: inherit;
         height: 48px;
         padding: 0 12px;
         margin: 6px 0;
         border: 1px solid #d6ccc2;
         border-radius: 18px;
-        font-size: 16px; /* Verhindert Auto-Zoom auf Safari iOS */
-        background-color: #ffffff;
+        font-size: 16px;
+        background: #fff;
       }
-
       button {
-        background-color: #40916c;
-        color: white;
+        background: #40916c;
+        color: #fff;
         border: none;
         font-weight: bold;
         cursor: pointer;
       }
-
       .btn-secondary {
-        background-color: #ffffff;
+        background: #fff;
         color: #40916c;
         border: 1px solid #40916c;
       }
-
       .btn-delete {
-        background-color: #c52233 !important;
-        color: white !important;
+        background: #c52233 !important;
+        color: #fff !important;
         width: auto !important;
         height: auto !important;
         padding: 6px 12px !important;
         font-size: 12px !important;
       }
-
-      /* Zentrieren von Text in Datums-Inputs */
       input[type="date"],
       input[type="month"] {
-        color: #000000;
+        color: #000;
         text-align: center;
         display: flex;
         align-items: center;
@@ -76,25 +69,23 @@
         line-height: 48px;
         font-size: 16px;
       }
-
       input[type="date"]::-webkit-date-and-time-value,
       input[type="month"]::-webkit-date-and-time-value {
         text-align: center;
-        color: #000000;
+        color: #000;
         margin: auto;
       }
 
-      /* Grid für die Info-Boxen */
+      /* --- 3. INFO-BOXEN --- */
       .stats-grid {
         display: flex;
         gap: 10px;
         margin-top: 10px;
       }
-
       .stat-box {
         flex: 1;
         min-width: 0;
-        background: #ffffff;
+        background: #fff;
         border: 1px solid #d6ccc2;
         border-radius: 18px;
         padding: 10px;
@@ -104,19 +95,17 @@
         justify-content: center;
         align-items: center;
       }
-
-      /* Spezielles schmälere (dünnere) Info-Box */
       .stat-box-thin {
-        background: #ffffff;
+        background: #fff;
         border: 1px solid #d6ccc2;
         border-radius: 18px;
         padding: 4px 8px;
         text-align: center;
         margin-top: 10px;
       }
-
       .stat-box label,
-      .stat-box-thin label {
+      .stat-box-thin label,
+      .savings-goal-box label {
         display: block;
         font-size: 11px;
         color: #666;
@@ -124,7 +113,6 @@
         font-weight: bold;
         margin-bottom: 2px;
       }
-
       .stat-box span,
       .stat-box-thin span {
         font-size: 15px;
@@ -132,34 +120,28 @@
         color: #32a74a;
       }
 
-      /* --- 3. DASHBOARD GRID LAYOUT --- */
+      /* --- 4. DASHBOARD --- */
       .dashboard-grid {
         display: flex;
         flex-direction: column;
         gap: 10px;
       }
-
       .dashboard-row {
         display: flex;
         gap: 10px;
       }
-
       .dashboard-box-large {
         flex: 2;
         min-height: 110px;
       }
-
       .dashboard-box-tall {
         flex: 1;
         min-height: 110px;
       }
-
       .dashboard-box-small {
         flex: 1;
         min-height: 44px;
       }
-
-      /* Spalte für Sparziel + Progress-Box (min-width: 0 verhindert den Überlauf) */
       .savings-goal-col {
         flex: 1;
         min-width: 0;
@@ -167,9 +149,8 @@
         flex-direction: column;
         gap: 8px;
       }
-
       .savings-goal-box {
-        background: #ffffff;
+        background: #fff;
         border: 1px solid #d6ccc2;
         border-radius: 18px;
         padding: 10px 4px;
@@ -181,19 +162,8 @@
         align-items: center;
         min-height: 105px;
       }
-
-      .savings-goal-box label {
-        display: block;
-        font-size: 11px;
-        color: #666;
-        text-transform: uppercase;
-        font-weight: bold;
-        margin-bottom: 2px;
-      }
-
-      /* Ladebalken & Prozentzahl */
       .progress-box {
-        background: #ffffff;
+        background: #fff;
         border: 1px solid #d6ccc2;
         border-radius: 18px;
         padding: 8px 10px;
@@ -203,39 +173,33 @@
         justify-content: center;
         align-items: center;
       }
-
       .progress-bar-bg {
         width: 100%;
         height: 8px;
-        background-color: #edede9;
+        background: #edede9;
         border-radius: 10px;
         overflow: hidden;
         margin-bottom: 4px;
       }
-
       .progress-bar-fill {
         height: 100%;
-        width: 0%;
-        background-color: #40916c;
+        width: 0;
+        background: #40916c;
         border-radius: 10px;
         transition: width 0.3s ease;
       }
-
       .progress-text {
         font-size: 12px;
         font-weight: bold;
         color: #666;
       }
-
-      /* Dropdown (Accordion) für Savings */
       details.savings-dropdown {
-        background: #ffffff;
+        background: #fff;
         border: 1px solid #d6ccc2;
         border-radius: 18px;
         padding: 10px 14px;
         margin-top: 5px;
       }
-
       details.savings-dropdown summary {
         font-size: 12px;
         color: #666;
@@ -246,15 +210,12 @@
         text-align: center;
         list-style: none;
       }
-
       details.savings-dropdown summary::-webkit-details-marker {
         display: none;
       }
-
       details.savings-dropdown[open] summary {
         margin-bottom: 12px;
       }
-
       .savings-content {
         display: flex;
         flex-direction: column;
@@ -262,19 +223,14 @@
         border-top: 1px solid #f0eee9;
         padding-top: 10px;
       }
-
-      /* Felder im Savings-Dropdown: etwas grauer als der weiße Dropdown-Hintergrund */
       .savings-content .stat-box,
       .savings-content .savings-goal-box,
       .savings-content .progress-box {
         background: #f3f3f1;
       }
-
       .savings-content .progress-bar-bg {
-        background-color: #dedcd7;
+        background: #dedcd7;
       }
-
-      /* Interaktive Input-Felder im Dashboard */
       .dash-input,
       .salary-input {
         width: 100% !important;
@@ -288,19 +244,15 @@
         font-size: 16px !important;
         font-weight: bold !important;
       }
-
       .dash-input:focus,
       .salary-input:focus {
         outline: none;
-        background: #ffffff !important;
+        background: #fff !important;
         border-radius: 18px;
       }
-
-      /* Kleinere Beträge in den drei Sparziel-Feldern */
       .savings-goal-box .dash-input {
         font-size: 14px !important;
       }
-
       .savings-goal-box .goal-input {
         font-size: 12px !important;
         color: #666 !important;
@@ -308,35 +260,30 @@
         padding: 0 !important;
         margin-top: 2px !important;
       }
-
-      /* Farbvarianten für Income & Expenses */
       .expenses-val {
         color: #c52233 !important;
         font-weight: bold;
         font-size: 16px;
       }
-
       .income-val {
         color: #32a74a !important;
         font-weight: bold;
         font-size: 16px;
       }
 
-      /* --- 4. TABELLEN-STYLING --- */
+      /* --- 5. TABELLEN & LABELS --- */
       table {
         width: 100%;
         border-collapse: collapse;
         margin-top: 10px;
         font-size: 16px;
       }
-
       th,
       td {
         border: 1px solid #d6ccc2;
         padding: 10px 8px;
         text-align: left;
       }
-
       table input[type="date"] {
         width: 100% !important;
         height: auto !important;
@@ -346,39 +293,102 @@
         display: inline-block !important;
         font-size: 15px !important;
       }
-
       .custom-label {
         text-align: center;
         text-transform: uppercase;
         color: #666;
         font-weight: bold;
         font-size: 12px;
-        margin-top: 0px;
+        margin-top: 0;
       }
-
       .custom-label2 {
         color: #666;
         font-weight: bold;
         font-size: 16px;
-        margin-top: 0px;
+        margin-top: 0;
       }
-
       .backup-info {
         text-align: center;
         font-size: 12px;
         color: #666;
         margin: 8px 0 0;
       }
+
+      /* --- 6. MENÜ & SPARPLAN --- */
+      .menu-btn {
+        position: fixed;
+        top: calc(env(safe-area-inset-top, 0px) + 12px);
+        left: 12px;
+        width: 44px;
+        height: 44px;
+        margin: 0;
+        padding: 0;
+        font-size: 22px;
+        border-radius: 14px;
+        z-index: 20;
+      }
+      .menu {
+        display: none;
+        position: fixed;
+        top: calc(env(safe-area-inset-top, 0px) + 64px);
+        left: 12px;
+        width: 210px;
+        padding: 6px;
+        background: #fff;
+        border: 1px solid #d6ccc2;
+        border-radius: 18px;
+        z-index: 20;
+      }
+      .menu button {
+        margin: 0;
+        height: 44px;
+        background: #fff;
+        color: #40916c;
+        text-align: left;
+      }
+      .menu button.active {
+        background: #edede9;
+      }
+      .plan-table th,
+      .plan-table td {
+        padding: 8px 4px;
+        font-size: 13px;
+        text-align: right;
+      }
+      .plan-table th:first-child,
+      .plan-table td:first-child {
+        text-align: left;
+      }
     </style>
   </head>
-
   <body>
-    <!-- ========================================== -->
-    <!-- ANSICHT 1: DASHBOARD                      -->
-    <!-- ========================================== -->
+    <!-- MENÜ -->
+    <button
+      class="menu-btn"
+      id="menu-btn"
+      onclick="toggleMenu()"
+      aria-label="Menu"
+    >
+      ☰
+    </button>
+    <div class="menu" id="menu">
+      <button data-view="dashboard-view" onclick="showView('dashboard-view')">
+        Dashboard
+      </button>
+      <button data-view="main-view" onclick="showView('main-view')">
+        Monthly Overview
+      </button>
+      <button data-view="plan-view" onclick="showView('plan-view')">
+        Sparplan
+      </button>
+      <button data-view="backup-view" onclick="showView('backup-view')">
+        Backup
+      </button>
+    </div>
+
+    <!-- ANSICHT 1: DASHBOARD -->
     <div id="dashboard-view" style="display: block">
       <h2>Welcome to Cells</h2>
-
       <div class="card">
         <div class="dashboard-grid">
           <div class="dashboard-row">
@@ -400,7 +410,6 @@
               />
             </div>
           </div>
-
           <div class="dashboard-row">
             <div class="stat-box dashboard-box-small">
               <label>Cash</label>
@@ -421,7 +430,6 @@
               />
             </div>
           </div>
-
           <details class="savings-dropdown">
             <summary>Savings</summary>
             <div class="savings-content">
@@ -435,7 +443,6 @@
                   >
                 </div>
               </div>
-
               <div class="dashboard-row">
                 <div class="stat-box dashboard-box-small">
                   <label>Bank Savings</label>
@@ -447,7 +454,6 @@
                   />
                 </div>
               </div>
-
               <div class="dashboard-row">
                 <div class="stat-box dashboard-box-small">
                   <label>Cash Savings</label>
@@ -459,55 +465,16 @@
                   />
                 </div>
               </div>
-
-              <!-- Sparziele (werden per JS aus GOALS erzeugt) -->
+              <!-- Sparziele (per JS aus GOALS erzeugt) -->
               <div class="dashboard-row" id="goals-row"></div>
             </div>
           </details>
         </div>
       </div>
-
-      <div class="card" style="text-align: center; margin-top: 20px">
-        <button onclick="showMainView()" style="padding: 12px; font-size: 16px">
-          Monthly Overview
-        </button>
-      </div>
-
-      <!-- BACKUP -->
-      <div class="card">
-        <button onclick="exportBackup()">Download Backup</button>
-        <button
-          class="btn-secondary"
-          onclick="document.getElementById('backup-file').click()"
-        >
-          Restore Backup
-        </button>
-        <input
-          type="file"
-          id="backup-file"
-          accept=".json,application/json"
-          style="display: none"
-        />
-        <p class="backup-info" id="backup-info"></p>
-      </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- ANSICHT 2: MONATSÜBERSICHT                 -->
-    <!-- ========================================== -->
+    <!-- ANSICHT 2: MONATSÜBERSICHT -->
     <div id="main-view" style="display: none">
-      <button
-        onclick="showDashboard()"
-        style="
-          background-color: #40916c;
-          width: auto;
-          margin-bottom: 15px;
-          padding: 6px 12px;
-        "
-      >
-        Dashboard
-      </button>
-
       <div class="filter-selection">
         <input type="month" id="month-filter" onchange="onMonthChange()" />
       </div>
@@ -523,39 +490,33 @@
             placeholder="0,00€"
           />
         </div>
-
         <div class="stats-grid">
           <div class="stat-box">
-            <label>Cash</label>
-            <span id="cash-total">0,00€</span>
+            <label>Cash</label><span id="cash-total">0,00€</span>
           </div>
           <div class="stat-box">
-            <label id="dynamic-label">Plasma</label>
-            <span id="plasma-total">0,00€</span>
+            <label id="dynamic-label">Plasma</label
+            ><span id="plasma-total">0,00€</span>
           </div>
         </div>
-
         <div class="stat-box-thin">
-          <label>Total</label>
-          <span id="cash-plasma-sum">0,00€</span>
+          <label>Total</label><span id="cash-plasma-sum">0,00€</span>
         </div>
       </div>
 
       <div class="card">
         <div class="stats-grid">
           <div class="stat-box">
-            <label>Total Income</label>
-            <span id="total-income" class="income-val">0,00€</span>
+            <label>Total Income</label
+            ><span id="total-income" class="income-val">0,00€</span>
           </div>
           <div class="stat-box">
-            <label>Total Expenses</label>
-            <span id="total-expenses" class="expenses-val">0,00€</span>
+            <label>Total Expenses</label
+            ><span id="total-expenses" class="expenses-val">0,00€</span>
           </div>
         </div>
-
         <div class="stat-box-thin">
-          <label>Net Total</label>
-          <span id="net-total">0,00€</span>
+          <label>Net Total</label><span id="net-total">0,00€</span>
         </div>
       </div>
 
@@ -607,9 +568,72 @@
       </table>
     </div>
 
-    <!-- ========================================== -->
-    <!-- JAVASCRIPT                                 -->
-    <!-- ========================================== -->
+    <!-- ANSICHT 3: SPARPLAN -->
+    <div id="plan-view" style="display: none">
+      <h2>Sparplan</h2>
+      <div class="card">
+        <p class="custom-label">Sparmonate</p>
+        <input
+          type="number"
+          id="plan-months"
+          min="1"
+          step="1"
+          oninput="renderPlan()"
+        />
+        <table class="plan-table">
+          <thead>
+            <tr>
+              <th>Ziel</th>
+              <th>Betrag</th>
+              <th>Fehlt</th>
+              <th>Monat</th>
+              <th>Woche</th>
+            </tr>
+          </thead>
+          <tbody id="plan-goals"></tbody>
+        </table>
+        <p class="backup-info">
+          Berechnet aus den Ziel- und Betragsfeldern im Savings-Dropdown.
+        </p>
+      </div>
+      <div class="card">
+        <p class="custom-label">Meilensteine (neu gespart bis Monatsende)</p>
+        <table class="plan-table">
+          <thead>
+            <tr>
+              <th>Monat</th>
+              <th>Travels</th>
+              <th>Studies</th>
+              <th>Car</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="plan-miles"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ANSICHT 4: BACKUP -->
+    <div id="backup-view" style="display: none">
+      <h2>Backup</h2>
+      <div class="card">
+        <button onclick="exportBackup()">Download Backup</button>
+        <button
+          class="btn-secondary"
+          onclick="document.getElementById('backup-file').click()"
+        >
+          Restore Backup
+        </button>
+        <input
+          type="file"
+          id="backup-file"
+          accept=".json,application/json"
+          style="display: none"
+        />
+        <p class="backup-info" id="backup-info"></p>
+      </div>
+    </div>
+
     <script>
       const $ = (id) => document.getElementById(id);
 
@@ -622,7 +646,6 @@
       const GREEN = "#32a74a",
         RED = "#c52233",
         GREY = "#666666";
-      // Felder, die bei 0 grau statt grün sind
       const GREY_ZERO = [
         "dash-travels",
         "dash-studies",
@@ -632,7 +655,6 @@
       ];
 
       // --- 2. ZAHLEN & DATUM (Format: 1.324,54€) ---
-      // Versteht "1324,54", "1.324,54", "1324.54" und "1,324.54"
       function parseNum(str) {
         if (str === null || str === undefined) return NaN;
         let s = String(str).replace(/[^0-9.,-]/g, "");
@@ -652,14 +674,10 @@
         }
         return parseFloat(s);
       }
-
-      // Normalisiert zum Speichern: "1.324,5" -> "1324.5" (auf 2 Nachkommastellen gerundet)
       function cleanNumber(str) {
         const n = parseNum(str);
         return isNaN(n) ? "" : String(Math.round(n * 100) / 100);
       }
-
-      // Anzeige: 1324.5 -> "1.324,50€"
       function fmt(n) {
         const neg = n < 0 && Math.abs(n) >= 0.005;
         const [i, d] = Math.abs(n).toFixed(2).split(".");
@@ -671,13 +689,9 @@
           "€"
         );
       }
-
-      // Beim Bearbeiten: "1324,5" (ohne Tausenderpunkte und €)
       function editStr(str) {
         return cleanNumber(str).replace(".", ",");
       }
-
-      // Lokales Datum (nicht UTC) -> wechselt genau um 0:00 Uhr
       function localDate(d = new Date()) {
         return (
           d.getFullYear() +
@@ -687,7 +701,6 @@
           String(d.getDate()).padStart(2, "0")
         );
       }
-
       function esc(s) {
         return String(s).replace(
           /[&<>"']/g,
@@ -701,7 +714,6 @@
             })[c],
         );
       }
-
       function colorFor(n) {
         return n < 0 ? RED : GREEN;
       }
@@ -709,30 +721,28 @@
       // --- 3. STATE & INITIALISIERUNG ---
       let transactions =
         JSON.parse(localStorage.getItem("my_transactions")) || [];
-      let historyStack = [];
-      let redoStack = [];
+      let historyStack = [],
+        redoStack = [];
       let lastDay = localDate();
 
-      // Sparziel-Spalten erzeugen
       $("goals-row").innerHTML = GOALS.map(
         ([key, label]) => `
-        <div class="savings-goal-col">
-          <div class="savings-goal-box">
-            <label>${label}</label>
-            <input type="text" id="dash-${key}" class="dash-input" placeholder="0,00€" />
-            <input type="text" id="goal-${key}" class="dash-input goal-input" placeholder="0,00€" />
-          </div>
-          <div class="progress-box">
-            <div class="progress-bar-bg"><div id="bar-${key}" class="progress-bar-fill"></div></div>
-            <span id="pct-${key}" class="progress-text">0%</span>
-          </div>
-        </div>`,
+  <div class="savings-goal-col">
+    <div class="savings-goal-box">
+      <label>${label}</label>
+      <input type="text" id="dash-${key}" class="dash-input" placeholder="0,00€" />
+      <input type="text" id="goal-${key}" class="dash-input goal-input" placeholder="0,00€" />
+    </div>
+    <div class="progress-box">
+      <div class="progress-bar-bg"><div id="bar-${key}" class="progress-bar-fill"></div></div>
+      <span id="pct-${key}" class="progress-text">0%</span>
+    </div>
+  </div>`,
       ).join("");
 
       $("date").value = lastDay;
       $("month-filter").value = lastDay.slice(0, 7);
 
-      // Eingabefelder (Dashboard + Gehalt): beim Fokus Rohwert, beim Verlassen speichern
       document.querySelectorAll(".dash-input").forEach((input) => {
         input.addEventListener("focus", () => {
           input.value = editStr(input.value);
@@ -765,24 +775,24 @@
       setInterval(checkNewDay, 15000);
       document.addEventListener("visibilitychange", checkNewDay);
 
-      // Browser bitten, den Speicher nicht automatisch zu löschen
       try {
         navigator.storage &&
           navigator.storage.persist &&
           navigator.storage.persist();
       } catch (e) {}
 
+      $("plan-months").value = localStorage.getItem("plan_months") || 5;
       loadMonthlySalary();
       loadDashboardData();
       renderBackupInfo();
       updateUI();
+      showView("dashboard-view");
 
       // --- 4. SPEICHER-FUNKTIONEN ---
       function saveState() {
         historyStack.push(JSON.stringify(transactions));
         redoStack = [];
       }
-
       function saveAndRefresh() {
         localStorage.setItem("my_transactions", JSON.stringify(transactions));
         updateUI();
@@ -805,20 +815,17 @@
         );
         renderDashboard();
       }
-
       function loadDashboardData() {
         dashIds().forEach(
           (id) => ($(id).value = localStorage.getItem(keyOf(id)) || ""),
         );
         renderDashboard();
       }
-
       function updateProgress(current, goal, key) {
         const pct = goal > 0 && current > 0 ? (current / goal) * 100 : 0;
         $("bar-" + key).style.width = Math.min(Math.max(pct, 0), 100) + "%";
         $("pct-" + key).innerText = Math.round(pct) + "%";
       }
-
       function renderDashboard() {
         dashIds().forEach((id) => {
           const raw = localStorage.getItem(keyOf(id));
@@ -834,11 +841,9 @@
                 : GREY
             : colorFor(n || 0);
         });
-
         GOALS.forEach(([key]) =>
           updateProgress(stored("dash-" + key), stored("goal-" + key), key),
         );
-
         const totalSavings =
           stored("dash-bank-savings") + stored("dash-cash-savings");
         const totalAssets =
@@ -846,7 +851,6 @@
           stored("dash-top-cash") +
           stored("dash-paypal") +
           totalSavings;
-
         $("dash-savings-val").innerText = fmt(totalSavings);
         $("dash-savings-val").style.color = colorFor(totalSavings);
         $("dash-total-val").innerText = fmt(totalAssets);
@@ -930,7 +934,6 @@
           input.style.color = colorFor(num);
         }
       }
-
       function saveMonthlySalary() {
         const month = $("month-filter").value;
         const val = cleanNumber($("monthly-salary").value);
@@ -941,68 +944,101 @@
         applySalaryDisplay(val === "" ? "" : parseFloat(val));
         updateUI();
       }
-
       function loadMonthlySalary() {
         const saved = localStorage.getItem(`salary_${$("month-filter").value}`);
         applySalaryDisplay(saved === null ? "" : parseFloat(saved));
         checkDynamicLabel();
       }
-
       function checkDynamicLabel() {
         const month = $("month-filter").value;
         $("dynamic-label").innerText =
           month && month >= "2026-11" ? "Tips" : "Plasma";
       }
-
       function onMonthChange() {
         loadMonthlySalary();
         updateUI();
       }
 
-      // --- 8. NAVIGATION ---
-      function showMainView() {
-        $("dashboard-view").style.display = "none";
-        $("main-view").style.display = "block";
-        checkDynamicLabel();
+      // --- 8. NAVIGATION & MENÜ ---
+      function toggleMenu() {
+        const m = $("menu");
+        m.style.display = m.style.display === "block" ? "none" : "block";
+      }
+      function showView(id) {
+        ["dashboard-view", "main-view", "plan-view", "backup-view"].forEach(
+          (v) => ($(v).style.display = v === id ? "block" : "none"),
+        );
+        document
+          .querySelectorAll("#menu button")
+          .forEach((b) => b.classList.toggle("active", b.dataset.view === id));
+        $("menu").style.display = "none";
+        window.scrollTo(0, 0);
+        if (id === "main-view") checkDynamicLabel();
+        if (id === "dashboard-view") renderDashboard();
+        if (id === "plan-view") renderPlan();
+        if (id === "backup-view") renderBackupInfo();
+      }
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest("#menu, #menu-btn"))
+          $("menu").style.display = "none";
+      });
+
+      // --- 9. SPARPLAN (aus Ziel- und Betragsfeldern berechnet) ---
+      function renderPlan() {
+        const n = Math.max(1, parseInt($("plan-months").value) || 1);
+        localStorage.setItem("plan_months", n);
+        const rows = GOALS.map(([key, label]) => {
+          const goal = stored("goal-" + key);
+          const miss = Math.max(0, goal - stored("dash-" + key));
+          return {
+            label,
+            goal,
+            miss,
+            mo: miss / n,
+            wk: miss / ((n * 52) / 12),
+          };
+        });
+        const sum = (f) => rows.reduce((a, r) => a + f(r), 0);
+        $("plan-goals").innerHTML =
+          rows
+            .map(
+              (r) =>
+                `<tr><td>${r.label}</td><td>${fmt(r.goal)}</td><td>${fmt(r.miss)}</td><td>${fmt(r.mo)}</td><td>${fmt(r.wk)}</td></tr>`,
+            )
+            .join("") +
+          `<tr><td><b>Total</b></td><td><b>${fmt(sum((r) => r.goal))}</b></td><td><b>${fmt(sum((r) => r.miss))}</b></td><td><b>${fmt(sum((r) => r.mo))}</b></td><td><b>${fmt(sum((r) => r.wk))}</b></td></tr>`;
+        let miles = "";
+        for (let i = 1; i <= n; i++) {
+          miles += `<tr><td>${i}</td>${rows.map((r) => `<td>${fmt(r.mo * i)}</td>`).join("")}<td>${fmt(sum((r) => r.mo) * i)}</td></tr>`;
+        }
+        $("plan-miles").innerHTML = miles;
       }
 
-      function showDashboard() {
-        $("main-view").style.display = "none";
-        $("dashboard-view").style.display = "block";
-        renderDashboard();
-      }
-
-      // --- 9. TRANSAKTIONEN ---
+      // --- 10. TRANSAKTIONEN ---
       function addTransaction() {
         const desc = $("desc").value;
         const amount = parseFloat($("amount").value);
         const date = $("date").value;
-
         if (!desc || isNaN(amount) || !date) {
           alert("Please enter a valid Description and Amount");
           return;
         }
-
         saveState();
         transactions.push({ id: Date.now(), desc, amount, date });
-
         $("month-filter").value = date.slice(0, 7);
         loadMonthlySalary();
         saveAndRefresh();
-
         $("desc").value = "";
         $("amount").value = "";
         $("date").value = localDate();
         lastDay = localDate();
       }
-
       function deleteTransaction(id) {
         if (!confirm("Do you really want to remove this transaction?")) return;
         saveState();
         transactions = transactions.filter((t) => t.id !== id);
         saveAndRefresh();
       }
-
       function updateTransactionDate(id, newDate) {
         if (!newDate) return;
         saveState();
@@ -1013,14 +1049,13 @@
         }
       }
 
-      // --- 10. UNDO / REDO ---
+      // --- 11. UNDO / REDO ---
       function undo() {
         if (historyStack.length === 0) return;
         redoStack.push(JSON.stringify(transactions));
         transactions = JSON.parse(historyStack.pop());
         saveAndRefresh();
       }
-
       function redo() {
         if (redoStack.length === 0) return;
         historyStack.push(JSON.stringify(transactions));
@@ -1028,12 +1063,11 @@
         saveAndRefresh();
       }
 
-      // --- 11. UI & SUMMEN ---
+      // --- 12. UI & SUMMEN ---
       function updateUI() {
         const tbody = $("transaction-list");
         const selectedMonth = $("month-filter").value;
         checkDynamicLabel();
-
         tbody.innerHTML = "";
         let monthBalance = 0,
           cashTotal = 0,
@@ -1047,12 +1081,10 @@
         if (!isNaN(savedSalary)) totalIncome += savedSalary;
 
         const secondaryKeyword = selectedMonth >= "2026-11" ? "tips" : "plasma";
-
         transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
 
         transactions.forEach((t) => {
           if (selectedMonth && t.date.slice(0, 7) !== selectedMonth) return;
-
           monthBalance += t.amount;
           if (t.amount < 0) totalExpenses += Math.abs(t.amount);
           else totalIncome += t.amount;
@@ -1064,11 +1096,10 @@
 
           const row = document.createElement("tr");
           row.innerHTML = `
-            <td><input type="date" value="${t.date}" onchange="updateTransactionDate(${t.id}, this.value)"></td>
-            <td>${esc(t.desc)}</td>
-            <td style="color: ${colorFor(t.amount)}; font-weight: bold;">${fmt(t.amount)}</td>
-            <td><button class="btn-delete" onclick="deleteTransaction(${t.id})">X</button></td>
-          `;
+      <td><input type="date" value="${t.date}" onchange="updateTransactionDate(${t.id}, this.value)"></td>
+      <td>${esc(t.desc)}</td>
+      <td style="color: ${colorFor(t.amount)}; font-weight: bold;">${fmt(t.amount)}</td>
+      <td><button class="btn-delete" onclick="deleteTransaction(${t.id})">X</button></td>`;
           tbody.appendChild(row);
         });
 
@@ -1079,7 +1110,6 @@
         $("cash-plasma-sum").innerText = fmt(cashTotal + secondaryTotal);
         $("total-expenses").innerText = fmt(totalExpenses);
         $("total-income").innerText = fmt(totalIncome);
-
         const net = totalIncome - totalExpenses;
         $("net-total").innerText = fmt(net);
         $("net-total").style.color = colorFor(net);
