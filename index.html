@@ -314,6 +314,41 @@
         margin: 8px 0 0;
       }
 
+      /* --- 5b. DEBT --- */
+      .debt-section .custom-label {
+        margin: 0 0 8px;
+      }
+      .debt-section + .debt-section {
+        border-top: 1px solid #f0eee9;
+        padding-top: 14px;
+      }
+      .debt-add {
+        display: flex;
+        gap: 10px;
+      }
+      .debt-add input,
+      .debt-add button {
+        flex: 1;
+        min-width: 0;
+      }
+      .debt-table {
+        margin-top: 6px;
+        font-size: 15px;
+      }
+      .debt-table td {
+        padding: 8px 6px;
+        word-break: break-word;
+      }
+      .debt-table td:nth-child(2) {
+        text-align: right;
+        white-space: nowrap;
+        font-weight: bold;
+      }
+      .debt-table td:last-child {
+        width: 1%;
+        text-align: center;
+      }
+
       /* --- 6. MENÜ & SPARPLAN --- */
       .menu-btn {
         position: fixed;
@@ -468,6 +503,10 @@
               <!-- Sparziele (per JS aus GOALS erzeugt) -->
               <div class="dashboard-row" id="goals-row"></div>
             </div>
+          </details>
+          <details class="savings-dropdown">
+            <summary>Debt</summary>
+            <div class="savings-content" id="debt-sections"></div>
           </details>
         </div>
       </div>
@@ -1114,6 +1153,95 @@
         $("net-total").innerText = fmt(net);
         $("net-total").style.color = colorFor(net);
       }
+
+      // --- 13. DEBT (reine Notizliste, rechnet nirgends ins Dashboard ein) ---
+      const DEBT_TYPES = [
+        ["owe", "I owe", "To whom", RED],
+        ["owed", "I am owed", "From whom", GREEN],
+      ];
+      function loadDebts() {
+        try {
+          const d = JSON.parse(localStorage.getItem("debts"));
+          return { owe: (d && d.owe) || [], owed: (d && d.owed) || [] };
+        } catch (e) {
+          return { owe: [], owed: [] };
+        }
+      }
+      let debts = loadDebts();
+
+      $("debt-sections").innerHTML = DEBT_TYPES.map(
+        ([key, label, placeholder, color]) => `
+  <div class="debt-section">
+    <p class="custom-label">${label}</p>
+    <div class="stat-box" style="min-height: 50px">
+      <label>Total</label>
+      <span id="debt-${key}-total" style="font-size: 18px; font-weight: bold; color: ${color}">0,00€</span>
+    </div>
+    <input type="text" id="debt-${key}-name" placeholder="${placeholder}" autocomplete="off" />
+    <div class="debt-add">
+      <input type="text" inputmode="decimal" id="debt-${key}-amount" placeholder="Amount" />
+      <button onclick="addDebt('${key}')">Add</button>
+    </div>
+    <table class="debt-table" id="debt-${key}-table"><tbody id="debt-${key}-list"></tbody></table>
+  </div>`,
+      ).join("");
+
+      DEBT_TYPES.forEach(([key]) => {
+        $(`debt-${key}-name`).addEventListener(
+          "keydown",
+          (e) => e.key === "Enter" && $(`debt-${key}-amount`).focus(),
+        );
+        $(`debt-${key}-amount`).addEventListener(
+          "keydown",
+          (e) => e.key === "Enter" && addDebt(key),
+        );
+      });
+
+      function saveDebts() {
+        localStorage.setItem("debts", JSON.stringify(debts));
+        renderDebts();
+      }
+      function addDebt(type) {
+        const nameEl = $(`debt-${type}-name`),
+          amountEl = $(`debt-${type}-amount`);
+        const name = nameEl.value.trim();
+        const amount = Math.abs(parseNum(amountEl.value));
+        if (!name || isNaN(amount) || amount === 0) {
+          alert("Please enter a valid Name and Amount");
+          return;
+        }
+        debts[type].push({
+          id: Date.now(),
+          name,
+          amount: Math.round(amount * 100) / 100,
+        });
+        nameEl.value = "";
+        amountEl.value = "";
+        saveDebts();
+      }
+      function deleteDebt(type, id) {
+        if (!confirm("Do you really want to remove this entry?")) return;
+        debts[type] = debts[type].filter((d) => d.id !== id);
+        saveDebts();
+      }
+      function renderDebts() {
+        DEBT_TYPES.forEach(([key, , , color]) => {
+          const list = debts[key];
+          const sum = list.reduce((a, d) => a + d.amount, 0);
+          $(`debt-${key}-total`).innerText = fmt(sum);
+          $(`debt-${key}-table`).style.display = list.length ? "table" : "none";
+          $(`debt-${key}-list`).innerHTML = list
+            .map(
+              (d) => `<tr>
+      <td>${esc(d.name)}</td>
+      <td style="color: ${color}">${fmt(d.amount)}</td>
+      <td><button class="btn-delete" onclick="deleteDebt('${key}', ${d.id})">X</button></td>
+    </tr>`,
+            )
+            .join("");
+        });
+      }
+      renderDebts();
     </script>
   </body>
 </html>
