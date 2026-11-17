@@ -142,6 +142,65 @@
         flex: 1;
         min-height: 44px;
       }
+      .accounts-grid {
+        flex-wrap: wrap;
+      }
+      .accounts-grid .stat-box {
+        position: relative;
+        box-sizing: border-box;
+        flex: 0 0 calc((100% - 20px) / 3);
+        padding: 10px 4px;
+        min-height: 44px;
+      }
+      .accounts-grid label {
+        max-width: 100%;
+        box-sizing: border-box;
+        padding: 0 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .accounts-grid .dash-input {
+        font-size: 14px !important;
+      }
+      .acc-menu {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        width: 26px !important;
+        height: 26px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: transparent !important;
+        color: #666 !important;
+        font-size: 18px !important;
+        line-height: 1;
+      }
+      .btn-thin {
+        height: 32px;
+        margin: 0;
+        font-size: 13px;
+      }
+      .btn-danger {
+        background: #c52233;
+      }
+      .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 30;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+      .modal-card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 18px;
+        width: 100%;
+        max-width: 360px;
+      }
       .savings-goal-col {
         flex: 1;
         min-width: 0;
@@ -349,7 +408,7 @@
         text-align: center;
       }
 
-      /* --- 6. MENÜ & SPARPLAN --- */
+      /* --- 6. MENÜ --- */
       .menu-btn {
         position: fixed;
         top: calc(env(safe-area-inset-top, 0px) + 12px);
@@ -384,16 +443,6 @@
       .menu button.active {
         background: #edede9;
       }
-      .plan-table th,
-      .plan-table td {
-        padding: 8px 4px;
-        font-size: 13px;
-        text-align: right;
-      }
-      .plan-table th:first-child,
-      .plan-table td:first-child {
-        text-align: left;
-      }
     </style>
   </head>
   <body>
@@ -412,9 +461,6 @@
       </button>
       <button data-view="main-view" onclick="showView('main-view')">
         Monthly Overview
-      </button>
-      <button data-view="plan-view" onclick="showView('plan-view')">
-        Sparplan
       </button>
       <button data-view="backup-view" onclick="showView('backup-view')">
         Backup
@@ -445,26 +491,10 @@
               />
             </div>
           </div>
-          <div class="dashboard-row">
-            <div class="stat-box dashboard-box-small">
-              <label>Cash</label>
-              <input
-                type="text"
-                id="dash-top-cash"
-                class="dash-input"
-                placeholder="0,00€"
-              />
-            </div>
-            <div class="stat-box dashboard-box-small">
-              <label>Paypal</label>
-              <input
-                type="text"
-                id="dash-paypal"
-                class="dash-input"
-                placeholder="0,00€"
-              />
-            </div>
-          </div>
+          <div class="dashboard-row accounts-grid" id="accounts-grid"></div>
+          <button class="btn-secondary btn-thin" onclick="openAccountDialog()">
+            + Add Account
+          </button>
           <details class="savings-dropdown">
             <summary>Savings</summary>
             <div class="savings-content">
@@ -607,51 +637,6 @@
       </table>
     </div>
 
-    <!-- ANSICHT 3: SPARPLAN -->
-    <div id="plan-view" style="display: none">
-      <h2>Sparplan</h2>
-      <div class="card">
-        <p class="custom-label">Sparmonate</p>
-        <input
-          type="number"
-          id="plan-months"
-          min="1"
-          step="1"
-          oninput="renderPlan()"
-        />
-        <table class="plan-table">
-          <thead>
-            <tr>
-              <th>Ziel</th>
-              <th>Betrag</th>
-              <th>Fehlt</th>
-              <th>Monat</th>
-              <th>Woche</th>
-            </tr>
-          </thead>
-          <tbody id="plan-goals"></tbody>
-        </table>
-        <p class="backup-info">
-          Berechnet aus den Ziel- und Betragsfeldern im Savings-Dropdown.
-        </p>
-      </div>
-      <div class="card">
-        <p class="custom-label">Meilensteine (neu gespart bis Monatsende)</p>
-        <table class="plan-table">
-          <thead>
-            <tr>
-              <th>Monat</th>
-              <th>Travels</th>
-              <th>Studies</th>
-              <th>Car</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody id="plan-miles"></tbody>
-        </table>
-      </div>
-    </div>
-
     <!-- ANSICHT 4: BACKUP -->
     <div id="backup-view" style="display: none">
       <h2>Backup</h2>
@@ -670,6 +655,31 @@
           style="display: none"
         />
         <p class="backup-info" id="backup-info"></p>
+      </div>
+    </div>
+
+    <!-- FENSTER: ACCOUNT HINZUFÜGEN / BEARBEITEN -->
+    <div class="modal" id="account-modal">
+      <div class="modal-card">
+        <p class="custom-label" id="account-modal-title">Add Account</p>
+        <input
+          type="text"
+          id="account-name"
+          placeholder="Account name"
+          maxlength="20"
+          autocomplete="off"
+        />
+        <button onclick="saveAccount()">Save</button>
+        <button
+          class="btn-danger"
+          id="account-delete"
+          onclick="deleteAccount()"
+        >
+          Delete
+        </button>
+        <button class="btn-secondary" onclick="closeAccountDialog()">
+          Cancel
+        </button>
       </div>
     </div>
 
@@ -779,10 +789,92 @@
   </div>`,
       ).join("");
 
+      // --- Accounts (Cash, Revolut, Paypal + eigene) ---
+      const DEFAULT_ACCOUNTS = [
+        { id: "cash", name: "Cash", inputId: "dash-top-cash" },
+        { id: "revolut", name: "Revolut", inputId: "dash-revolut" },
+        { id: "paypal", name: "Paypal", inputId: "dash-paypal" },
+      ];
+      let accounts = null;
+      try {
+        accounts = JSON.parse(localStorage.getItem("accounts"));
+      } catch (e) {}
+      if (!Array.isArray(accounts)) accounts = DEFAULT_ACCOUNTS;
+      let editingAccountId = null;
+
+      function saveAccounts() {
+        localStorage.setItem("accounts", JSON.stringify(accounts));
+      }
+      function renderAccounts() {
+        const grid = $("accounts-grid");
+        grid.innerHTML = accounts
+          .map(
+            (a) => `
+  <div class="stat-box">
+    <label>${esc(a.name)}</label>
+    <button class="acc-menu" onclick="openAccountDialog('${a.id}')" aria-label="Edit account">⋮</button>
+    <input type="text" id="${a.inputId}" class="dash-input" placeholder="0,00€" />
+  </div>`,
+          )
+          .join("");
+        grid.querySelectorAll(".dash-input").forEach(bindDashInput);
+      }
+      function openAccountDialog(id) {
+        editingAccountId = id || null;
+        const acc = accounts.find((a) => a.id === id);
+        $("account-modal-title").innerText = acc
+          ? "Edit Account"
+          : "Add Account";
+        $("account-name").value = acc ? acc.name : "";
+        $("account-delete").style.display = acc ? "block" : "none";
+        $("account-modal").style.display = "flex";
+        $("account-name").focus();
+      }
+      function closeAccountDialog() {
+        $("account-modal").style.display = "none";
+      }
+      function saveAccount() {
+        const name = $("account-name").value.trim();
+        if (!name) {
+          alert("Please enter a name");
+          return;
+        }
+        const acc = accounts.find((a) => a.id === editingAccountId);
+        if (acc) acc.name = name;
+        else {
+          const id = "a" + Date.now();
+          accounts.push({ id, name, inputId: "acc-" + id });
+        }
+        saveAccounts();
+        closeAccountDialog();
+        renderAccounts();
+        renderDashboard();
+      }
+      function deleteAccount() {
+        const acc = accounts.find((a) => a.id === editingAccountId);
+        if (!acc || !confirm(`Remove "${acc.name}" and its amount?`)) return;
+        localStorage.removeItem(keyOf(acc.inputId));
+        accounts = accounts.filter((a) => a !== acc);
+        saveAccounts();
+        closeAccountDialog();
+        renderAccounts();
+        renderDashboard();
+      }
+      $("account-name").addEventListener(
+        "keydown",
+        (e) => e.key === "Enter" && saveAccount(),
+      );
+      $("account-modal").addEventListener("click", (e) => {
+        if (e.target === $("account-modal")) closeAccountDialog();
+      });
+      renderAccounts();
+
       $("date").value = lastDay;
       $("month-filter").value = lastDay.slice(0, 7);
 
-      document.querySelectorAll(".dash-input").forEach((input) => {
+      function bindDashInput(input) {
+        if (input.dataset.bound) return;
+        input.dataset.bound = "1";
         input.addEventListener("focus", () => {
           input.value = editStr(input.value);
           if (!input.id.startsWith("goal-")) input.style.color = "#000000";
@@ -792,7 +884,8 @@
           "keydown",
           (e) => e.key === "Enter" && input.blur(),
         );
-      });
+      }
+      document.querySelectorAll(".dash-input").forEach(bindDashInput);
       $("monthly-salary").addEventListener("focus", () => {
         const i = $("monthly-salary");
         i.value = editStr(i.value);
@@ -820,7 +913,6 @@
           navigator.storage.persist();
       } catch (e) {}
 
-      $("plan-months").value = localStorage.getItem("plan_months") || 5;
       loadMonthlySalary();
       loadDashboardData();
       renderBackupInfo();
@@ -887,8 +979,7 @@
           stored("dash-bank-savings") + stored("dash-cash-savings");
         const totalAssets =
           stored("dash-this-month") +
-          stored("dash-top-cash") +
-          stored("dash-paypal") +
+          accounts.reduce((sum, a) => sum + stored(a.inputId), 0) +
           totalSavings;
         $("dash-savings-val").innerText = fmt(totalSavings);
         $("dash-savings-val").style.color = colorFor(totalSavings);
@@ -1004,7 +1095,7 @@
         m.style.display = m.style.display === "block" ? "none" : "block";
       }
       function showView(id) {
-        ["dashboard-view", "main-view", "plan-view", "backup-view"].forEach(
+        ["dashboard-view", "main-view", "backup-view"].forEach(
           (v) => ($(v).style.display = v === id ? "block" : "none"),
         );
         document
@@ -1014,44 +1105,12 @@
         window.scrollTo(0, 0);
         if (id === "main-view") checkDynamicLabel();
         if (id === "dashboard-view") renderDashboard();
-        if (id === "plan-view") renderPlan();
         if (id === "backup-view") renderBackupInfo();
       }
       document.addEventListener("click", (e) => {
         if (!e.target.closest("#menu, #menu-btn"))
           $("menu").style.display = "none";
       });
-
-      // --- 9. SPARPLAN (aus Ziel- und Betragsfeldern berechnet) ---
-      function renderPlan() {
-        const n = Math.max(1, parseInt($("plan-months").value) || 1);
-        localStorage.setItem("plan_months", n);
-        const rows = GOALS.map(([key, label]) => {
-          const goal = stored("goal-" + key);
-          const miss = Math.max(0, goal - stored("dash-" + key));
-          return {
-            label,
-            goal,
-            miss,
-            mo: miss / n,
-            wk: miss / ((n * 52) / 12),
-          };
-        });
-        const sum = (f) => rows.reduce((a, r) => a + f(r), 0);
-        $("plan-goals").innerHTML =
-          rows
-            .map(
-              (r) =>
-                `<tr><td>${r.label}</td><td>${fmt(r.goal)}</td><td>${fmt(r.miss)}</td><td>${fmt(r.mo)}</td><td>${fmt(r.wk)}</td></tr>`,
-            )
-            .join("") +
-          `<tr><td><b>Total</b></td><td><b>${fmt(sum((r) => r.goal))}</b></td><td><b>${fmt(sum((r) => r.miss))}</b></td><td><b>${fmt(sum((r) => r.mo))}</b></td><td><b>${fmt(sum((r) => r.wk))}</b></td></tr>`;
-        let miles = "";
-        for (let i = 1; i <= n; i++) {
-          miles += `<tr><td>${i}</td>${rows.map((r) => `<td>${fmt(r.mo * i)}</td>`).join("")}<td>${fmt(sum((r) => r.mo) * i)}</td></tr>`;
-        }
-        $("plan-miles").innerHTML = miles;
-      }
 
       // --- 10. TRANSAKTIONEN ---
       function addTransaction() {
@@ -1173,7 +1232,7 @@
         ([key, label, placeholder, color]) => `
   <div class="debt-section">
     <p class="custom-label">${label}</p>
-    <div class="stat-box" style="min-height: 50px">
+    <div class="stat-box" style="min-height: 0; padding: 4px 10px">
       <label>Total</label>
       <span id="debt-${key}-total" style="font-size: 18px; font-weight: bold; color: ${color}">0,00€</span>
     </div>
