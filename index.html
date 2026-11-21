@@ -104,8 +104,7 @@
         margin-top: 10px;
       }
       .stat-box label,
-      .stat-box-thin label,
-      .savings-goal-box label {
+      .stat-box-thin label {
         display: block;
         font-size: 11px;
         color: #666;
@@ -201,31 +200,82 @@
         width: 100%;
         max-width: 360px;
       }
+      .modal-label {
+        display: block;
+        font-size: 11px;
+        color: #666;
+        text-transform: uppercase;
+        font-weight: bold;
+        margin: 8px 0 0 4px;
+      }
+
+      /* Sparziele (ca. 25 % kleiner) */
+      .goals-grid {
+        flex-wrap: wrap;
+      }
       .savings-goal-col {
-        flex: 1;
+        flex: 0 0 calc((100% - 20px) / 3);
         min-width: 0;
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 6px;
       }
       .savings-goal-box {
+        position: relative;
         background: #fff;
         border: 1px solid #d6ccc2;
-        border-radius: 18px;
-        padding: 10px 4px;
+        border-radius: 14px;
+        padding: 8px 3px;
         min-width: 0;
         text-align: center;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        min-height: 105px;
+        min-height: 78px;
+      }
+      .savings-goal-box label {
+        display: block;
+        max-width: 100%;
+        box-sizing: border-box;
+        padding: 0 12px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 10px;
+        color: #666;
+        text-transform: uppercase;
+        font-weight: bold;
+        margin-bottom: 2px;
+      }
+      .savings-goal-box .acc-menu {
+        width: 22px !important;
+        height: 22px !important;
+        font-size: 16px !important;
+      }
+      .goal-saved {
+        font-size: 12px;
+        font-weight: bold;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .goal-target {
+        font-size: 10px;
+        font-weight: bold;
+        color: #666;
+        margin-top: 2px;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       .progress-box {
         background: #fff;
         border: 1px solid #d6ccc2;
-        border-radius: 18px;
-        padding: 8px 10px;
+        border-radius: 14px;
+        padding: 6px 8px;
         text-align: center;
         display: flex;
         flex-direction: column;
@@ -234,11 +284,11 @@
       }
       .progress-bar-bg {
         width: 100%;
-        height: 8px;
+        height: 6px;
         background: #edede9;
         border-radius: 10px;
         overflow: hidden;
-        margin-bottom: 4px;
+        margin-bottom: 3px;
       }
       .progress-bar-fill {
         height: 100%;
@@ -248,7 +298,7 @@
         transition: width 0.3s ease;
       }
       .progress-text {
-        font-size: 12px;
+        font-size: 10px;
         font-weight: bold;
         color: #666;
       }
@@ -308,16 +358,6 @@
         outline: none;
         background: #fff !important;
         border-radius: 18px;
-      }
-      .savings-goal-box .dash-input {
-        font-size: 14px !important;
-      }
-      .savings-goal-box .goal-input {
-        font-size: 12px !important;
-        color: #666 !important;
-        height: 22px !important;
-        padding: 0 !important;
-        margin-top: 2px !important;
       }
       .expenses-val {
         color: #c52233 !important;
@@ -530,8 +570,11 @@
                   />
                 </div>
               </div>
-              <!-- Sparziele (per JS aus GOALS erzeugt) -->
-              <div class="dashboard-row" id="goals-row"></div>
+              <!-- Sparziele (per JS aus goals erzeugt) -->
+              <div class="dashboard-row goals-grid" id="goals-row"></div>
+              <button class="btn-secondary btn-thin" onclick="openGoalDialog()">
+                + Add Goal
+              </button>
             </div>
           </details>
           <details class="savings-dropdown">
@@ -683,25 +726,52 @@
       </div>
     </div>
 
+    <!-- FENSTER: SPARZIEL HINZUFÜGEN / BEARBEITEN -->
+    <div class="modal" id="goal-modal">
+      <div class="modal-card">
+        <p class="custom-label" id="goal-modal-title">Add Goal</p>
+        <label class="modal-label" for="goal-name">Name</label>
+        <input
+          type="text"
+          id="goal-name"
+          placeholder="Goal name"
+          maxlength="20"
+          autocomplete="off"
+        />
+        <label class="modal-label" for="goal-saved">Saved so far</label>
+        <input
+          type="text"
+          inputmode="decimal"
+          id="goal-saved"
+          placeholder="0,00€"
+          autocomplete="off"
+        />
+        <label class="modal-label" for="goal-target">Goal amount</label>
+        <input
+          type="text"
+          inputmode="decimal"
+          id="goal-target"
+          placeholder="0,00€"
+          autocomplete="off"
+        />
+        <button onclick="saveGoal()">Save</button>
+        <button class="btn-danger" id="goal-delete" onclick="deleteGoal()">
+          Delete
+        </button>
+        <button class="btn-secondary" onclick="closeGoalDialog()">
+          Cancel
+        </button>
+      </div>
+    </div>
+
     <script>
       const $ = (id) => document.getElementById(id);
 
       // --- 1. KONSTANTEN ---
-      const GOALS = [
-        ["travels", "Travels"],
-        ["studies", "Studies"],
-        ["car", "Car"],
-      ];
       const GREEN = "#32a74a",
         RED = "#c52233",
         GREY = "#666666";
-      const GREY_ZERO = [
-        "dash-travels",
-        "dash-studies",
-        "dash-car",
-        "dash-bank-savings",
-        "dash-cash-savings",
-      ];
+      const GREY_ZERO = ["dash-bank-savings", "dash-cash-savings"];
 
       // --- 2. ZAHLEN & DATUM (Format: 1.324,54€) ---
       function parseNum(str) {
@@ -774,20 +844,102 @@
         redoStack = [];
       let lastDay = localDate();
 
-      $("goals-row").innerHTML = GOALS.map(
-        ([key, label]) => `
+      // --- Sparziele (eigene Liste, frei erstellbar) ---
+      // Beim ersten Start werden die alten Werte (Travels, Studies, Car) übernommen.
+      const DEFAULT_GOALS = [
+        { id: "travels", name: "Travels" },
+        { id: "studies", name: "College" },
+        { id: "car", name: "Car" },
+      ];
+      let goals = null;
+      try {
+        goals = JSON.parse(localStorage.getItem("goals"));
+      } catch (e) {}
+      if (!Array.isArray(goals)) {
+        goals = DEFAULT_GOALS.map((g) => ({
+          id: g.id,
+          name: g.name,
+          saved: parseFloat(localStorage.getItem("dash_" + g.id)) || 0,
+          target: parseFloat(localStorage.getItem("goal_" + g.id)) || 0,
+        }));
+        localStorage.setItem("goals", JSON.stringify(goals));
+      }
+      let editingGoalId = null;
+
+      function saveGoals() {
+        localStorage.setItem("goals", JSON.stringify(goals));
+      }
+      function renderGoals() {
+        $("goals-row").innerHTML = goals
+          .map((g) => {
+            const pct =
+              g.target > 0 && g.saved > 0 ? (g.saved / g.target) * 100 : 0;
+            const color = g.saved > 0 ? GREEN : g.saved < 0 ? RED : GREY;
+            return `
   <div class="savings-goal-col">
     <div class="savings-goal-box">
-      <label>${label}</label>
-      <input type="text" id="dash-${key}" class="dash-input" placeholder="0,00€" />
-      <input type="text" id="goal-${key}" class="dash-input goal-input" placeholder="0,00€" />
+      <button class="acc-menu" onclick="openGoalDialog('${g.id}')" aria-label="Edit goal">⋮</button>
+      <label>${esc(g.name)}</label>
+      <span class="goal-saved" style="color: ${color}">${fmt(g.saved)}</span>
+      <span class="goal-target">${fmt(g.target)}</span>
     </div>
     <div class="progress-box">
-      <div class="progress-bar-bg"><div id="bar-${key}" class="progress-bar-fill"></div></div>
-      <span id="pct-${key}" class="progress-text">0%</span>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${Math.min(Math.max(pct, 0), 100)}%"></div></div>
+      <span class="progress-text">${Math.round(pct)}%</span>
     </div>
-  </div>`,
-      ).join("");
+  </div>`;
+          })
+          .join("");
+      }
+      function openGoalDialog(id) {
+        editingGoalId = id || null;
+        const g = goals.find((g) => g.id === id);
+        $("goal-modal-title").innerText = g ? "Edit Goal" : "Add Goal";
+        $("goal-name").value = g ? g.name : "";
+        $("goal-saved").value = g && g.saved ? editStr(g.saved) : "";
+        $("goal-target").value = g && g.target ? editStr(g.target) : "";
+        $("goal-delete").style.display = g ? "block" : "none";
+        $("goal-modal").style.display = "flex";
+        $("goal-name").focus();
+      }
+      function closeGoalDialog() {
+        $("goal-modal").style.display = "none";
+      }
+      function saveGoal() {
+        const name = $("goal-name").value.trim();
+        if (!name) {
+          alert("Please enter a name");
+          return;
+        }
+        const saved = parseNum($("goal-saved").value);
+        const target = parseNum($("goal-target").value);
+        const data = {
+          name,
+          saved: isNaN(saved) ? 0 : Math.round(saved * 100) / 100,
+          target: isNaN(target) ? 0 : Math.round(Math.abs(target) * 100) / 100,
+        };
+        const g = goals.find((g) => g.id === editingGoalId);
+        if (g) Object.assign(g, data);
+        else goals.push({ id: "g" + Date.now(), ...data });
+        saveGoals();
+        closeGoalDialog();
+        renderGoals();
+      }
+      function deleteGoal() {
+        const g = goals.find((g) => g.id === editingGoalId);
+        if (!g || !confirm(`Remove "${g.name}"?`)) return;
+        goals = goals.filter((x) => x !== g);
+        saveGoals();
+        closeGoalDialog();
+        renderGoals();
+      }
+      ["goal-name", "goal-saved", "goal-target"].forEach((id) =>
+        $(id).addEventListener("keydown", (e) => e.key === "Enter" && saveGoal()),
+      );
+      $("goal-modal").addEventListener("click", (e) => {
+        if (e.target === $("goal-modal")) closeGoalDialog();
+      });
+      renderGoals();
 
       // --- Accounts (Cash, Revolut, Paypal + eigene) ---
       const DEFAULT_ACCOUNTS = [
@@ -877,7 +1029,7 @@
         input.dataset.bound = "1";
         input.addEventListener("focus", () => {
           input.value = editStr(input.value);
-          if (!input.id.startsWith("goal-")) input.style.color = "#000000";
+          input.style.color = "#000000";
         });
         input.addEventListener("blur", saveDashboardData);
         input.addEventListener(
@@ -952,18 +1104,12 @@
         );
         renderDashboard();
       }
-      function updateProgress(current, goal, key) {
-        const pct = goal > 0 && current > 0 ? (current / goal) * 100 : 0;
-        $("bar-" + key).style.width = Math.min(Math.max(pct, 0), 100) + "%";
-        $("pct-" + key).innerText = Math.round(pct) + "%";
-      }
       function renderDashboard() {
         dashIds().forEach((id) => {
           const raw = localStorage.getItem(keyOf(id));
           const n = parseFloat(raw);
           const input = $(id);
           input.value = raw !== null && raw !== "" && !isNaN(n) ? fmt(n) : "";
-          if (id.startsWith("goal-")) return;
           input.style.color = GREY_ZERO.includes(id)
             ? n > 0
               ? GREEN
@@ -972,9 +1118,7 @@
                 : GREY
             : colorFor(n || 0);
         });
-        GOALS.forEach(([key]) =>
-          updateProgress(stored("dash-" + key), stored("goal-" + key), key),
-        );
+        renderGoals();
         const totalSavings =
           stored("dash-bank-savings") + stored("dash-cash-savings");
         const totalAssets =
