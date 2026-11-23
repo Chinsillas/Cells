@@ -6,505 +6,118 @@
     <title>Cells</title>
     <style>
       /* --- 1. LAYOUT & CARDS --- */
-      body {
-        font-family: Helvetica, sans-serif;
-        padding: 72px 20px 20px;
-        max-width: 500px;
-        margin: auto;
-        font-size: 16px;
-        background: #f6f6f6;
-      }
-      .card {
-        background: #edede9;
-        padding: 18px;
-        border-radius: 20px;
-        margin-bottom: 20px;
-      }
+      body { font-family: Helvetica, sans-serif; padding: 72px 20px 20px; max-width: 500px; margin: auto; font-size: 16px; background: #f6f6f6; }
+      .card { background: #edede9; padding: 18px; border-radius: 20px; margin-bottom: 20px; }
 
       /* --- 2. FORMULARE & BUTTONS --- */
-      input,
-      select,
-      button {
-        display: block;
-        width: 100%;
-        box-sizing: border-box;
-        -webkit-appearance: none;
-        appearance: none;
-        font-family: inherit;
-        height: 48px;
-        padding: 0 12px;
-        margin: 6px 0;
-        border: 1px solid #d6ccc2;
-        border-radius: 18px;
-        font-size: 16px;
-        background: #fff;
-      }
-      button {
-        background: #40916c;
-        color: #fff;
-        border: none;
-        font-weight: bold;
-        cursor: pointer;
-      }
-      .btn-secondary {
-        background: #fff;
-        color: #40916c;
-        border: 1px solid #40916c;
-      }
-      .btn-delete {
-        background: #c52233 !important;
-        color: #fff !important;
-        width: auto !important;
-        height: auto !important;
-        padding: 6px 12px !important;
-        font-size: 12px !important;
-      }
-      input[type="date"],
-      input[type="month"] {
-        color: #000;
-        text-align: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        line-height: 48px;
-        font-size: 16px;
-      }
-      input[type="date"]::-webkit-date-and-time-value,
-      input[type="month"]::-webkit-date-and-time-value {
-        text-align: center;
-        color: #000;
-        margin: auto;
-      }
+      input, select, button { display: block; width: 100%; box-sizing: border-box; -webkit-appearance: none; appearance: none; font-family: inherit; height: 48px; padding: 0 12px; margin: 6px 0; border: 1px solid #d6ccc2; border-radius: 18px; font-size: 16px; background: #fff; }
+      button { background: #40916c; color: #fff; border: none; font-weight: bold; cursor: pointer; }
+      .btn-secondary { background: #fff; color: #40916c; border: 1px solid #40916c; }
+      .btn-delete { background: #c52233 !important; color: #fff !important; width: auto !important; height: auto !important; padding: 6px 12px !important; font-size: 12px !important; }
+      input[type="date"], input[type="month"] { color: #000; text-align: center; display: flex; align-items: center; justify-content: center; line-height: 48px; font-size: 16px; }
+      input[type="date"]::-webkit-date-and-time-value, input[type="month"]::-webkit-date-and-time-value { text-align: center; color: #000; margin: auto; }
 
       /* --- 3. INFO-BOXEN --- */
-      .stats-grid {
-        display: flex;
-        gap: 10px;
-        margin-top: 10px;
-      }
-      .stat-box {
-        flex: 1;
-        min-width: 0;
-        background: #fff;
-        border: 1px solid #d6ccc2;
-        border-radius: 18px;
-        padding: 10px;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
-      .stat-box-thin {
-        background: #fff;
-        border: 1px solid #d6ccc2;
-        border-radius: 18px;
-        padding: 4px 8px;
-        text-align: center;
-        margin-top: 10px;
-      }
-      .stat-box label,
-      .stat-box-thin label {
-        display: block;
-        font-size: 11px;
-        color: #666;
-        text-transform: uppercase;
-        font-weight: bold;
-        margin-bottom: 2px;
-      }
-      .stat-box span,
-      .stat-box-thin span {
-        font-size: 15px;
-        font-weight: bold;
-        color: #32a74a;
-      }
+      .stats-grid { display: flex; gap: 10px; margin-top: 10px; }
+      .stat-box { flex: 1; min-width: 0; background: #fff; border: 1px solid #d6ccc2; border-radius: 18px; padding: 10px; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+      .stat-box-thin { background: #fff; border: 1px solid #d6ccc2; border-radius: 18px; padding: 4px 8px; text-align: center; margin-top: 10px; }
+      .stat-box label, .stat-box-thin label { display: block; font-size: 11px; color: #666; text-transform: uppercase; font-weight: bold; margin-bottom: 2px; }
+      .stat-box span, .stat-box-thin span { font-size: 15px; font-weight: bold; color: #32a74a; }
 
       /* --- 4. DASHBOARD --- */
-      .dashboard-grid {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-      .dashboard-row {
-        display: flex;
-        gap: 10px;
-      }
-      .dashboard-box-large {
-        flex: 2;
-        min-height: 110px;
-      }
-      .dashboard-box-tall {
-        flex: 1;
-        min-height: 110px;
-      }
-      .dashboard-box-small {
-        flex: 1;
-        min-height: 44px;
-      }
-      .accounts-grid {
-        flex-wrap: wrap;
-      }
-      .accounts-grid .stat-box {
-        position: relative;
-        box-sizing: border-box;
-        flex: 0 0 calc((100% - 20px) / 3);
-        padding: 10px 4px;
-        min-height: 44px;
-      }
-      .accounts-grid label {
-        max-width: 100%;
-        box-sizing: border-box;
-        padding: 0 14px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      .accounts-grid .dash-input {
-        font-size: 14px !important;
-      }
-      .acc-menu {
-        position: absolute;
-        top: 2px;
-        right: 2px;
-        width: 26px !important;
-        height: 26px !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        background: transparent !important;
-        color: #666 !important;
-        font-size: 18px !important;
-        line-height: 1;
-      }
-      .btn-thin {
-        height: 32px;
-        margin: 0;
-        font-size: 13px;
-      }
-      .btn-danger {
-        background: #c52233;
-      }
-      .modal {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.4);
-        z-index: 30;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-      }
-      .modal-card {
-        background: #fff;
-        border-radius: 20px;
-        padding: 18px;
-        width: 100%;
-        max-width: 360px;
-      }
-      .modal-label {
-        display: block;
-        font-size: 11px;
-        color: #666;
-        text-transform: uppercase;
-        font-weight: bold;
-        margin: 8px 0 0 4px;
-      }
+      .dashboard-grid { display: flex; flex-direction: column; gap: 10px; }
+      .dashboard-row { display: flex; gap: 10px; }
+      .dashboard-box-large { flex: 2; min-height: 110px; }
+      .dashboard-box-tall { flex: 1; min-height: 110px; }
+      .dashboard-box-small { flex: 1; min-height: 44px; }
+      .accounts-grid { flex-wrap: wrap; }
+      .accounts-grid .stat-box { position: relative; box-sizing: border-box; flex: 0 0 calc((100% - 20px) / 3); padding: 10px 4px; min-height: 44px; }
+      .accounts-grid label { max-width: 100%; box-sizing: border-box; padding: 0 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .accounts-grid .dash-input { font-size: 14px !important; }
+      .acc-menu { position: absolute; top: 2px; right: 2px; width: 26px !important; height: 26px !important; margin: 0 !important; padding: 0 !important; background: transparent !important; color: #666 !important; font-size: 18px !important; line-height: 1; }
+      .btn-thin { height: 32px; margin: 0; font-size: 13px; }
+      .btn-danger { background: #c52233; }
+      .modal { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); z-index: 30; align-items: center; justify-content: center; padding: 20px; }
+      .modal-card { background: #fff; border-radius: 20px; padding: 18px; width: 100%; max-width: 360px; }
+      .modal-label { display: block; font-size: 11px; color: #666; text-transform: uppercase; font-weight: bold; margin: 8px 0 0 4px; }
 
       /* Sparziele (ca. 25 % kleiner) */
-      .goals-grid {
-        flex-wrap: wrap;
-      }
-      .savings-goal-col {
-        flex: 0 0 calc((100% - 20px) / 3);
-        min-width: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-      }
-      .savings-goal-box {
-        position: relative;
-        background: #fff;
-        border: 1px solid #d6ccc2;
-        border-radius: 14px;
-        padding: 8px 3px;
-        min-width: 0;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        min-height: 78px;
-      }
-      .savings-goal-box label {
-        display: block;
-        max-width: 100%;
-        box-sizing: border-box;
-        padding: 0 12px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        font-size: 10px;
-        color: #666;
-        text-transform: uppercase;
-        font-weight: bold;
-        margin-bottom: 2px;
-      }
-      .savings-goal-box .acc-menu {
-        width: 22px !important;
-        height: 22px !important;
-        font-size: 16px !important;
-      }
-      .goal-saved {
-        font-size: 12px;
-        font-weight: bold;
-        max-width: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      .goal-target {
-        font-size: 10px;
-        font-weight: bold;
-        color: #666;
-        margin-top: 2px;
-        max-width: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      .progress-box {
-        background: #fff;
-        border: 1px solid #d6ccc2;
-        border-radius: 14px;
-        padding: 6px 8px;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
-      .progress-bar-bg {
-        width: 100%;
-        height: 6px;
-        background: #edede9;
-        border-radius: 10px;
-        overflow: hidden;
-        margin-bottom: 3px;
-      }
-      .progress-bar-fill {
-        height: 100%;
-        width: 0;
-        background: #40916c;
-        border-radius: 10px;
-        transition: width 0.3s ease;
-      }
-      .progress-text {
-        font-size: 10px;
-        font-weight: bold;
-        color: #666;
-      }
-      details.savings-dropdown {
-        background: #fff;
-        border: 1px solid #d6ccc2;
-        border-radius: 18px;
-        padding: 10px 14px;
-        margin-top: 5px;
-      }
-      details.savings-dropdown summary {
-        font-size: 12px;
-        color: #666;
-        text-transform: uppercase;
-        font-weight: bold;
-        cursor: pointer;
-        outline: none;
-        text-align: center;
-        list-style: none;
-      }
-      details.savings-dropdown summary::-webkit-details-marker {
-        display: none;
-      }
-      details.savings-dropdown[open] summary {
-        margin-bottom: 12px;
-      }
-      .savings-content {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        border-top: 1px solid #f0eee9;
-        padding-top: 10px;
-      }
-      .savings-content .stat-box,
-      .savings-content .savings-goal-box,
-      .savings-content .progress-box {
-        background: #f3f3f1;
-      }
-      .savings-content .progress-bar-bg {
-        background: #dedcd7;
-      }
-      .dash-input,
-      .salary-input {
-        width: 100% !important;
-        min-width: 0;
-        height: auto !important;
-        margin: 0 !important;
-        padding: 2px 0 !important;
-        border: none !important;
-        background: transparent !important;
-        text-align: center !important;
-        font-size: 16px !important;
-        font-weight: bold !important;
-      }
-      .dash-input:focus,
-      .salary-input:focus {
-        outline: none;
-        background: #fff !important;
-        border-radius: 18px;
-      }
-      .expenses-val {
-        color: #c52233 !important;
-        font-weight: bold;
-        font-size: 16px;
-      }
-      .income-val {
-        color: #32a74a !important;
-        font-weight: bold;
-        font-size: 16px;
-      }
+      .goals-grid { flex-wrap: wrap; }
+      .savings-goal-col { flex: 0 0 calc((100% - 20px) / 3); min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+      .savings-goal-box { position: relative; background: #fff; border: 1px solid #d6ccc2; border-radius: 14px; padding: 8px 3px; min-width: 0; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 78px; }
+      .savings-goal-box label { display: block; max-width: 100%; box-sizing: border-box; padding: 0 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; color: #666; text-transform: uppercase; font-weight: bold; margin-bottom: 2px; }
+      .savings-goal-box .acc-menu { width: 22px !important; height: 22px !important; font-size: 16px !important; }
+      .goal-saved { font-size: 12px; font-weight: bold; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .goal-target { font-size: 10px; font-weight: bold; color: #666; margin-top: 2px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .progress-box { background: #fff; border: 1px solid #d6ccc2; border-radius: 14px; padding: 6px 8px; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+      .progress-bar-bg { width: 100%; height: 6px; background: #edede9; border-radius: 10px; overflow: hidden; margin-bottom: 3px; }
+      .progress-bar-fill { height: 100%; width: 0; background: #40916c; border-radius: 10px; transition: width 0.3s ease; }
+      .progress-text { font-size: 10px; font-weight: bold; color: #666; }
+      details.savings-dropdown { background: #fff; border: 1px solid #d6ccc2; border-radius: 18px; padding: 10px 14px; margin-top: 5px; }
+      details.savings-dropdown summary { font-size: 12px; color: #666; text-transform: uppercase; font-weight: bold; cursor: pointer; outline: none; text-align: center; list-style: none; }
+      details.savings-dropdown summary::-webkit-details-marker { display: none; }
+      details.savings-dropdown[open] summary { margin-bottom: 12px; }
+      .savings-content { display: flex; flex-direction: column; gap: 10px; border-top: 1px solid #f0eee9; padding-top: 10px; }
+      .savings-content .stat-box, .savings-content .savings-goal-box, .savings-content .progress-box { background: #f3f3f1; }
+      .savings-content .progress-bar-bg { background: #dedcd7; }
+      .dash-input, .salary-input { width: 100% !important; min-width: 0; height: auto !important; margin: 0 !important; padding: 2px 0 !important; border: none !important; background: transparent !important; text-align: center !important; font-size: 16px !important; font-weight: bold !important; }
+      .dash-input:focus, .salary-input:focus { outline: none; background: #fff !important; border-radius: 18px; }
+      .expenses-val { color: #c52233 !important; font-weight: bold; font-size: 16px; }
+      .income-val { color: #32a74a !important; font-weight: bold; font-size: 16px; }
 
       /* --- 5. TABELLEN & LABELS --- */
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
-        font-size: 16px;
-      }
-      th,
-      td {
-        border: 1px solid #d6ccc2;
-        padding: 10px 8px;
-        text-align: left;
-      }
-      table input[type="date"] {
-        width: 100% !important;
-        height: auto !important;
-        min-height: 36px !important;
-        padding: 4px 6px !important;
-        line-height: normal !important;
-        display: inline-block !important;
-        font-size: 15px !important;
-      }
-      .custom-label {
-        text-align: center;
-        text-transform: uppercase;
-        color: #666;
-        font-weight: bold;
-        font-size: 12px;
-        margin-top: 0;
-      }
-      .custom-label2 {
-        color: #666;
-        font-weight: bold;
-        font-size: 16px;
-        margin-top: 0;
-      }
-      .backup-info {
-        text-align: center;
-        font-size: 12px;
-        color: #666;
-        margin: 8px 0 0;
-      }
+      table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 16px; }
+      th, td { border: 1px solid #d6ccc2; padding: 10px 8px; text-align: left; }
+      table input[type="date"] { width: 100% !important; height: auto !important; min-height: 36px !important; padding: 4px 6px !important; line-height: normal !important; display: inline-block !important; font-size: 15px !important; }
+      .custom-label { text-align: center; text-transform: uppercase; color: #666; font-weight: bold; font-size: 12px; margin-top: 0; }
+      .custom-label2 { color: #666; font-weight: bold; font-size: 16px; margin-top: 0; }
+      .backup-info { text-align: center; font-size: 12px; color: #666; margin: 8px 0 0; }
 
       /* --- 5b. DEBT --- */
-      .debt-section .custom-label {
-        margin: 0 0 8px;
-      }
-      .debt-section + .debt-section {
-        border-top: 1px solid #f0eee9;
-        padding-top: 14px;
-      }
-      .debt-add {
-        display: flex;
-        gap: 10px;
-      }
-      .debt-add input,
-      .debt-add button {
-        flex: 1;
-        min-width: 0;
-      }
-      .debt-table {
-        margin-top: 6px;
-        font-size: 15px;
-      }
-      .debt-table td {
-        padding: 8px 6px;
-        word-break: break-word;
-      }
-      .debt-table td:nth-child(2) {
-        text-align: right;
-        white-space: nowrap;
-        font-weight: bold;
-      }
-      .debt-table td:last-child {
-        width: 1%;
-        text-align: center;
-      }
+      .debt-section .custom-label { margin: 0 0 8px; }
+      .debt-section + .debt-section { border-top: 1px solid #f0eee9; padding-top: 14px; }
+      .debt-add { display: flex; gap: 10px; }
+      .debt-add input, .debt-add button { flex: 1; min-width: 0; }
+      .debt-table { margin-top: 6px; font-size: 15px; }
+      .debt-table td { padding: 8px 6px; word-break: break-word; }
+      .debt-table td:nth-child(2) { text-align: right; white-space: nowrap; font-weight: bold; }
+      .debt-table td:last-child { width: 1%; text-align: center; }
+
+      /* --- 5c. LISTS --- */
+      .list-item { display: flex; justify-content: space-between; align-items: center; gap: 10px; background: #fff; color: #000; border: 1px solid #d6ccc2; height: 48px; margin: 8px 0 0; text-align: left; }
+      .list-item .li-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .list-item .li-sum { color: #666; font-size: 14px; white-space: nowrap; }
+      .list-empty { text-align: center; font-size: 13px; color: #666; margin: 14px 0 0; }
+      .list-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+      .list-head h2 { flex: 1; min-width: 0; margin: 0; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .list-head button { flex: 0 0 44px; width: 44px; height: 44px; margin: 0; padding: 0; font-size: 18px; border-radius: 14px; }
+      .pos-add { display: flex; gap: 8px; align-items: center; }
+      .pos-add input { flex: 1; min-width: 0; }
+      .pos-cat { flex: 0 0 56px; width: 56px !important; height: 48px; margin: 6px 0; padding: 0 4px; text-align: center; text-align-last: center; font-weight: bold; color: #40916c; }
+      .pos-row { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid #d6ccc2; }
+      .pos-row .pos-cat { flex: 0 0 46px; width: 46px !important; height: 34px; margin: 0; border-radius: 12px; font-size: 14px; }
+      .pos-row .pos-name { flex: 1; min-width: 0; word-break: break-word; }
+      .pos-row .pos-amount { white-space: nowrap; font-weight: bold; }
+      .list-summary { margin-top: 12px; }
+      .sum-line { display: flex; justify-content: space-between; font-size: 12px; color: #888; margin-bottom: 2px; }
+      .sum-total { display: flex; justify-content: space-between; align-items: baseline; margin-top: 6px; font-weight: bold; font-size: 18px; }
+      .sum-total .sum-label { font-size: 12px; color: #666; text-transform: uppercase; }
 
       /* --- 6. MENÜ --- */
-      .menu-btn {
-        position: fixed;
-        top: calc(env(safe-area-inset-top, 0px) + 12px);
-        left: 12px;
-        width: 44px;
-        height: 44px;
-        margin: 0;
-        padding: 0;
-        font-size: 22px;
-        border-radius: 14px;
-        z-index: 20;
-      }
-      .menu {
-        display: none;
-        position: fixed;
-        top: calc(env(safe-area-inset-top, 0px) + 64px);
-        left: 12px;
-        width: 210px;
-        padding: 6px;
-        background: #fff;
-        border: 1px solid #d6ccc2;
-        border-radius: 18px;
-        z-index: 20;
-      }
-      .menu button {
-        margin: 0;
-        height: 44px;
-        background: #fff;
-        color: #40916c;
-        text-align: left;
-      }
-      .menu button.active {
-        background: #edede9;
-      }
+      .menu-btn { position: fixed; top: calc(env(safe-area-inset-top, 0px) + 12px); left: 12px; width: 44px; height: 44px; margin: 0; padding: 0; font-size: 22px; border-radius: 14px; z-index: 20; }
+      .menu { display: none; position: fixed; top: calc(env(safe-area-inset-top, 0px) + 64px); left: 12px; width: 210px; padding: 6px; background: #fff; border: 1px solid #d6ccc2; border-radius: 18px; z-index: 20; }
+      .menu button { margin: 0; height: 44px; background: #fff; color: #40916c; text-align: left; }
+      .menu button.active { background: #edede9; }
     </style>
   </head>
   <body>
     <!-- MENÜ -->
-    <button
-      class="menu-btn"
-      id="menu-btn"
-      onclick="toggleMenu()"
-      aria-label="Menu"
-    >
-      ☰
-    </button>
+    <button class="menu-btn" id="menu-btn" onclick="toggleMenu()" aria-label="Menu">☰</button>
     <div class="menu" id="menu">
-      <button data-view="dashboard-view" onclick="showView('dashboard-view')">
-        Dashboard
-      </button>
-      <button data-view="main-view" onclick="showView('main-view')">
-        Monthly Overview
-      </button>
-      <button data-view="backup-view" onclick="showView('backup-view')">
-        Backup
-      </button>
+      <button data-view="dashboard-view" onclick="showView('dashboard-view')">Dashboard</button>
+      <button data-view="main-view" onclick="showView('main-view')">Monthly Overview</button>
+      <button data-view="lists-view" onclick="showView('lists-view')">Lists</button>
+      <button data-view="backup-view" onclick="showView('backup-view')">Backup</button>
     </div>
 
     <!-- ANSICHT 1: DASHBOARD -->
@@ -515,66 +128,39 @@
           <div class="dashboard-row">
             <div class="stat-box dashboard-box-large">
               <label>Total</label>
-              <span
-                id="dash-total-val"
-                style="font-size: 20px; font-weight: bold"
-                >0,00€</span
-              >
+              <span id="dash-total-val" style="font-size: 20px; font-weight: bold">0,00€</span>
             </div>
             <div class="stat-box dashboard-box-tall">
               <label>This Month</label>
-              <input
-                type="text"
-                id="dash-this-month"
-                class="dash-input"
-                placeholder="0,00€"
-              />
+              <input type="text" id="dash-this-month" class="dash-input" placeholder="0,00€" />
             </div>
           </div>
           <div class="dashboard-row accounts-grid" id="accounts-grid"></div>
-          <button class="btn-secondary btn-thin" onclick="openAccountDialog()">
-            + Add Account
-          </button>
+          <button class="btn-secondary btn-thin" onclick="openAccountDialog()">+ Add Account</button>
           <details class="savings-dropdown">
             <summary>Savings</summary>
             <div class="savings-content">
               <div class="dashboard-row">
                 <div class="stat-box" style="flex: 1; min-height: 50px">
                   <label>Total Savings</label>
-                  <span
-                    id="dash-savings-val"
-                    style="font-size: 18px; font-weight: bold"
-                    >0,00€</span
-                  >
+                  <span id="dash-savings-val" style="font-size: 18px; font-weight: bold">0,00€</span>
                 </div>
               </div>
               <div class="dashboard-row">
                 <div class="stat-box dashboard-box-small">
                   <label>Bank Savings</label>
-                  <input
-                    type="text"
-                    id="dash-bank-savings"
-                    class="dash-input"
-                    placeholder="0,00€"
-                  />
+                  <input type="text" id="dash-bank-savings" class="dash-input" placeholder="0,00€" />
                 </div>
               </div>
               <div class="dashboard-row">
                 <div class="stat-box dashboard-box-small">
                   <label>Cash Savings</label>
-                  <input
-                    type="text"
-                    id="dash-cash-savings"
-                    class="dash-input"
-                    placeholder="0,00€"
-                  />
+                  <input type="text" id="dash-cash-savings" class="dash-input" placeholder="0,00€" />
                 </div>
               </div>
               <!-- Sparziele (per JS aus goals erzeugt) -->
               <div class="dashboard-row goals-grid" id="goals-row"></div>
-              <button class="btn-secondary btn-thin" onclick="openGoalDialog()">
-                + Add Goal
-              </button>
+              <button class="btn-secondary btn-thin" onclick="openGoalDialog()">+ Add Goal</button>
             </div>
           </details>
           <details class="savings-dropdown">
@@ -595,41 +181,21 @@
         <p class="custom-label">Earned this month</p>
         <div class="stat-box" style="margin-bottom: 10px">
           <label>Salary</label>
-          <input
-            type="text"
-            id="monthly-salary"
-            class="salary-input"
-            placeholder="0,00€"
-          />
+          <input type="text" id="monthly-salary" class="salary-input" placeholder="0,00€" />
         </div>
         <div class="stats-grid">
-          <div class="stat-box">
-            <label>Cash</label><span id="cash-total">0,00€</span>
-          </div>
-          <div class="stat-box">
-            <label id="dynamic-label">Plasma</label
-            ><span id="plasma-total">0,00€</span>
-          </div>
+          <div class="stat-box"><label>Cash</label><span id="cash-total">0,00€</span></div>
+          <div class="stat-box"><label id="dynamic-label">Plasma</label><span id="plasma-total">0,00€</span></div>
         </div>
-        <div class="stat-box-thin">
-          <label>Total</label><span id="cash-plasma-sum">0,00€</span>
-        </div>
+        <div class="stat-box-thin"><label>Total</label><span id="cash-plasma-sum">0,00€</span></div>
       </div>
 
       <div class="card">
         <div class="stats-grid">
-          <div class="stat-box">
-            <label>Total Income</label
-            ><span id="total-income" class="income-val">0,00€</span>
-          </div>
-          <div class="stat-box">
-            <label>Total Expenses</label
-            ><span id="total-expenses" class="expenses-val">0,00€</span>
-          </div>
+          <div class="stat-box"><label>Total Income</label><span id="total-income" class="income-val">0,00€</span></div>
+          <div class="stat-box"><label>Total Expenses</label><span id="total-expenses" class="expenses-val">0,00€</span></div>
         </div>
-        <div class="stat-box-thin">
-          <label>Net Total</label><span id="net-total">0,00€</span>
-        </div>
+        <div class="stat-box-thin"><label>Net Total</label><span id="net-total">0,00€</span></div>
       </div>
 
       <div class="card">
@@ -641,43 +207,57 @@
       </div>
 
       <div style="margin-bottom: 10px; display: flex; gap: 10px">
-        <button
-          onclick="undo()"
-          style="
-            background-color: #40916c;
-            height: 32px;
-            width: 48px;
-            padding: 2px 8px;
-            font-size: 14px;
-          "
-        >
-          ←
-        </button>
-        <button
-          onclick="redo()"
-          style="
-            background-color: #40916c;
-            height: 32px;
-            width: 48px;
-            padding: 2px 8px;
-            font-size: 14px;
-          "
-        >
-          →
-        </button>
+        <button onclick="undo()" style="background-color: #40916c; height: 32px; width: 48px; padding: 2px 8px; font-size: 14px">←</button>
+        <button onclick="redo()" style="background-color: #40916c; height: 32px; width: 48px; padding: 2px 8px; font-size: 14px">→</button>
       </div>
 
       <table>
         <thead>
-          <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Amount</th>
-            <th></th>
-          </tr>
+          <tr><th>Date</th><th>Description</th><th>Amount</th><th></th></tr>
         </thead>
         <tbody id="transaction-list"></tbody>
       </table>
+    </div>
+
+    <!-- ANSICHT 3: LISTS (Übersicht) -->
+    <div id="lists-view" style="display: none">
+      <h2>Lists</h2>
+      <div class="card">
+        <button class="btn-secondary btn-thin" onclick="openListDialog()">+ Add List</button>
+        <div id="lists-container"></div>
+      </div>
+    </div>
+
+    <!-- ANSICHT 3b: EINZELNE LISTE -->
+    <div id="list-detail-view" style="display: none">
+      <div class="list-head">
+        <button class="btn-secondary" onclick="showView('lists-view')" aria-label="Back">←</button>
+        <h2 id="list-title"></h2>
+        <button class="btn-secondary" onclick="openListDialog(currentListId)" aria-label="Edit list">⋮</button>
+      </div>
+      <div class="card">
+        <div class="pos-add">
+          <select id="pos-cat" class="pos-cat" aria-label="Category">
+            <option value="D">D</option>
+            <option value="G">G</option>
+          </select>
+          <input type="text" id="pos-name" placeholder="Name" autocomplete="off" />
+        </div>
+        <div class="debt-add">
+          <input type="text" inputmode="decimal" id="pos-amount" placeholder="Amount" autocomplete="off" />
+          <button onclick="addPosition()">Add Position</button>
+        </div>
+      </div>
+      <div class="card">
+        <div id="positions-container"></div>
+        <div class="list-summary">
+          <div class="sum-line"><span>Daily (D)</span><span id="sum-d">0,00€</span></div>
+          <div class="sum-line"><span>General (G)</span><span id="sum-g">0,00€</span></div>
+          <div class="sum-total">
+            <span class="sum-label">Total</span><span id="sum-total" style="color: #c52233">0,00€</span>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- ANSICHT 4: BACKUP -->
@@ -685,18 +265,8 @@
       <h2>Backup</h2>
       <div class="card">
         <button onclick="exportBackup()">Download Backup</button>
-        <button
-          class="btn-secondary"
-          onclick="document.getElementById('backup-file').click()"
-        >
-          Restore Backup
-        </button>
-        <input
-          type="file"
-          id="backup-file"
-          accept=".json,application/json"
-          style="display: none"
-        />
+        <button class="btn-secondary" onclick="document.getElementById('backup-file').click()">Restore Backup</button>
+        <input type="file" id="backup-file" accept=".json,application/json" style="display: none" />
         <p class="backup-info" id="backup-info"></p>
       </div>
     </div>
@@ -705,24 +275,10 @@
     <div class="modal" id="account-modal">
       <div class="modal-card">
         <p class="custom-label" id="account-modal-title">Add Account</p>
-        <input
-          type="text"
-          id="account-name"
-          placeholder="Account name"
-          maxlength="20"
-          autocomplete="off"
-        />
+        <input type="text" id="account-name" placeholder="Account name" maxlength="20" autocomplete="off" />
         <button onclick="saveAccount()">Save</button>
-        <button
-          class="btn-danger"
-          id="account-delete"
-          onclick="deleteAccount()"
-        >
-          Delete
-        </button>
-        <button class="btn-secondary" onclick="closeAccountDialog()">
-          Cancel
-        </button>
+        <button class="btn-danger" id="account-delete" onclick="deleteAccount()">Delete</button>
+        <button class="btn-secondary" onclick="closeAccountDialog()">Cancel</button>
       </div>
     </div>
 
@@ -731,36 +287,25 @@
       <div class="modal-card">
         <p class="custom-label" id="goal-modal-title">Add Goal</p>
         <label class="modal-label" for="goal-name">Name</label>
-        <input
-          type="text"
-          id="goal-name"
-          placeholder="Goal name"
-          maxlength="20"
-          autocomplete="off"
-        />
+        <input type="text" id="goal-name" placeholder="Goal name" maxlength="20" autocomplete="off" />
         <label class="modal-label" for="goal-saved">Saved so far</label>
-        <input
-          type="text"
-          inputmode="decimal"
-          id="goal-saved"
-          placeholder="0,00€"
-          autocomplete="off"
-        />
+        <input type="text" inputmode="decimal" id="goal-saved" placeholder="0,00€" autocomplete="off" />
         <label class="modal-label" for="goal-target">Goal amount</label>
-        <input
-          type="text"
-          inputmode="decimal"
-          id="goal-target"
-          placeholder="0,00€"
-          autocomplete="off"
-        />
+        <input type="text" inputmode="decimal" id="goal-target" placeholder="0,00€" autocomplete="off" />
         <button onclick="saveGoal()">Save</button>
-        <button class="btn-danger" id="goal-delete" onclick="deleteGoal()">
-          Delete
-        </button>
-        <button class="btn-secondary" onclick="closeGoalDialog()">
-          Cancel
-        </button>
+        <button class="btn-danger" id="goal-delete" onclick="deleteGoal()">Delete</button>
+        <button class="btn-secondary" onclick="closeGoalDialog()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- FENSTER: LISTE ERSTELLEN / BEARBEITEN -->
+    <div class="modal" id="list-modal">
+      <div class="modal-card">
+        <p class="custom-label" id="list-modal-title">Add List</p>
+        <input type="text" id="list-name" placeholder="List name" maxlength="30" autocomplete="off" />
+        <button id="list-save" onclick="saveList()">Create</button>
+        <button class="btn-danger" id="list-delete" onclick="deleteList()">Delete</button>
+        <button class="btn-secondary" onclick="closeListDialog()">Cancel</button>
       </div>
     </div>
 
@@ -1131,7 +676,7 @@
         $("dash-total-val").style.color = colorFor(totalAssets);
       }
 
-      // --- 6. BACKUP ---
+      // --- 6. BACKUP (sichert den kompletten localStorage, also auch Lists) ---
       function exportBackup() {
         localStorage.setItem("last_backup", localDate());
         const data = {};
@@ -1234,21 +779,32 @@
       }
 
       // --- 8. NAVIGATION & MENÜ ---
+      const VIEWS = [
+        "dashboard-view",
+        "main-view",
+        "lists-view",
+        "list-detail-view",
+        "backup-view",
+      ];
       function toggleMenu() {
         const m = $("menu");
         m.style.display = m.style.display === "block" ? "none" : "block";
       }
       function showView(id) {
-        ["dashboard-view", "main-view", "backup-view"].forEach(
+        VIEWS.forEach(
           (v) => ($(v).style.display = v === id ? "block" : "none"),
         );
+        const menuId = id === "list-detail-view" ? "lists-view" : id;
         document
           .querySelectorAll("#menu button")
-          .forEach((b) => b.classList.toggle("active", b.dataset.view === id));
+          .forEach((b) =>
+            b.classList.toggle("active", b.dataset.view === menuId),
+          );
         $("menu").style.display = "none";
         window.scrollTo(0, 0);
         if (id === "main-view") checkDynamicLabel();
         if (id === "dashboard-view") renderDashboard();
+        if (id === "lists-view") renderLists();
         if (id === "backup-view") renderBackupInfo();
       }
       document.addEventListener("click", (e) => {
@@ -1445,6 +1001,166 @@
         });
       }
       renderDebts();
+
+      // --- 14. LISTS (Listen mit Positionen, D = daily, G = general) ---
+      function loadLists() {
+        try {
+          const l = JSON.parse(localStorage.getItem("lists"));
+          return Array.isArray(l) ? l : [];
+        } catch (e) {
+          return [];
+        }
+      }
+      let lists = loadLists();
+      let currentListId = null,
+        editingListId = null;
+
+      function saveLists() {
+        localStorage.setItem("lists", JSON.stringify(lists));
+      }
+      function listSums(l) {
+        let d = 0,
+          g = 0;
+        l.positions.forEach((p) => {
+          if (p.cat === "D") d += p.amount;
+          else g += p.amount;
+        });
+        return { d, g, total: d + g };
+      }
+
+      // Übersicht aller Listen
+      function renderLists() {
+        $("lists-container").innerHTML = lists.length
+          ? lists
+              .map(
+                (l) => `
+  <button class="list-item" onclick="openList('${l.id}')">
+    <span class="li-name">${esc(l.name)}</span>
+    <span class="li-sum">${fmt(listSums(l).total)} ›</span>
+  </button>`,
+              )
+              .join("")
+          : '<p class="list-empty">No lists yet</p>';
+      }
+
+      // Liste erstellen / umbenennen / löschen
+      function openListDialog(id) {
+        editingListId = id || null;
+        const l = lists.find((l) => l.id === id);
+        $("list-modal-title").innerText = l ? "Edit List" : "Add List";
+        $("list-save").innerText = l ? "Save" : "Create";
+        $("list-name").value = l ? l.name : "";
+        $("list-delete").style.display = l ? "block" : "none";
+        $("list-modal").style.display = "flex";
+        $("list-name").focus();
+      }
+      function closeListDialog() {
+        $("list-modal").style.display = "none";
+      }
+      function saveList() {
+        const name = $("list-name").value.trim();
+        if (!name) {
+          alert("Please enter a name");
+          return;
+        }
+        const l = lists.find((l) => l.id === editingListId);
+        if (l) l.name = name;
+        else lists.push({ id: "l" + Date.now(), name, positions: [] });
+        saveLists();
+        closeListDialog();
+        if (l) renderListDetail();
+        else renderLists();
+      }
+      function deleteList() {
+        const l = lists.find((l) => l.id === editingListId);
+        if (!l || !confirm(`Remove "${l.name}" and all its positions?`)) return;
+        lists = lists.filter((x) => x !== l);
+        saveLists();
+        closeListDialog();
+        currentListId = null;
+        showView("lists-view");
+      }
+      $("list-name").addEventListener(
+        "keydown",
+        (e) => e.key === "Enter" && saveList(),
+      );
+      $("list-modal").addEventListener("click", (e) => {
+        if (e.target === $("list-modal")) closeListDialog();
+      });
+
+      // Einzelne Liste
+      function openList(id) {
+        currentListId = id;
+        showView("list-detail-view");
+        renderListDetail();
+      }
+      function renderListDetail() {
+        const l = lists.find((l) => l.id === currentListId);
+        if (!l) return;
+        $("list-title").innerText = l.name;
+        $("positions-container").innerHTML = l.positions
+          .map(
+            (p) => `
+  <div class="pos-row">
+    <select class="pos-cat" onchange="setPositionCat(${p.id}, this.value)" aria-label="Category">
+      <option value="D"${p.cat === "D" ? " selected" : ""}>D</option>
+      <option value="G"${p.cat === "G" ? " selected" : ""}>G</option>
+    </select>
+    <span class="pos-name">${esc(p.name)}</span>
+    <span class="pos-amount">${fmt(p.amount)}</span>
+    <button class="btn-delete" onclick="deletePosition(${p.id})">X</button>
+  </div>`,
+          )
+          .join("");
+        const s = listSums(l);
+        $("sum-d").innerText = fmt(s.d);
+        $("sum-g").innerText = fmt(s.g);
+        $("sum-total").innerText = fmt(s.total);
+      }
+      function addPosition() {
+        const l = lists.find((l) => l.id === currentListId);
+        if (!l) return;
+        const name = $("pos-name").value.trim();
+        const amount = Math.abs(parseNum($("pos-amount").value));
+        if (!name || isNaN(amount) || amount === 0) {
+          alert("Please enter a valid Name and Amount");
+          return;
+        }
+        l.positions.push({
+          id: Date.now(),
+          cat: $("pos-cat").value,
+          name,
+          amount: Math.round(amount * 100) / 100,
+        });
+        $("pos-name").value = "";
+        $("pos-amount").value = "";
+        saveLists();
+        renderListDetail();
+      }
+      function setPositionCat(id, cat) {
+        const l = lists.find((l) => l.id === currentListId);
+        const p = l && l.positions.find((p) => p.id === id);
+        if (!p) return;
+        p.cat = cat;
+        saveLists();
+        renderListDetail();
+      }
+      function deletePosition(id) {
+        const l = lists.find((l) => l.id === currentListId);
+        if (!l || !confirm("Do you really want to remove this position?"))
+          return;
+        l.positions = l.positions.filter((p) => p.id !== id);
+        saveLists();
+        renderListDetail();
+      }
+      $("pos-name").addEventListener(
+        "keydown",
+        (e) => e.key === "Enter" && $("pos-amount").focus(),
+      );
+      $("pos-amount").addEventListener(
+        "keydown",
+        (e) => e.key === "Enter" && addPosition(),
+      );
     </script>
   </body>
 </html>
