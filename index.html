@@ -317,6 +317,13 @@
         RED = "#c52233",
         GREY = "#666666";
       const GREY_ZERO = ["dash-bank-savings", "dash-cash-savings"];
+      const VIEWS = [
+        "dashboard-view",
+        "main-view",
+        "lists-view",
+        "list-detail-view",
+        "backup-view",
+      ];
 
       // --- 2. ZAHLEN & DATUM (Format: 1.324,54€) ---
       function parseNum(str) {
@@ -779,13 +786,6 @@
       }
 
       // --- 8. NAVIGATION & MENÜ ---
-      const VIEWS = [
-        "dashboard-view",
-        "main-view",
-        "lists-view",
-        "list-detail-view",
-        "backup-view",
-      ];
       function toggleMenu() {
         const m = $("menu");
         m.style.display = m.style.display === "block" ? "none" : "block";
