@@ -84,7 +84,13 @@
       .debt-table td:last-child { width: 1%; text-align: center; }
 
       /* --- 5c. LISTS --- */
-      .list-item { display: flex; justify-content: space-between; align-items: center; gap: 10px; background: #fff; color: #000; border: 1px solid #d6ccc2; height: 48px; margin: 8px 0 0; text-align: left; }
+      .list-row { display: flex; align-items: center; gap: 6px; margin: 8px 0 0; position: relative; }
+      .list-row.dragging { z-index: 5; opacity: 0.85; transition: none; }
+      .list-row.dragging .list-item { box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18); }
+      .list-row.drop-above { box-shadow: 0 -4px 0 #40916c; }
+      .list-row.drop-below { box-shadow: 0 4px 0 #40916c; }
+      .drag-handle { flex: 0 0 30px; width: 30px; height: 48px; line-height: 48px; text-align: center; color: #999; font-size: 22px; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
+      .list-item { flex: 1; min-width: 0; display: flex; justify-content: space-between; align-items: center; gap: 10px; background: #fff; color: #000; border: 1px solid #d6ccc2; height: 48px; margin: 0; text-align: left; }
       .list-item .li-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .list-item .li-sum { color: #666; font-size: 14px; white-space: nowrap; }
       .list-empty { text-align: center; font-size: 13px; color: #666; margin: 14px 0 0; }
@@ -1021,6 +1027,7 @@
       renderDebts();
 
       // --- 14. LISTS (Listen mit Positionen, D = daily, G = general) ---
+      // Reihenfolge = Reihenfolge im lists-Array (oben = vorne).
       // Jede Liste hat einen Monat ("YYYY-MM"). Alte Listen ohne Monat
       // bekommen den Monat, in dem sie erstellt wurden (steckt in der id).
       function listTime(l) {
@@ -1037,6 +1044,12 @@
                 7,
               );
           });
+          // Einmalig: bisherige Listen nach Erstelldatum sortieren (neueste oben)
+          if (!localStorage.getItem("lists_sorted")) {
+            l.sort((a, b) => listTime(b) - listTime(a));
+            localStorage.setItem("lists", JSON.stringify(l));
+            localStorage.setItem("lists_sorted", "1");
+          }
           return l;
         } catch (e) {
           return [];
@@ -1059,12 +1072,10 @@
         return { d, g, total: d + g };
       }
 
-      // Übersicht: nur der gewählte Monat, neueste Liste oben
+      // Übersicht: nur der gewählte Monat, in gespeicherter Reihenfolge
       function renderLists() {
         const m = $("lists-month-filter").value || localDate().slice(0, 7);
-        const items = lists
-          .filter((l) => l.month === m)
-          .sort((a, b) => listTime(b) - listTime(a));
+        const items = lists.filter((l) => l.month === m);
         let d = 0,
           g = 0;
         items.forEach((l) => {
@@ -1079,14 +1090,76 @@
           ? items
               .map(
                 (l) => `
-  <button class="list-item" onclick="openList('${l.id}')">
-    <span class="li-name">${esc(l.name)}</span>
-    <span class="li-sum">${fmt(listSums(l).total)} ›</span>
-  </button>`,
+  <div class="list-row" data-id="${l.id}">
+    <span class="drag-handle" aria-label="Drag to reorder">≡</span>
+    <button class="list-item" onclick="openList('${l.id}')">
+      <span class="li-name">${esc(l.name)}</span>
+      <span class="li-sum">${fmt(listSums(l).total)} ›</span>
+    </button>
+  </div>`,
               )
               .join("")
           : '<p class="list-empty">No lists in this month</p>';
       }
+
+      // Drag & Drop (Touch + Maus) über den ≡-Griff
+      let drag = null;
+      const listBox = $("lists-container");
+      function clearDropMarks() {
+        listBox
+          .querySelectorAll(".drop-above, .drop-below")
+          .forEach((r) => r.classList.remove("drop-above", "drop-below"));
+      }
+      listBox.addEventListener("pointerdown", (e) => {
+        const h = e.target.closest(".drag-handle");
+        if (!h) return;
+        e.preventDefault();
+        const row = h.closest(".list-row");
+        h.setPointerCapture(e.pointerId);
+        row.classList.add("dragging");
+        drag = { row, startY: e.clientY, before: null };
+      });
+      listBox.addEventListener("pointermove", (e) => {
+        if (!drag) return;
+        drag.row.style.transform = `translateY(${e.clientY - drag.startY}px)`;
+        const others = [...listBox.querySelectorAll(".list-row")].filter(
+          (r) => r !== drag.row,
+        );
+        clearDropMarks();
+        if (!others.length) return;
+        const after = others.find((r) => {
+          const b = r.getBoundingClientRect();
+          return e.clientY < b.top + b.height / 2;
+        });
+        drag.before = after || null;
+        (after || others[others.length - 1]).classList.add(
+          after ? "drop-above" : "drop-below",
+        );
+      });
+      function endDrag(e, cancel) {
+        if (!drag) return;
+        const { row, before } = drag;
+        drag = null;
+        row.classList.remove("dragging");
+        row.style.transform = "";
+        clearDropMarks();
+        if (!cancel) {
+          if (before) listBox.insertBefore(row, before);
+          else listBox.appendChild(row);
+          const ids = [...listBox.querySelectorAll(".list-row")].map(
+            (r) => r.dataset.id,
+          );
+          const m = $("lists-month-filter").value || localDate().slice(0, 7);
+          const idxs = [];
+          lists.forEach((l, i) => l.month === m && idxs.push(i));
+          const byId = Object.fromEntries(lists.map((l) => [l.id, l]));
+          ids.forEach((id, k) => (lists[idxs[k]] = byId[id]));
+          saveLists();
+        }
+        renderLists();
+      }
+      listBox.addEventListener("pointerup", (e) => endDrag(e, false));
+      listBox.addEventListener("pointercancel", (e) => endDrag(e, true));
 
       // Liste erstellen / bearbeiten / löschen
       function openListDialog(id) {
@@ -1116,7 +1189,7 @@
         if (l) {
           l.name = name;
           l.month = month;
-        } else lists.push({ id: "l" + Date.now(), name, month, positions: [] });
+        } else lists.unshift({ id: "l" + Date.now(), name, month, positions: [] });
         $("lists-month-filter").value = month;
         saveLists();
         closeListDialog();
