@@ -88,11 +88,6 @@
       .list-item .li-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .list-item .li-sum { color: #666; font-size: 14px; white-space: nowrap; }
       .list-empty { text-align: center; font-size: 13px; color: #666; margin: 14px 0 0; }
-      .month-group { margin-top: 18px; }
-      .month-head { padding: 0 4px; }
-      .mh-top { display: flex; justify-content: space-between; align-items: baseline; font-weight: bold; margin-bottom: 2px; }
-      .mh-name { font-size: 16px; }
-      .mh-total { font-size: 16px; color: #c52233; }
       .list-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
       .list-head h2 { flex: 1; min-width: 0; margin: 0; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .list-head button { flex: 0 0 44px; width: 44px; height: 44px; margin: 0; padding: 0; font-size: 18px; border-radius: 14px; }
@@ -224,9 +219,23 @@
       </table>
     </div>
 
-    <!-- ANSICHT 3: LISTS (Übersicht) -->
+    <!-- ANSICHT 3: LISTS (Übersicht, pro Monat) -->
     <div id="lists-view" style="display: none">
-      <h2>Lists</h2>
+      <div class="filter-selection">
+        <input type="month" id="lists-month-filter" onchange="renderLists()" />
+      </div>
+
+      <div class="card">
+        <p class="custom-label">Spent this month</p>
+        <div class="list-summary" style="margin-top: 0">
+          <div class="sum-line"><span>Daily (D)</span><span id="ms-d">0,00€</span></div>
+          <div class="sum-line"><span>General (G)</span><span id="ms-g">0,00€</span></div>
+          <div class="sum-total">
+            <span class="sum-label">Total</span><span id="ms-total" style="color: #c52233">0,00€</span>
+          </div>
+        </div>
+      </div>
+
       <div class="card">
         <button class="btn-secondary btn-thin" onclick="openListDialog()">+ Add List</button>
         <div id="lists-container"></div>
@@ -331,10 +340,6 @@
         "lists-view",
         "list-detail-view",
         "backup-view",
-      ];
-      const MONTHS = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December",
       ];
 
       // --- 2. ZAHLEN & DATUM (Format: 1.324,54€) ---
@@ -587,6 +592,7 @@
 
       $("date").value = lastDay;
       $("month-filter").value = lastDay.slice(0, 7);
+      $("lists-month-filter").value = lastDay.slice(0, 7);
 
       function bindDashInput(input) {
         if (input.dataset.bound) return;
@@ -1052,51 +1058,34 @@
         });
         return { d, g, total: d + g };
       }
-      function monthLabel(m) {
-        const [y, mo] = m.split("-");
-        return (MONTHS[+mo - 1] || mo) + " " + y;
-      }
 
-      // Übersicht: nach Monaten gruppiert, neuester Monat und neueste Liste oben
+      // Übersicht: nur der gewählte Monat, neueste Liste oben
       function renderLists() {
-        if (!lists.length) {
-          $("lists-container").innerHTML =
-            '<p class="list-empty">No lists yet</p>';
-          return;
-        }
-        const groups = {};
-        lists.forEach((l) => (groups[l.month] = groups[l.month] || []).push(l));
-        $("lists-container").innerHTML = Object.keys(groups)
-          .sort()
-          .reverse()
-          .map((m) => {
-            const items = groups[m].sort((a, b) => listTime(b) - listTime(a));
-            let d = 0,
-              g = 0;
-            items.forEach((l) => {
-              const s = listSums(l);
-              d += s.d;
-              g += s.g;
-            });
-            return `
-  <div class="month-group">
-    <div class="month-head">
-      <div class="mh-top"><span class="mh-name">${monthLabel(m)}</span><span class="mh-total">${fmt(d + g)}</span></div>
-      <div class="sum-line"><span>Daily (D)</span><span>${fmt(d)}</span></div>
-      <div class="sum-line"><span>General (G)</span><span>${fmt(g)}</span></div>
-    </div>
-    ${items
-      .map(
-        (l) => `
-    <button class="list-item" onclick="openList('${l.id}')">
-      <span class="li-name">${esc(l.name)}</span>
-      <span class="li-sum">${fmt(listSums(l).total)} ›</span>
-    </button>`,
-      )
-      .join("")}
-  </div>`;
-          })
-          .join("");
+        const m = $("lists-month-filter").value || localDate().slice(0, 7);
+        const items = lists
+          .filter((l) => l.month === m)
+          .sort((a, b) => listTime(b) - listTime(a));
+        let d = 0,
+          g = 0;
+        items.forEach((l) => {
+          const s = listSums(l);
+          d += s.d;
+          g += s.g;
+        });
+        $("ms-d").innerText = fmt(d);
+        $("ms-g").innerText = fmt(g);
+        $("ms-total").innerText = fmt(d + g);
+        $("lists-container").innerHTML = items.length
+          ? items
+              .map(
+                (l) => `
+  <button class="list-item" onclick="openList('${l.id}')">
+    <span class="li-name">${esc(l.name)}</span>
+    <span class="li-sum">${fmt(listSums(l).total)} ›</span>
+  </button>`,
+              )
+              .join("")
+          : '<p class="list-empty">No lists in this month</p>';
       }
 
       // Liste erstellen / bearbeiten / löschen
@@ -1106,7 +1095,9 @@
         $("list-modal-title").innerText = l ? "Edit List" : "Add List";
         $("list-save").innerText = l ? "Save" : "Create";
         $("list-name").value = l ? l.name : "";
-        $("list-month").value = l ? l.month : localDate().slice(0, 7);
+        $("list-month").value = l
+          ? l.month
+          : $("lists-month-filter").value || localDate().slice(0, 7);
         $("list-delete").style.display = l ? "block" : "none";
         $("list-modal").style.display = "flex";
         $("list-name").focus();
@@ -1126,6 +1117,7 @@
           l.name = name;
           l.month = month;
         } else lists.push({ id: "l" + Date.now(), name, month, positions: [] });
+        $("lists-month-filter").value = month;
         saveLists();
         closeListDialog();
         if (l) renderListDetail();
