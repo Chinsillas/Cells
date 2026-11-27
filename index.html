@@ -88,6 +88,11 @@
       .list-item .li-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .list-item .li-sum { color: #666; font-size: 14px; white-space: nowrap; }
       .list-empty { text-align: center; font-size: 13px; color: #666; margin: 14px 0 0; }
+      .month-group { margin-top: 18px; }
+      .month-head { padding: 0 4px; }
+      .mh-top { display: flex; justify-content: space-between; align-items: baseline; font-weight: bold; margin-bottom: 2px; }
+      .mh-name { font-size: 16px; }
+      .mh-total { font-size: 16px; color: #c52233; }
       .list-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
       .list-head h2 { flex: 1; min-width: 0; margin: 0; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .list-head button { flex: 0 0 44px; width: 44px; height: 44px; margin: 0; padding: 0; font-size: 18px; border-radius: 14px; }
@@ -302,7 +307,10 @@
     <div class="modal" id="list-modal">
       <div class="modal-card">
         <p class="custom-label" id="list-modal-title">Add List</p>
+        <label class="modal-label" for="list-name">Name</label>
         <input type="text" id="list-name" placeholder="List name" maxlength="30" autocomplete="off" />
+        <label class="modal-label" for="list-month">Month</label>
+        <input type="month" id="list-month" />
         <button id="list-save" onclick="saveList()">Create</button>
         <button class="btn-danger" id="list-delete" onclick="deleteList()">Delete</button>
         <button class="btn-secondary" onclick="closeListDialog()">Cancel</button>
@@ -323,6 +331,10 @@
         "lists-view",
         "list-detail-view",
         "backup-view",
+      ];
+      const MONTHS = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December",
       ];
 
       // --- 2. ZAHLEN & DATUM (Format: 1.324,54€) ---
@@ -1003,10 +1015,23 @@
       renderDebts();
 
       // --- 14. LISTS (Listen mit Positionen, D = daily, G = general) ---
+      // Jede Liste hat einen Monat ("YYYY-MM"). Alte Listen ohne Monat
+      // bekommen den Monat, in dem sie erstellt wurden (steckt in der id).
+      function listTime(l) {
+        return parseInt(String(l.id).slice(1)) || 0;
+      }
       function loadLists() {
         try {
           const l = JSON.parse(localStorage.getItem("lists"));
-          return Array.isArray(l) ? l : [];
+          if (!Array.isArray(l)) return [];
+          l.forEach((x) => {
+            if (!x.month)
+              x.month = localDate(new Date(listTime(x) || Date.now())).slice(
+                0,
+                7,
+              );
+          });
+          return l;
         } catch (e) {
           return [];
         }
@@ -1027,29 +1052,61 @@
         });
         return { d, g, total: d + g };
       }
-
-      // Übersicht aller Listen
-      function renderLists() {
-        $("lists-container").innerHTML = lists.length
-          ? lists
-              .map(
-                (l) => `
-  <button class="list-item" onclick="openList('${l.id}')">
-    <span class="li-name">${esc(l.name)}</span>
-    <span class="li-sum">${fmt(listSums(l).total)} ›</span>
-  </button>`,
-              )
-              .join("")
-          : '<p class="list-empty">No lists yet</p>';
+      function monthLabel(m) {
+        const [y, mo] = m.split("-");
+        return (MONTHS[+mo - 1] || mo) + " " + y;
       }
 
-      // Liste erstellen / umbenennen / löschen
+      // Übersicht: nach Monaten gruppiert, neuester Monat und neueste Liste oben
+      function renderLists() {
+        if (!lists.length) {
+          $("lists-container").innerHTML =
+            '<p class="list-empty">No lists yet</p>';
+          return;
+        }
+        const groups = {};
+        lists.forEach((l) => (groups[l.month] = groups[l.month] || []).push(l));
+        $("lists-container").innerHTML = Object.keys(groups)
+          .sort()
+          .reverse()
+          .map((m) => {
+            const items = groups[m].sort((a, b) => listTime(b) - listTime(a));
+            let d = 0,
+              g = 0;
+            items.forEach((l) => {
+              const s = listSums(l);
+              d += s.d;
+              g += s.g;
+            });
+            return `
+  <div class="month-group">
+    <div class="month-head">
+      <div class="mh-top"><span class="mh-name">${monthLabel(m)}</span><span class="mh-total">${fmt(d + g)}</span></div>
+      <div class="sum-line"><span>Daily (D)</span><span>${fmt(d)}</span></div>
+      <div class="sum-line"><span>General (G)</span><span>${fmt(g)}</span></div>
+    </div>
+    ${items
+      .map(
+        (l) => `
+    <button class="list-item" onclick="openList('${l.id}')">
+      <span class="li-name">${esc(l.name)}</span>
+      <span class="li-sum">${fmt(listSums(l).total)} ›</span>
+    </button>`,
+      )
+      .join("")}
+  </div>`;
+          })
+          .join("");
+      }
+
+      // Liste erstellen / bearbeiten / löschen
       function openListDialog(id) {
         editingListId = id || null;
         const l = lists.find((l) => l.id === id);
         $("list-modal-title").innerText = l ? "Edit List" : "Add List";
         $("list-save").innerText = l ? "Save" : "Create";
         $("list-name").value = l ? l.name : "";
+        $("list-month").value = l ? l.month : localDate().slice(0, 7);
         $("list-delete").style.display = l ? "block" : "none";
         $("list-modal").style.display = "flex";
         $("list-name").focus();
@@ -1063,9 +1120,12 @@
           alert("Please enter a name");
           return;
         }
+        const month = $("list-month").value || localDate().slice(0, 7);
         const l = lists.find((l) => l.id === editingListId);
-        if (l) l.name = name;
-        else lists.push({ id: "l" + Date.now(), name, positions: [] });
+        if (l) {
+          l.name = name;
+          l.month = month;
+        } else lists.push({ id: "l" + Date.now(), name, month, positions: [] });
         saveLists();
         closeListDialog();
         if (l) renderListDetail();
